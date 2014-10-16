@@ -52,3 +52,16 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# environments
+environments/
+
+# Vagrant
+.vagrant/
+Vagrantfile
+
+# Eclipse
+.project
+.pydevproject
+
+

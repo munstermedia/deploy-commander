@@ -1,0 +1,71 @@
+# This file should contain generic values you want to use to overwrite
+from .base import *
+
+# Main Admins
+ADMINS = (
+    ('Ference', 'ference@munstermedia.nl'),
+)
+
+# Debug settings
+DEBUG = {{ DEBUG }}
+THUMBNAIL_DEBUG = {{ THUMBNAIL_DEBUG }}
+TEMPLATE_DEBUG = {{ TEMPLATE_DEBUG }}
+
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = '{{ SECRET_KEY }}'
+
+
+# DJANGO CMS SETTINGS
+CMS_PERMISSION = True
+CMS_SEO_FIELDS = True
+
+
+# Django compress for js and css
+COMPRESS_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+COMPRESS_OUTPUT_DIR = 'cache'
+
+COMPRESS_CSS_FILTERS = ['compressor.filters.css_default.CssAbsoluteFilter', 'compressor.filters.datauri.CssDataUriFilter']
+COMPRESS_ENABLED = {{ COMPRESS_ENABLED }}
+
+DATABASES['default']['USER'] = '{{ DB_USER }}'
+DATABASES['default']['PASSWORD'] = '{{ DB_PASSWORD }}'
+
+
+
+# Storage Amazone
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+AWS_QUERYSTRING_AUTH = True
+AWS_STORAGE_BUCKET_NAME = '{{ AWS_STORAGE_BUCKET_NAME }}'
+AWS_ACCESS_KEY_ID = '{{ AWS_ACCESS_KEY_ID }}'
+AWS_SECRET_ACCESS_KEY = '{{ AWS_SECRET_ACCESS_KEY }}'
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.7/howto/static-files/
+
+#STATIC_URL = 'http://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR + '/../static/'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.mandrillapp.com"
+EMAIL_PORT = "587"
+DEFAULT_FROM_EMAIL = '{{ DEFAULT_FROM_EMAIL }}'
+SERVER_EMAIL = '{{ SERVER_EMAIL }}'
+EMAIL_HOST_USER = '{{ EMAIL_HOST_USER }}'
+EMAIL_HOST_PASSWORD = '{{ EMAIL_HOST_PASSWORD }}'
+
+
+# Django cache settings
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+        'KEY_PREFIX':'{{ DB_USER }}'
+    }
+}
+
+# Sorl thumbnail config
+THUMBNAIL_COLORSPACE = None
+THUMBNAIL_DEBUG = DEBUG
