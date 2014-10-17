@@ -56,7 +56,7 @@ def install_mysqlserver():
     local('fab environment:%s install_mysql restart_mysql' % env.env)
     
     if len(env.roledefs['mysql']['hosts']) > 1:
-        local('fab environment:%s config_mysql_replicator set_mysql_master_info config_mysql_master_replication restart_mysql' % env.env)
+        local('fab environment:%s config_mysql_replicator set_mysql_master_info config_mysql_master_replication' % env.env)
     
 
 

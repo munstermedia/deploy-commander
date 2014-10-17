@@ -58,7 +58,6 @@ environments/
 
 # Vagrant
 .vagrant/
-Vagrantfile
 
 # Eclipse
 .project

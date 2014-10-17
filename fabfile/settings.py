@@ -44,16 +44,15 @@ UWSGI_LOG_PATH = '/var/log/uwsgi.log'
 
 @task
 def tag(tag):
-    if not env.has_key('virtualenv_project_path'):
-        abort("Run `environment:stage` first")
     # Set global tag
     env.tag = tag
     
-    env.virtualenv_project_tag = '%s/%s' % (env.virtualenv_project_path, env.tag)
-    env.vassals_project_ini = '%s/%s.ini' % (env.vassals_project_path, env.tag)
-    env.source_project_tag = '%s/%s' % (env.source_project_path, env.tag)
-    env.nginx_project_conf = '%s/%s.conf' % (env.nginx_project_path, env.tag)
-    env.mysql_project_backupsql = '%s/%s.sql' % (env.mysql_project_path, env.tag)
+    if env.has_key('virtualenv_project_path'):
+        env.virtualenv_project_tag = '%s/%s' % (env.virtualenv_project_path, env.tag)
+        env.vassals_project_ini = '%s/%s.ini' % (env.vassals_project_path, env.tag)
+        env.source_project_tag = '%s/%s' % (env.source_project_path, env.tag)
+        env.nginx_project_conf = '%s/%s.conf' % (env.nginx_project_path, env.tag)
+        env.mysql_project_backupsql = '%s/%s.sql' % (env.mysql_project_path, env.tag)
 
 @task
 def project(project):
@@ -126,7 +125,7 @@ def environment(environment):
     
        
     # When dev, create dev tag 
-    if environment == 'dev' or environment == 'development':
+    if environment == 'development':
         tag('dev')
         
 

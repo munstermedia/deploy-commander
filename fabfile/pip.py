@@ -17,8 +17,15 @@ from utils import ensure_path
      
 @task
 def setup_pip_project():
+    pip_download_cache_dir = "%s/.pip_download_cache" % env.user_path
+    
+    # If pip cache dir not exist, then create
+    if not exists(pip_download_cache_dir):
+        sudo('mkdir %s' % pip_download_cache_dir)
+        sudo('chmod 0777 %s' % pip_download_cache_dir)
+    
     # Ensure download cache for pip
-    with shell_env(PIP_DOWNLOAD_CACHE="%s/.pip_download_cache" % env.user_path):
+    with shell_env(PIP_DOWNLOAD_CACHE=pip_download_cache_dir):
         # Make sure virtualenv is installed
         sudo('pip install virtualenv')
         

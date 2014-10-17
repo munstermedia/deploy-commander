@@ -105,6 +105,9 @@ def install_app():
         # Prepare virtualenv
         setup_pip_project()
         
+        # Store the app settings
+        config_app_settings();
+        
         # Create nginx file
         config_nginx_project()
 
@@ -114,7 +117,8 @@ def install_app():
         # Create uwsgi vassal
         config_uwsgi_project()
     
-        
+        # Set active uwsgi
+        set_uwsgi_ini_active()
         
         # Restart uwsgi just to be sure
         restart_uwsgi()
