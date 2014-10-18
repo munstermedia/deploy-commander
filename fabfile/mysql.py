@@ -39,7 +39,7 @@ def install_mysql():
 
 @task
 @runs_once
-def setup_mysql_dev():
+def install_mysql_project():
     put('%s/.data/mysql/install.sql' % env.local_project_path, './tmp_sql.sql')
     command = """ 
     mysql --user="root" --password='%s' -e "CREATE DATABASE IF NOT EXISTS %s DEFAULT CHARACTER SET \'utf8\';"

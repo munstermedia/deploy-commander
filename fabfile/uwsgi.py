@@ -40,20 +40,46 @@ def ensure_uwsgi_socket_path():
     sudo('/bin/chmod 0777 -R /run/uwsgi')
 
 @task
+@roles('webserver')
 def config_uwsgi_project():
     if not env.tag:
         abort("No tag set")
     
     ensure_path(env.vassals_project_path)
-     
-    upload_template('./server/etc/uwsgi/vassals/uwsgi.ini',
-                    env.vassals_project_ini, 
-                    use_sudo=True, use_jinja=True, 
-                    context={'PROJECT_NAME': env.project_name,
-                             'USER': env.user,
-                             'SOURCE_PROJECT_TAG': env.source_project_tag,
-                             'VIRTUALENV_PROJECT_TAG': env.virtualenv_project_tag })
     
+    for project, config in get_uwsgi_project_config().iteritems():
+        upload_template('./server/etc/uwsgi/vassals/uwsgi.ini',
+                        config['file_path'], 
+                        use_sudo=True,
+                        use_jinja=True, 
+                        context=config)
+        
+    return False
+
+def get_uwsgi_project_config():
+    if len(env.uwsgi) == 0:
+        env.uwsgi = {env.project_name:{}}
+    
+    for project, config in env.uwsgi.iteritems():
+        if not config.has_key('file_path'):
+            config['file_path'] = '%s/%s-%s.ini' % (env.vassals_project_path, project, env.tag)
+        
+        if not config.has_key('socket'):
+            config['socket'] = '/run/uwsgi/%s.sock' % project
+        
+        if not config.has_key('chdir'):
+            config['chdir'] = env.source_project_tag
+        
+        if not config.has_key('module'):
+            config['module'] = "%s.wsgi" % project
+         
+        if not config.has_key('home'):
+            config['home'] = env.virtualenv_project_tag
+            
+        env.uwsgi[project] = config
+        
+    return env.uwsgi
+
 @task
 @roles('webserver') 
 def set_uwsgi_ini_active():

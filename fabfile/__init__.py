@@ -48,17 +48,16 @@ from mysql import config_mysql_replicator
 from mysql import set_mysql_master_info
 from mysql import config_mysql_master_replication
 from mysql import restart_mysql
-from mysql import setup_mysql_dev
+from mysql import install_mysql_project
 
 @task
 @hosts('localhost')
 def install_mysqlserver():
-    local('fab environment:%s install_mysql restart_mysql' % env.env)
+    local('fab environment:%s mysql.install_mysql mysql.restart_mysql' % env.env)
     
     if len(env.roledefs['mysql']['hosts']) > 1:
-        local('fab environment:%s config_mysql_replicator set_mysql_master_info config_mysql_master_replication' % env.env)
+        local('fab environment:%s mysql.config_mysql_replicator mysql.set_mysql_master_info mysql.config_mysql_master_replication' % env.env)
     
-
 
 @task
 @roles('webserver')

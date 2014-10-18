@@ -20,6 +20,8 @@ from fabric.utils import abort
 
 from fabric.contrib.console import confirm
 
+from fabric.context_managers import cd
+
 from utils import upload_template
 from utils import ensure_path
 
@@ -36,7 +38,7 @@ from nginx import restart_nginx
 
 from pip import setup_pip_project
 
-from mysql import setup_mysql_dev
+from mysql import install_mysql_project
 from mysql import backup_database
 
 from django import django_manage
@@ -58,30 +60,32 @@ def install_app():
         
         key_name = '%s_rsa' % env.project_name
         
-        if not exists(repo_path):
-            #run('chmod -R 777 ~/.ssh')
+        if exists(repo_path):
+            sudo('rm -Rf %s' % repo_path)
             
-            if confirm("Create new key?"):
-                run('ssh-keygen -t rsa -b 2048 -f ~/.ssh/%s -N \'\'' % (key_name))
-            
-            #sudo('chmod -R 600 ~/.ssh')
-            
-            #sudo('chmod 600 ~/.ssh/%s' % key_name)
-            
-            
-            #sudo('chmod 644 ~/.ssh/known_hosts')
-            
-            upload_template('./server/ssh/config', '~/.ssh/config',
-                            use_sudo=True, use_jinja=True,
-                            context={'KEY_NAME': key_name})
-            
-            print(yellow("Add this key to github or bitbucket or something..."))
-            run('cat .ssh/%s.pub' % key_name)
-            
-            if confirm("Done adding the key, can we checkout the repo ?"):
-                run('git clone %s %s' % (GIT_REPO_URL, repo_path))
-            else:
-                abort(red("Cancelled you'll need to be ready with the key!"))
+        #run('chmod -R 777 ~/.ssh')
+        
+        if confirm("Create new key?"):
+            run('ssh-keygen -t rsa -b 2048 -f ~/.ssh/%s -N \'\'' % (key_name))
+        
+        #sudo('chmod -R 600 ~/.ssh')
+        
+        #sudo('chmod 600 ~/.ssh/%s' % key_name)
+        
+        
+        #sudo('chmod 644 ~/.ssh/known_hosts')
+        
+        upload_template('./server/ssh/config', '~/.ssh/config',
+                        use_sudo=True, use_jinja=True,
+                        context={'KEY_NAME': key_name})
+        
+        print(yellow("Add this key to github or bitbucket or something..."))
+        run('cat .ssh/%s.pub' % key_name)
+        
+        if confirm("Done adding the key, can we checkout the repo ?"):
+            run('git clone --recursive %s %s' % (GIT_REPO_URL, repo_path))
+        else:
+            abort(red("Cancelled you'll need to be ready with the key!"))
     
         ensure_path(env.virtualenv_project_path)
         ensure_path(env.vassals_project_path)
@@ -100,7 +104,7 @@ def install_app():
         sudo('ln -s /project/%s %s' % (env.project_name, env.source_project_tag))
         
         # Import mysql database
-        setup_mysql_dev()
+        install_mysql_project()
         
         # Prepare virtualenv
         setup_pip_project()
@@ -179,9 +183,15 @@ def deploy_app():
     
     # Make repo path
     repo_path = '/home/%s/repo/%s' % (env.user, env.project_name)
+    with cd(repo_path):
+        run('git fetch')
+        # Update local repo with latest code
+        run('git checkout %s' % (env.tag))
     
-    # Update local repo with latest code
-    run('git --git-dir="%s/.git" --work-tree="%s/." pull origin %s' % (repo_path, repo_path, env.tag))
+        run('git pull origin %s --recurse-submodules' % (env.tag))
+        
+        run('git submodule update')
+        
     
     # If exist remove full source
     if exists(env.source_project_tag):

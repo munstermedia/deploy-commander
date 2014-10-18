@@ -42,6 +42,10 @@ MEMCACHED_MEMORY = 64
 
 UWSGI_LOG_PATH = '/var/log/uwsgi.log'
 
+env.uwsgi = {}
+env.nginx = {}
+env.django_settings = {}
+
 @task
 def tag(tag):
     # Set global tag
@@ -49,6 +53,8 @@ def tag(tag):
     
     if env.has_key('virtualenv_project_path'):
         env.virtualenv_project_tag = '%s/%s' % (env.virtualenv_project_path, env.tag)
+        
+        # vassals_project_ini is depricated
         env.vassals_project_ini = '%s/%s.ini' % (env.vassals_project_path, env.tag)
         env.source_project_tag = '%s/%s' % (env.source_project_path, env.tag)
         env.nginx_project_conf = '%s/%s.conf' % (env.nginx_project_path, env.tag)
@@ -104,6 +110,10 @@ def environment(environment):
     env.env = environment
         
     
+    
+    
+    
+    
     if environment == 'dev' or environment == 'development':
         env.is_debug = 'True'
     
@@ -123,9 +133,33 @@ def environment(environment):
         env.nginx_project_path = '/home/%s/nginx/%s' % (env.user, env.project_name)
         env.mysql_project_path = '/home/%s/mysql/%s' % (env.user, env.project_name)
     
-       
+        # Set default project settings
+        load_config('./environments/%s/default.json' % (env.project_name))
+        
+        # Set specific env settings
+        load_config('./environments/%s/%s.json' % (env.project_name, environment))
+      
+            
+     
     # When dev, create dev tag 
     if environment == 'development':
         tag('dev')
-        
 
+
+
+def load_config(file):
+    with open(file) as json_file:
+        set_config(json.load(json_file))
+          
+def set_config(config):
+    if config.has_key('django_settings'):
+        for setting_name, setting_value in config['django_settings'].iteritems():
+            env.django_settings[setting_name] = setting_value
+        
+    if config.has_key('uwsgi'):
+        for setting_name, setting_value in config['uwsgi'].iteritems():
+            env.uwsgi[setting_name] = setting_value
+       
+    if config.has_key('nginx'):
+        for setting_name, setting_value in config['nginx'].iteritems():
+            env.nginx[setting_name] = setting_value
