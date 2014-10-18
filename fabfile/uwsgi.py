@@ -61,8 +61,11 @@ def get_uwsgi_project_config():
         env.uwsgi = {env.project_name:{}}
     
     for project, config in env.uwsgi.iteritems():
+        if not config.has_key('ini_file'):
+            config['ini_file'] = '%s-%s.ini' % (project, env.tag)
+        
         if not config.has_key('file_path'):
-            config['file_path'] = '%s/%s-%s.ini' % (env.vassals_project_path, project, env.tag)
+            config['file_path'] = '%s/%s' % (env.vassals_project_path, config['ini_file'])
         
         if not config.has_key('socket'):
             config['socket'] = '/run/uwsgi/%s.sock' % project
@@ -83,11 +86,12 @@ def get_uwsgi_project_config():
 @task
 @roles('webserver') 
 def set_uwsgi_ini_active():
-    ini_path = '/etc/uwsgi/vassals/%s.ini' % env.project_name
-    if exists(ini_path):
-        sudo('rm %s' % ini_path)
-    
-    sudo('ln -s %s %s' % (env.vassals_project_ini, ini_path))
+    for project, config in get_uwsgi_project_config().iteritems():
+        ini_path = '/etc/uwsgi/vassals/%s-%s.ini' % (env.user, project)
+        if exists(ini_path):
+            sudo('rm %s' % ini_path)
+        
+        sudo('ln -s %s %s' % (config['file_path'], ini_path))
     
 @task
 @roles('webserver') 

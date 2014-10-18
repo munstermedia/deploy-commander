@@ -1,6 +1,7 @@
 import os.path
 
 from fabric.api import task
+from fabric.api import roles
 
 from fabric.operations import run
 from fabric.operations import sudo
@@ -16,6 +17,7 @@ from utils import ensure_path
 
      
 @task
+@roles('webserver') 
 def setup_pip_project():
     pip_download_cache_dir = "%s/.pip_download_cache" % env.user_path
     
