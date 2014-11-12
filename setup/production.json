@@ -1,0 +1,26 @@
+{
+	"roledefs":{
+            "webserver": {
+                "hosts": ["IP SERVER 1", "IP SERVER 2"],
+                "config": {
+                	"IP SERVER 1":{
+                		"ssh_password":"",
+                		"ssh_user":""
+                	},
+                	"IP SERVER 2":{
+                		"ssh_password":"",
+                		"ssh_user":""
+                	}
+                }
+            },
+            "mysql": {
+                "hosts": ["192.168.56.111"],
+                "config": {
+                	"192.168.56.111":{
+                		"ssh_password":"vagrant",
+                		"ssh_user":"vagrant"
+                	}
+                }
+            }
+	}
+}

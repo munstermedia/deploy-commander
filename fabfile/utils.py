@@ -1,13 +1,10 @@
-import os
-
 from fabric.contrib.files import upload_template as orig_upload_template
 
 from fabric.operations import sudo
 from fabric.operations import run
 
-from fabric.api import task
 from fabric.api import env
-from fabric.api import roles
+
 
 from fabric.colors import green
 
@@ -22,16 +19,19 @@ def upload_template(src, dest, *args, **kwargs):
     orig_upload_template(src, dest, *args, **kwargs)
     sudo('chmod +r %s' % dest)
     
-def ensure_path(path):
+def ensure_path(path, use_sudo=False):
     parts = path.split('/')
     for i in range(2, len(parts)):
         tmp_parts = parts[0:(i+1)]
         tmp_path = '/'.join(tmp_parts)
         if not exists(tmp_path):
             print(green("Path %s created" % tmp_path))
-            run('mkdir %s' % tmp_path)
+            if use_sudo:
+                sudo('mkdir %s' % tmp_path)
+            else:
+                run('mkdir %s' % tmp_path)
 
-@task
-@roles('webserver') 
-def run_python(): 
-    sudo(os.path.join(env.virtualenv_project_tag, 'bin', 'python'))
+    
+def init_env_settings(group):
+    env.password = env.roledefs[group]["config"][env.host]["ssh_password"]
+    env.user = env.roledefs[group]["config"][env.host]["ssh_user"]

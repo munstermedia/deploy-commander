@@ -1,0 +1,11 @@
+{
+	"source":{
+		"current_path":"/home/%(user)s/%(project_folder)s/current",
+		"repo_path":"/home/%(user)s/%(project_folder)s/repo",
+		"tag_path":"/home/%(user)s/%(project_folder)s/source/%(tag)s"
+	},
+	"mysql_backup":{
+		"db_backup_path":"/home/%(user)s/%(project_folder)s/db_backup",
+		"db":{"host":"127.0.0.1", "user":"root", "password":"", "database":"dbname"}
+	}
+}

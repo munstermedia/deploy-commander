@@ -16,22 +16,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	  # web1.vm.network :forwarded_port, guest: 80, host: 8000
 	
 	  web1.vm.network :private_network, ip: "192.168.56.111"
-	  
 	  web1.vm.synced_folder "./../", "/project/", :owner => "www-data", :group => "www-data"
   end
   
-  config.vm.define "web2" do |web2|
-	  # Use ubuntu trusty box
-	  web2.vm.box = "ubuntu/trusty64"
-	  
-	  # Define fetch box
-	  web2.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
-	
-	  # Foreward port 80 to devserver port
-	  # web2.vm.network :forwarded_port, guest: 80, host: 8000
-	
-	  web2.vm.network :private_network, ip: "192.168.56.112"
-	  
-	  web2.vm.synced_folder "./../", "/project/", :owner => "www-data", :group => "www-data"
+  
+  config.vm.provider :virtualbox do |vb|
+    # Don't boot with headless mode
+    #vb.gui = true
+  
+    #vb.customize ["modifyvm", :id, "--cpus", "2"]
+    vb.customize ["modifyvm", :id, "--memory", "2048"]
   end
 end

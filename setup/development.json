@@ -1,0 +1,13 @@
+{
+	"roledefs":{
+            "webserver": {
+                "hosts": ["192.168.56.111"],
+                "config": {
+                	"192.168.56.111":{
+                		"ssh_password":"vagrant",
+                		"ssh_user":"vagrant"
+                	}
+                }
+            }
+	}
+}
