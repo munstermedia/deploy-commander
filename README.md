@@ -28,10 +28,15 @@ Configuration
 The configuration is located ind the config folder.
 These are json structured configs where you can setup your credentials and project properties
 
+Install app
+-----------
+Command:
+	
+	fab project:<project> environment:<env> app.install
 
 
-Deploy
-------
+Deploy app
+----------
 Command:
 
 	fab project:<project> environment:<env> tag:<git tagname> app.deploy

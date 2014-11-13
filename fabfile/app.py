@@ -2,6 +2,7 @@ import os.path
 import os
 import utils
 import pprint
+import mysql
 
 from fabric.api import task
 from fabric.api import env
@@ -33,16 +34,16 @@ def install():
     
     utils.init_env_settings('webserver')
      
-    params = {'project_folder':env.project_folder,
-              'user':env.user,
-              'tag':env.tag}
+    url_params = {'project_folder':env.project_folder,
+                  'user':env.user,
+                  'tag':env.tag,
+                  'domain':env.site['domain']}
     
-    repo_path = env.source['repo_path'] % params
+    repo_path = env.source['repo_path'] % url_params
     utils.ensure_path(repo_path)
     
     with cd(repo_path):
         run('git clone --recursive %s %s' % (env.git['repo_url'], repo_path))
-    #run('git clone --recursive %s %s' % (env.git['repo_url'], repo_path))
          
       
 @task
@@ -66,15 +67,18 @@ def deploy():
     
     utils.init_env_settings('webserver')
     
-    params = {'project_folder':env.project_folder,
-              'user':env.user,
-              'tag':env.tag}
+    url_params = {'project_folder':env.project_folder,
+                  'user':env.user,
+                  'tag':env.tag,
+                  'domain':env.site['domain']}
     
-    repo_path = env.source['repo_path'] % params
-    utils.ensure_path(repo_path)
+    repo_path = env.source['repo_path'] % url_params
+    current_path = env.source['current_path'] % url_params
+    tag_path = env.source['tag_path'] % url_params
     
-    tag_path = env.source['tag_path'] % params
-
+    if not exists(repo_path):
+        abort("Repo path not existing... is the project installed? ")
+    
     # If exist remove full source
     if exists(tag_path):
         run('rm -Rf %s' % tag_path)
@@ -89,8 +93,50 @@ def deploy():
         run('git pull origin %s --recurse-submodules' % (env.tag))
          
         run('git submodule update')
-
-     
+    
     # Copy source code to version
-    run('cp -R %s %s' % (repo_path, tag_path))
+    run('cp -R %s/* %s' % (repo_path, tag_path))
+    
+    process_stage('after_checkout')
+            
+    if env.has_key('mysql_backup'):
+        mysql.backup()
+        process_stage('after_mysql_backup')
+    
+        
+    # Final live,... create symlink to current folder
+    if exists(current_path):
+        run('rm %s' % current_path)
+    
+    run('ln -s %s %s' % (tag_path, current_path))
+    
+@task
+@roles('webserver')   
+def process_stage(stage):
+    utils.init_env_settings('webserver')
+    
+    url_params = {'project_folder':env.project_folder,
+                  'user':env.user,
+                  'tag':env.tag,
+                  'domain':env.site['domain']}
+        
+    if stage in env.stages and len(env.stages[stage]) > 0:
+        for task_key, task in env.stages[stage].iteritems():
+            if task['action'] == 'execute-command':
+                command = task['command'] % url_params
+                run(command)
+                
+            if task['action'] == 'push-template':
+                print task['action']
+                source = task['source'] % url_params
+                target = task['target'] % url_params
+                
+                if 'use_sudo' in task:
+                    use_sudo = task['use_sudo']
+                else:
+                    use_sudo = False
+                
+                utils.upload_template('./templates/%s' % source, target,
+                                      use_sudo=use_sudo, use_jinja=True, context=task['params']),
+                                      
     

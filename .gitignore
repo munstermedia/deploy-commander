@@ -53,11 +53,10 @@ docs/_build/
 # PyBuilder
 target/
 
-# environments
-environments/
-
-# Vagrant
+# Hidden project files
+.config/
 .vagrant/
+.templates/
 
 # Eclipse
 .project

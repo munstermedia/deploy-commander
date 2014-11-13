@@ -19,21 +19,23 @@ from fabric.utils import abort
 @task
 @runs_once
 @roles('webserver')
-def backup_database():
+def backup():
     utils.init_env_settings('webserver')
     
     command = """
-    mysqldump -h %(host) -u %(user)s --password='%(password)s' %(database)s > %(backup_file)s
+    mysqldump -h %(host)s -u %(user)s --password='%(password)s' %(database)s > %(backup_file)s
     """
     
     settings = env.mysql_backup["db"]
     
     # Make params for db backup path
-    params = {'project_folder':env.project_folder,
-              'user':env.user,
-              'tag':env.tag}
+    url_params = {'project_folder':env.project_folder,
+                  'user':env.user,
+                  'tag':env.tag,
+                  'domain':env.site['domain']}
     
-    db_backup_path = env.django_dtap['db_backup_path'] % params
+    db_backup_path = env.mysql_backup['db_backup_path'] % url_params
+    utils.ensure_path(db_backup_path)
     
     backup_file = "%s/%s.sql" % (db_backup_path, env.tag)
     
