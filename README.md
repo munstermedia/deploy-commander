@@ -2,7 +2,7 @@
 
 One app to rule all your apps!
 
-A tool for setting up a Development Testing Acceptance and Production flow, build on python/django, but can be used by any codebase
+A tool for setting up a Development Testing Acceptance and Production flow, build on python/fabric and django, but can be used for any project.
 
 Note : This application is still in it's development phase.
 
