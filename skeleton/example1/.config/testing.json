@@ -1,0 +1,32 @@
+{
+	"roledefs":{
+            "webserver": {
+                "hosts": ["testing.yourserver.nl"],
+                "config": {
+                	"testing.yourserver.nl":{
+                		"ssh_password":"testing",
+                		"ssh_user":"testing"
+                	}
+                }
+            }
+	},
+	"stages":{
+		"after_checkout":{
+			"setup-environment-ini":{
+				"params":{
+					"ENVIRONMENT":"TESTING"
+				}
+			},
+			"setup-environment-php":{
+				"params":{
+					"ENVIRONMENT":"TESTING"
+				}
+			},
+			"setup-environment-python":{
+				"params":{
+					"ENVIRONMENT":"TESTING"
+				}
+			}
+		}
+	}
+}

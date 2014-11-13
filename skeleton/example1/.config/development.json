@@ -1,0 +1,32 @@
+{
+	"roledefs":{
+            "webserver": {
+                "hosts": ["development.yourserver.nl"],
+                "config": {
+                	"development.yourserver.nl":{
+                		"ssh_password":"development",
+                		"ssh_user":"development"
+                	}
+                }
+            }
+	},
+	"stages":{
+		"after_checkout":{
+			"setup-environment-ini":{
+				"params":{
+					"ENVIRONMENT":"DEVELOPMENT"
+				}
+			},
+			"setup-environment-php":{
+				"params":{
+					"ENVIRONMENT":"DEVELOPMENT"
+				}
+			},
+			"setup-environment-python":{
+				"params":{
+					"ENVIRONMENT":"DEVELOPMENT"
+				}
+			}
+		}
+	}
+}

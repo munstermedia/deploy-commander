@@ -1,0 +1,32 @@
+{
+	"roledefs":{
+            "webserver": {
+                "hosts": ["staging.yourserver.nl"],
+                "config": {
+                	"staging.yourserver.nl":{
+                		"ssh_password":"staging",
+                		"ssh_user":"staging"
+                	}
+                }
+            }
+	},
+	"stages":{
+		"after_checkout":{
+			"setup-environment-ini":{
+				"params":{
+					"ENVIRONMENT":"STAGING"
+				}
+			},
+			"setup-environment-php":{
+				"params":{
+					"ENVIRONMENT":"STAGING"
+				}
+			},
+			"setup-environment-python":{
+				"params":{
+					"ENVIRONMENT":"STAGING"
+				}
+			}
+		}
+	}
+}
