@@ -1,19 +1,42 @@
 django-dtap
 ===========
-
-Django Development Testing Acceptance and Production application
-
 One app to rule your dtap environments!
+
+A tool for setting up a Development Testing Acceptance and Production flow, build on python/django, but used by any codebase
 
 This application is still in it's development phase.
 
+[Goals]
+....
+
 
 Setup
-- python/pip
+=====
 
-Home folder structure
-/home/<user>/virtualenv/<project>/<tag>
-/home/<user>/nginx/<project>/<project>-<tag>.conf
-/home/<user>/source/<project>/<tag>
-/home/<user>/uwsgi/<project>/<project>-<tag>.ini
-/home/<user>/.pip_download_cache
+Ubuntu
+------
+
+	sudo apt-get install fabric
+
+
+Usage
+=====
+This is currently a quick command line tool. In the future there will be an visual admin for your deployments.
+
+Configuration
+-------------
+The configuration is located ind the config folder.
+These are json structured configs where you can setup your credentials and project properties
+
+
+
+Deploy
+------
+Command:
+
+	fab project:<project> environment:<env> tag:<git tagname> app.deploy
+	
+- project : your own defined project
+- environment : [dev/testing/staging/production]
+- tag : Your git tag
+

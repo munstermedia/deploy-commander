@@ -35,9 +35,9 @@ def environment(environment):
     if environment == 'prod':
         environment = 'production'   
     
-    load_config('./setup/default.json')
+    load_config('./config/default.json')
     
-    load_config('./setup/%s.json' % environment)
+    load_config('./config/%s.json' % environment)
     
     env.env = environment
     
@@ -48,10 +48,10 @@ def environment(environment):
         env.is_debug = 'False'
     
     # Set default project settings
-    load_config('./setup/%s/default.json' % (env.project_name))
+    load_config('./config/%s/default.json' % (env.project_name))
     
     # Set specific env settings
-    load_config('./setup/%s/%s.json' % (env.project_name, environment))
+    load_config('./config/%s/%s.json' % (env.project_name, environment))
         
     # When dev, create dev tag 
     if environment == 'development':
