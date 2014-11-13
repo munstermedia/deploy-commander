@@ -1,12 +1,14 @@
-from fabric.api import task
-from fabric.api import env
-
-from fabric.utils import abort
-
 import collections
 import json
 import pprint
 
+from fabric.api import task
+from fabric.api import env
+from fabric.utils import abort
+
+from fabric.colors import red
+from fabric.colors import yellow
+from fabric.colors import green
 
 env.source = {}
 env.mysql_backup = {}
@@ -39,9 +41,9 @@ def environment(environment):
     if environment == 'prod':
         environment = 'production'   
     
-    load_config('./config/default.json')
+    load_config('./.config/default.json')
     
-    load_config('./config/%s.json' % environment)
+    load_config('./.config/%s.json' % environment)
     
     env.env = environment
     
@@ -52,10 +54,10 @@ def environment(environment):
         env.is_debug = 'False'
     
     # Set default project settings
-    load_config('./config/%s/default.json' % (env.project_name))
+    load_config('./.config/%s/default.json' % (env.project_name))
     
     # Set specific env settings
-    load_config('./config/%s/%s.json' % (env.project_name, environment))
+    load_config('./.config/%s/%s.json' % (env.project_name, environment))
         
     # When dev, create dev tag 
     if environment == 'development':
@@ -64,7 +66,7 @@ def environment(environment):
     pprint.pprint(env)
 
 def load_config(filename):
-    print "Set config %s" % (filename)
+    print green("Load config %s" % (filename))
     with open(filename) as json_file:
         set_config(json.load(json_file))
      

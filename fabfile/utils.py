@@ -6,7 +6,7 @@ from fabric.operations import run
 from fabric.api import env
 
 
-from fabric.colors import green
+from fabric.colors import yellow
 
 from fabric.contrib.files import exists
 
@@ -25,11 +25,12 @@ def ensure_path(path, use_sudo=False):
         tmp_parts = parts[0:(i+1)]
         tmp_path = '/'.join(tmp_parts)
         if not exists(tmp_path):
-            print(green("Path %s created" % tmp_path))
             if use_sudo:
                 sudo('mkdir %s' % tmp_path)
             else:
                 run('mkdir %s' % tmp_path)
+                
+            print(yellow("Path `%s` did not exist and is created" % tmp_path))
 
     
 def init_env_settings(group):

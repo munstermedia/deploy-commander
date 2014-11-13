@@ -18,6 +18,7 @@ from fabric.utils import abort
 
 from fabric.colors import red
 from fabric.colors import yellow
+from fabric.colors import green
 
 from fabric.utils import abort
 
@@ -29,9 +30,6 @@ from fabric.context_managers import cd
 @task
 @roles('webserver')
 def install():
-    if not env.has_key('project_folder'):
-        abort('No project known, execute with `fab project:name` first')
-    
     utils.init_env_settings('webserver')
      
     url_params = {'project_folder':env.project_folder,
@@ -40,20 +38,24 @@ def install():
                   'domain':env.site['domain']}
     
     repo_path = env.source['repo_path'] % url_params
-    utils.ensure_path(repo_path)
     
-    with cd(repo_path):
-        run('git clone --recursive %s %s' % (env.git['repo_url'], repo_path))
+    if exists(repo_path):
+        if confirm("Repo path found, do you want to reinstall?"):
+            print(yellow("Repo path `%s` will be deleted" % repo_path))
+            run('rm -Rf %s' % repo_path)
+        
+    utils.ensure_path(repo_path)
+    run('git clone --recursive %s %s' % (env.git['repo_url'], repo_path))
          
-      
+    print(green("Project `%s` successfully installed" % env.project_name))
+    
 @task
 @roles('webserver')
 def rollback_app():  
-    if env.env == 'development':
-        abort(red("Rollback on development? :)"))
-
     if not env.tag:
-        abort("Run `tag:<tagname>` first")
+        abort("Run with `tag:<tagname>`")
+
+    utils.init_env_settings('webserver')
 
 
 @task
@@ -113,6 +115,7 @@ def deploy():
 @task
 @roles('webserver')   
 def process_stage(stage):
+    print(green("Start processing stage `%s`" % stage))
     utils.init_env_settings('webserver')
     
     url_params = {'project_folder':env.project_folder,
@@ -122,12 +125,20 @@ def process_stage(stage):
         
     if stage in env.stages and len(env.stages[stage]) > 0:
         for task_key, task in env.stages[stage].iteritems():
+            print yellow("Running %s" % task['action'])
+            
+            if task['action'] == 'create-symlink':
+                source = task['source'] % url_params
+                target = task['target'] % url_params
+                command = "ln -s %s %s" % (source, target)
+                run(command)
+                
             if task['action'] == 'execute-command':
                 command = task['command'] % url_params
                 run(command)
                 
             if task['action'] == 'push-template':
-                print task['action']
+                
                 source = task['source'] % url_params
                 target = task['target'] % url_params
                 
@@ -136,7 +147,7 @@ def process_stage(stage):
                 else:
                     use_sudo = False
                 
-                utils.upload_template('./templates/%s' % source, target,
+                utils.upload_template('./.templates/%s' % source, target,
                                       use_sudo=use_sudo, use_jinja=True, context=task['params']),
                                       
-    
+    print(green("Done processing stage `%s`" % stage))

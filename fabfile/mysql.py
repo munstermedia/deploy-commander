@@ -51,7 +51,7 @@ def backup():
 @task
 @runs_once
 @roles('webserver')
-def restore_database():
+def restore():
     utils.init_env_settings('webserver')
     
     command = """
@@ -61,11 +61,12 @@ def restore_database():
     settings = env.mysql_backup["db"]
     
     # Make params for db backup path
-    params = {'project_folder':env.project_folder,
-              'user':env.user,
-              'tag':env.tag}
+    url_params = {'project_folder':env.project_folder,
+                  'user':env.user,
+                  'tag':env.tag,
+                  'domain':env.site['domain']}
     
-    db_backup_path = env.django_dtap['db_backup_path'] % params
+    db_backup_path = env.mysql_backup['db_backup_path'] % url_params
     
     backup_file = "%s/%s.sql" % (db_backup_path, env.tag)
     
