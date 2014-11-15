@@ -5,12 +5,22 @@ import datetime
 
 from fabric.api import env
 from fabric.operations import run
+from fabric.operations import sudo
 from fabric.colors import green
 from fabric.operations import prompt
 from fabric.context_managers import hide
+from fabric.context_managers import shell_env
 
 from fabfile import utils
 
+def install_server(params):
+    """
+    Install mysql server
+    This currently works on ubuntu systems only
+    """
+    with shell_env(DEBIAN_FRONTEND='noninteractive'):
+        sudo('apt-get -y install mysql-server')
+    
 def backup_db(params):
     """" 
     This command backups the database based on a backup folder
