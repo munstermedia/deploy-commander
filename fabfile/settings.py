@@ -1,6 +1,7 @@
 import collections
 import json
 import pprint
+import utils
 
 from fabric.api import task
 from fabric.api import env
@@ -12,7 +13,7 @@ from fabric.colors import green
 
 from fabric.operations import prompt
 
-env.warn_only = True
+env.warn_only = False
 
 env.source = {}
 env.mysql_backup = {}
@@ -53,6 +54,8 @@ def environment(environment):
     
     env.env = environment
     
+    
+    
     if environment == 'dev' or environment == 'development':
         env.is_debug = 'True'
     
@@ -65,11 +68,14 @@ def environment(environment):
     # Set specific env settings
     load_config('./.config/%s/%s.json' % (env.params['project'], environment))
 
+    
+    
     # Post process params from params
     if env.post_params:
         for param_key, param_value in env.post_params.iteritems():
             env.params[param_key] = param_value % env.params
             print(yellow("Set post param `%s` to `%s`" % (param_key, env.params[param_key])))
+    
     
 
 def load_config(filename):
@@ -94,23 +100,6 @@ def set_config(config):
         for setting_name, setting_value in config['roledefs'].iteritems():
             env.roledefs[setting_name] = setting_value
     
-    
-    if config.has_key('site'):
-        env.site = update(env.site, config['site'])
-    
-    if config.has_key('source'):
-        env.source = update(env.source, config['source'])
-      
-    if config.has_key('git'):
-        env.git = update(env.git, config['git'])
-            
-    if config.has_key('mysql_backup'):
-        env.mysql_backup = update(env.mysql_backup, config['mysql_backup'])
-
-            
-    if config.has_key('stages'):
-        env.stages = update(env.stages, config['stages'])
-     
     if config.has_key('params'):
         env.params = update(env.params, config['params'])
        

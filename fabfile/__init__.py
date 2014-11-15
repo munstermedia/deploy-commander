@@ -43,6 +43,7 @@ def go():
 @task
 @roles('webserver')   
 def run(action):
+    
     utils.init_env_settings('webserver')
     
     print(green(env.actions[action]['title']))
@@ -52,7 +53,7 @@ def run(action):
         for param_key, param_value in env.actions[action]['input_params'].items():
             env.params[param_value['param']] = prompt(param_value['prompt'])
     
-    ordered_actions = sorted(env.actions[action]['commands'].items(), key=lambda (k,v): v['order'])
+    ordered_actions = sorted(env.actions[action]['commands'].items(), key=lambda (k,v): v['sequence'])
     
     for key_action, current_action in ordered_actions:
         print("Run `%s`" % key_action)
