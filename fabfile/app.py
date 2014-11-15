@@ -9,6 +9,7 @@ from fabric.api import env
 from fabric.api import roles
 
 from fabric.contrib.files import exists
+from fabric.contrib.files import is_link
 
 from fabric.operations import sudo
 from fabric.operations import run
@@ -79,10 +80,11 @@ def deploy():
     tag_path = env.source['tag_path'] % url_params
     
     if not exists(repo_path):
-        abort("Repo path not existing... is the project installed? ")
+        abort(red("Repo path not existing... is the project installed?"))
     
     # If exist remove full source
     if exists(tag_path):
+        print(yellow("Deploy source path `%s` allready existed... source data be removed and reset." % tag_path))
         run('rm -Rf %s' % tag_path)
     
     utils.ensure_path(tag_path)
@@ -130,7 +132,12 @@ def process_stage(stage):
             if task['action'] == 'create-symlink':
                 source = task['source'] % url_params
                 target = task['target'] % url_params
-                command = "ln -s %s %s" % (source, target)
+                
+                if is_link(source):
+                    print(yellow("Symlink `%s` exists and will be removed" % source))
+                    run('rm %s' % source)
+                
+                command = "ln -s %s %s" % (target, source)
                 run(command)
                 
             if task['action'] == 'execute-command':

@@ -10,29 +10,33 @@ from fabric.colors import red
 from fabric.colors import yellow
 from fabric.colors import green
 
+from fabric.operations import prompt
+
+env.warn_only = True
+
 env.source = {}
 env.mysql_backup = {}
 env.git = {}
 env.stages = {}
 env.site = {}
 
+env.params = {}
+env.post_params = {}
+env.actions = {}
+
 env.connection_attempts = 3
 env.timeout = 30
 
-@task
-def tag(tag):
-    # Set global tag
-    env.tag = tag
+
+
 
 @task
 def project(project):
     if not project:
         abort("Enter project name")
     
-    env.project_name = project
-    env.project_folder = project
-    env.domain = project 
-
+    env.params['project'] = project
+    
 @task
 def environment(environment):
     if environment == 'dev':
@@ -40,6 +44,8 @@ def environment(environment):
      
     if environment == 'prod':
         environment = 'production'   
+    
+    env.params['environment'] = environment
     
     load_config('./.config/default.json')
     
@@ -54,16 +60,17 @@ def environment(environment):
         env.is_debug = 'False'
     
     # Set default project settings
-    load_config('./.config/%s/default.json' % (env.project_name))
+    load_config('./.config/%s/default.json' % (env.params['project']))
     
     # Set specific env settings
-    load_config('./.config/%s/%s.json' % (env.project_name, environment))
-        
-    # When dev, create dev tag 
-    if environment == 'development':
-        tag('dev')
+    load_config('./.config/%s/%s.json' % (env.params['project'], environment))
 
-    pprint.pprint(env)
+    # Post process params from params
+    if env.post_params:
+        for param_key, param_value in env.post_params.iteritems():
+            env.params[param_key] = param_value % env.params
+            print(yellow("Set post param `%s` to `%s`" % (param_key, env.params[param_key])))
+    
 
 def load_config(filename):
     print green("Load config %s" % (filename))
@@ -103,3 +110,12 @@ def set_config(config):
             
     if config.has_key('stages'):
         env.stages = update(env.stages, config['stages'])
+     
+    if config.has_key('params'):
+        env.params = update(env.params, config['params'])
+       
+    if config.has_key('post_params'):
+        env.post_params = update(env.post_params, config['post_params'])
+         
+    if config.has_key('actions'):
+        env.actions = update(env.actions, config['actions'])

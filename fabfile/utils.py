@@ -17,7 +17,6 @@ def upload_template(src, dest, *args, **kwargs):
     upload_template does not preserve file permissions, http://code.fabfile.org/issues/show/117
     """
     orig_upload_template(src, dest, *args, **kwargs)
-    sudo('chmod +r %s' % dest)
     
 def ensure_path(path, use_sudo=False):
     parts = path.split('/')

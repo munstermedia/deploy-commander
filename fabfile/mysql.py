@@ -1,4 +1,5 @@
 import utils
+import time
 
 from fabric.api import task
 from fabric.api import env
@@ -12,9 +13,13 @@ from fabric.operations import run
 from fabric.operations import put
 
 from fabric.colors import red
+from fabric.colors import yellow
 from fabric.context_managers import shell_env
 
 from fabric.utils import abort
+from fabric.contrib.files import exists
+
+
 
 @task
 @runs_once
@@ -39,6 +44,11 @@ def backup():
     
     backup_file = "%s/%s.sql" % (db_backup_path, env.tag)
     
+    if exists(backup_file):
+        target_file = "%s/%s-%s.sql" % (db_backup_path, env.tag, time.time())
+        print(yellow("Backup sql `%s` exists.. it will be renamed to `%s`" % (backup_file, target_file)))
+        run('mv %s %s' % (backup_file, target_file))
+        
     # Make params
     command_params = {'user':settings['user'],
                       'password':settings['password'],
@@ -46,7 +56,7 @@ def backup():
                       'host':settings['host'],
                       'backup_file':backup_file}
     
-    sudo(command % command_params)
+    run(command % command_params)
 
 @task
 @runs_once
@@ -78,5 +88,5 @@ def restore():
                       'backup_file':backup_file}
     
    
-    sudo(command % (env.mysql_database_name, env.mysql_project_backupsql))
+    run(command % (env.mysql_database_name, env.mysql_project_backupsql))
      
