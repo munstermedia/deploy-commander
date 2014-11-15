@@ -1,40 +1,22 @@
-import os.path
-import os
+"""" 
+System commands for deploy commander
+"""
 
-import pprint
-import mysql
-
-from fabric.api import task
 from fabric.api import env
-from fabric.api import roles
-
-from fabric.contrib.files import exists
 from fabric.contrib.files import is_link
-
-from fabric.operations import sudo
 from fabric.operations import run
-from fabric.operations import prompt
-
-from fabric.utils import abort
-
-from fabric.colors import red
 from fabric.colors import yellow
 from fabric.colors import green
-
-from fabric.utils import abort
-
 from fabfile import utils
 
-from fabric.contrib.console import confirm
-
-from fabric.context_managers import cd
 
 def symlink(params):
-    
+    """
+    Create a symlink command.
+    """
     source = params['source'] % env.params
     target = params['target'] % env.params
-    
-    
+       
     if is_link(source):
         print source
         print(yellow("Symlink `%s` exists and will be removed" % source))
@@ -45,12 +27,18 @@ def symlink(params):
     run(command)
     
     print(green("Symlink from `%s` to `%s`." % (source, target))) 
-    
+
 def command(params):
+    """
+    Run a command
+    """
     command = params['command'] % env.params
     run(command)
-    
+
 def upload_template(params):
+    """
+    Upload a template and render it with the given params.
+    """
     source = params['source'] % env.params
     target = params['target'] % env.params
     

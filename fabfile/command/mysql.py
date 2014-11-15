@@ -1,40 +1,22 @@
-import os.path
-import os
-import fabfile.utils
-import pprint
-import mysql
+"""" 
+MYSQL Commands for deploy commander
+"""
 import datetime
 
-from fabric.api import task
 from fabric.api import env
-from fabric.api import roles
-
-from fabric.contrib.files import exists
-from fabric.contrib.files import is_link
-
-from fabric.operations import sudo
 from fabric.operations import run
-from fabric.operations import prompt
-
-from fabric.utils import abort
-
-from fabric.colors import red
-from fabric.colors import yellow
 from fabric.colors import green
-
-from fabric.utils import abort
-
 from fabric.operations import prompt
-from fabric.contrib.console import confirm
-
-from fabric.context_managers import cd
-
-from fabfile import utils
-from fabric.utils import abort
-
 from fabric.context_managers import hide
 
+from fabfile import utils
+
 def backup_db(params):
+    """" 
+    This command backups the database based on a backup folder
+    The output dump will be a iso date formatted filename
+    """
+    
     command = """
     mysqldump -h %(host)s -u %(user)s --password='%(password)s' %(database)s > %(backup_file)s
     """
@@ -56,8 +38,52 @@ def backup_db(params):
         run(command % command_params)      
     
     print(green("Mysql backup successfully stored in `%s`" % backup_file)) 
+
+def query(params):
+    """
+    Query command for executing raw queries
+    """
+    
+    command = """
+    mysql -h %(host)s -u %(user)s --password='%(password)s' -e '%(query)s'
+    """
+    # Make params
+    command_params = {'user': params['user'] % env.params,
+                      'password': params['password'] % env.params,
+                      'host': params['host'] % env.params,
+                      'query':params['query'] % env.params}
+    
+    run(command % command_params)
+    
+    print(green("Mysql query `%s` successfully runned." % command_params['query']))     
+    
+def import_file(params):
+    """
+    Given the database credentials and a import file it will import into a database
+    """
+    
+    command = """
+    mysql -h %(host)s -u %(user)s --password='%(password)s' %(database)s  < %(import_file)s
+    """
+        
+    # Make params
+    command_params = {'user': params['user'] % env.params,
+                      'password': params['password'] % env.params,
+                      'database': params['database'] % env.params,
+                      'host': params['host'] % env.params,
+                      'import_file':params['import_file'] % env.params}
+    
+    with hide('running', 'stdout', 'stderr'):
+        run(command % command_params)
+    
+    print(green("Mysql file `%s` successfully imported." % command_params['import_file']))     
     
 def restore_db(params):
+    """
+    Restore database from a backup folder. This will first list available backups, 
+    and then you'll be prompted to enter the version you'll like to import
+    """
+    
     command = """
     mysql -h %(host)s -u %(user)s --password='%(password)s' %(database)s  < %(backup_file)s
     """

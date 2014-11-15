@@ -1,37 +1,25 @@
-import os.path
-import os
-import fabfile.utils
-import pprint
-import mysql
+"""" 
+git commands for deploy commander
+"""
 
-from fabric.api import task
 from fabric.api import env
-from fabric.api import roles
-
 from fabric.contrib.files import exists
-from fabric.contrib.files import is_link
-
-from fabric.operations import sudo
 from fabric.operations import run
 from fabric.operations import prompt
-
 from fabric.utils import abort
-
 from fabric.colors import red
 from fabric.colors import yellow
 from fabric.colors import green
-
-from fabric.utils import abort
-
-from fabric.operations import prompt
 from fabric.contrib.console import confirm
-
 from fabric.context_managers import cd
 
 from fabfile import utils
-from fabric.utils import abort
 
 def clone(params):
+    """
+    The clone command can be used to clone a new repo.
+    If it's allready an existing path it will prompt for overwrite
+    """
     repo_path = params['repo_path'] % env.params
     
     if exists(repo_path):
@@ -47,6 +35,11 @@ def clone(params):
     print(green("Repo `%s` successfully cloned" % params['repo_url']))
 
 def deploy_tag(params):
+    """
+    This command will update a repo and copy the contents to another folder.
+    It can be used to create versioned deployments of the codebase
+    When executed it will prompt for the tag to deploy if it's not known
+    """
     repo_path = params['repo_path'] % env.params
     
     if 'tag' in params:
