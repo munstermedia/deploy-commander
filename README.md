@@ -47,47 +47,19 @@ In this quick demo we'll use [virtualbox](https://www.virtualbox.org/) and [vagr
 
 We'll assume you're known with these systems.
 
-
-## Code
-
-Checkout this code in your local environment.
-
+## Install
 ```
-git clone git@github.com:munstermedia/deploy-commander.git
+// On unix type machines
+pip install deploy-commander
 ```
 
-## Ubuntu
-
-You'll need to install the fabric python library. 
-On linux based system you'll need to run:
-
-```
-// Ubuntu
-sudo apt-get install fabric
-
-// Mac
-sudo pip install fabric
-```
-
-
-## Setup folders
-We'll need to create base folders for the configuration and templates.
-
-There is a skeleton structure available in the ./skeleton folder.
-This folder contains different examples you can use for different type of projects.
-
-Copy the example structure to get started.
-
-```
-cp ./.skelleton/example/ ./
-```
-
-> Please take a look at the settings and try to understand what is stored in these files.
-> More information can be found further on in this document.
 
 ## Start vagrant
 
+[Download vagrant file](https://github.com/munstermedia/deploy-commander/blob/master/Vagrantfile)
+
 ```
+// Run in root
 vagrant up
 ```
 
@@ -249,7 +221,43 @@ Config for the development project.
 This will overwrite the ./.config/default.json, default.json and development.json
 
 
-> For more information about the configuration options please see the examples in ./skeleton
+> For more information about the configuration options please see the examples in ./config
 
 - - -
+
+# Source code setup
+
+## Code
+
+Checkout this code in your local environment.
+
+```
+git clone git@github.com:munstermedia/deploy-commander.git
+```
+
+## Ubuntu
+
+You'll need to install the fabric python library. 
+On linux based system you'll need to run:
+
+```
+// Ubuntu
+sudo apt-get install fabric
+
+// Mac
+sudo pip install fabric
+```
+
+
+## Setup folders
+We'll need to create base folders for the configuration and templates.
+
+There is a structure available in the ./config folder.
+This folder contains different examples you can use for different type of projects.
+
+Copy the example structure to get started.
+
+> Please take a look at the settings and try to understand what is stored in these files.
+> More information can be found further on in this document.
+
 
