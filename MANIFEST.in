@@ -1,3 +1,5 @@
 include *.txt *.py
 recursive-include deploy_commander *.py
 recursive-include deploy_commander *.md
+recursive-include deploy_commander/.config *.*
+recursive-include deploy_commander/.template *.*
