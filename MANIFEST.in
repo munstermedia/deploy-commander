@@ -1,2 +1,3 @@
 include *.txt *.py
-recursive-include fabfile *.py
+recursive-include deploy_commander *.py
+recursive-include deploy_commander *.md

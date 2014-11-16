@@ -40,16 +40,16 @@ def environment(environment):
     env.params['environment'] = environment
     
     # Load default
-    load_config('./.config/default.json')
+    load_config('.config/default.json')
     
     # Load environment config
-    load_config('./.config/%s.json' % environment)
+    load_config('.config/%s.json' % environment)
     
     # Load default project settings
-    load_config('./.config/%s/default.json' % (env.params['project']))
+    load_config('.config/%s/default.json' % (env.params['project']))
     
     # Load specific env settings
-    load_config('./.config/%s/%s.json' % (env.params['project'], environment))
+    load_config('.config/%s/%s.json' % (env.params['project'], environment))
     
     # Post process params from params
     if env.post_params:
@@ -64,14 +64,24 @@ def load_config(filename):
     Load config by filename and set it...
     """
     
+    cwd = os.getcwd()
+    
+    current_path_config_file = "%s/%s" % (cwd, filename)  
+    
+    if not os.path.isfile(current_path_config_file):
+        print(yellow("No config `%s` found in current path. It will fallback to deploy commander defaults" % (current_path_config_file)))
+        final_config = "%s/%s" % (os.environ['DEPLOY_COMMANDER_ROOT_PATH'], filename)
+    else:
+        final_config = current_path_config_file
+        
     # Check if filename exists, if not abort...
-    if os.path.isfile(filename):
+    if os.path.isfile(final_config):
         # Load config and process with set_config
-        print(green("Load config %s" % (filename)))
-        with open(filename) as json_file:
+        print(green("Load config %s" % (final_config)))
+        with open(final_config) as json_file:
             set_config(json.load(json_file))
     else:
-        abort(red("Cannot read file `%s` it does not exist!" % filename))
+        abort(red("Cannot read file `%s` it does not exist!" % final_config))
 
 def update(orig_dict, new_dict):
     """

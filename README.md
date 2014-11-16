@@ -27,15 +27,15 @@ On a production setup it's best to create a dedicated environment to manage your
 ## General command
 	
 ```
-fab go run:<action>
+deploy-commander go run:<action>
 ```
 
-> You'll be asked for the project and the environment when you run the command
+> You'll be asked for the project and the environment when you run the command.
 
 ## Best practices
 
-- Don't commit credentials in the config files, especially with credentials
-- For production use a dedicated deployment environment 
+- Don't commit credentials in the config files, especially with passwords.
+- For production use a dedicated deployment environment.
 
 - - -
 
@@ -72,7 +72,7 @@ The newly created ubuntu box need some stuff to be installed.
 To do this we've created an action called `install-server`
 
 ```
-fab go run:install-server
+deploy-commander go run:install-server
 ```
 
 ### Install app
@@ -83,8 +83,7 @@ Run the command and yust leave the prompt empty... it will use the default setti
 * environment : development
 
 ```
-fab go run:install-app
-
+deploy-commander go run:install-app
 ```
 
 This will create base folders and clone the repo into a development enviroment
@@ -96,7 +95,7 @@ This will create base folders and clone the repo into a development enviroment
 Now we're gonna deploy the source code and use the master branch to do so.
 
 ```
-fab go run:deploy-app
+deploy-commander go run:deploy-app
 ```
 
 This wil prompt you with the same like install but it will ask for a tag.

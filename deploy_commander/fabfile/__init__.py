@@ -1,5 +1,6 @@
+import utils
+import settings
 
-import app
 from importlib import import_module
 
 from fabric.api import task
@@ -13,20 +14,14 @@ from fabric.contrib.files import exists
 from fabric.operations import sudo
 from fabric.operations import local
 
-from settings import environment
-from settings import project
-
 from fabric.colors import red
 from fabric.colors import yellow
 from fabric.colors import green
 
-from fabfile import utils
 import pprint
 
 from fabric.contrib.console import confirm
 from fabric.operations import prompt
-
-import settings
 
 @task
 def go():
@@ -62,7 +57,7 @@ def run(action):
             if not confirm(current_action['confirm']):
                 continue
             
-        script = 'fabfile.command.%s' % current_action['command']
+        script = 'deploy_commander.command.%s' % current_action['command']
         p, m = script.rsplit('.', 1)
 
         mod = import_module(p)
