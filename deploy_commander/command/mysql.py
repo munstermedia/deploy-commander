@@ -28,22 +28,24 @@ def backup_db(params):
     This command backups the database based on a backup folder
     The output dump will be a iso date formatted filename
     """
+    for key, value in params.iteritems():
+        params[key] = value % env.params
     
     command = """
     mysqldump -h %(host)s -u %(user)s --password='%(password)s' %(database)s > %(backup_file)s
     """
     
-    backup_path = params['backup_path'] % env.params
+    backup_path = params['backup_path']
     utils.ensure_path(backup_path)
     
     backup_file = "%s/%s.sql" % (backup_path,
                                  datetime.datetime.now().isoformat())
         
     # Make params
-    command_params = {'user': params['user'] % env.params,
-                      'password': params['password'] % env.params,
-                      'database': params['database'] % env.params,
-                      'host': params['host'] % env.params,
+    command_params = {'user': params['user'],
+                      'password': params['password'],
+                      'database': params['database'],
+                      'host': params['host'],
                       'backup_file':backup_file}
     
     with hide('running', 'stdout', 'stderr'):
@@ -55,15 +57,17 @@ def query(params):
     """
     Query command for executing raw queries
     """
+    for key, value in params.iteritems():
+        params[key] = value % env.params
     
     command = """
     mysql -h %(host)s -u %(user)s --password='%(password)s' -e '%(query)s'
     """
     # Make params
-    command_params = {'user': params['user'] % env.params,
-                      'password': params['password'] % env.params,
-                      'host': params['host'] % env.params,
-                      'query':params['query'] % env.params}
+    command_params = {'user': params['user'],
+                      'password': params['password'],
+                      'host': params['host'],
+                      'query':params['query']}
     
     run(command % command_params)
     
@@ -73,17 +77,19 @@ def import_file(params):
     """
     Given the database credentials and a import file it will import into a database
     """
-    
+    for key, value in params.iteritems():
+        params[key] = value % env.params
+        
     command = """
     mysql -h %(host)s -u %(user)s --password='%(password)s' %(database)s  < %(import_file)s
     """
         
     # Make params
-    command_params = {'user': params['user'] % env.params,
-                      'password': params['password'] % env.params,
-                      'database': params['database'] % env.params,
-                      'host': params['host'] % env.params,
-                      'import_file':params['import_file'] % env.params}
+    command_params = {'user': params['user'],
+                      'password': params['password'],
+                      'database': params['database'],
+                      'host': params['host'],
+                      'import_file':params['import_file']}
     
     with hide('running', 'stdout', 'stderr'):
         run(command % command_params)
@@ -95,13 +101,15 @@ def restore_db(params):
     Restore database from a backup folder. This will first list available backups, 
     and then you'll be prompted to enter the version you'll like to import
     """
-    
+    for key, value in params.iteritems():
+        params[key] = value % env.params
+        
     command = """
     mysql -h %(host)s -u %(user)s --password='%(password)s' %(database)s  < %(backup_file)s
     """
     
-    db_backup_path = params['backup_path'] % env.params
-    if not 'version' in params:
+    db_backup_path = params['backup_path']
+    if not 'version' in params or params['version'] == '':
         run('ls -las %s' % db_backup_path)
         params['version'] = prompt("Enter backup version to restore :")
     
@@ -114,10 +122,10 @@ def restore_db(params):
     
         
     # Make params
-    command_params = {'user': params['user'] % env.params,
-                      'password': params['password'] % env.params,
-                      'database': params['database'] % env.params,
-                      'host': params['host'] % env.params,
+    command_params = {'user': params['user'],
+                      'password': params['password'],
+                      'database': params['database'],
+                      'host': params['host'],
                       'backup_file':backup_file}
     
     with hide('running', 'stdout', 'stderr'):
