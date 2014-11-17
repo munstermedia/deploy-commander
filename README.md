@@ -1,9 +1,9 @@
-#deploy-commander
+# deploy-commander
 
 > One app to rule all your apps!
 
 A tool for setting up a different environments like a DTAP.
-Deploy commander is build on python/fabric, but can be used for any project.
+Deploy commander is build directly on python/fabric, but can be used for any project.
 
 ** Note : This application is still in it's development phase. **
 

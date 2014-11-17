@@ -59,7 +59,8 @@ def run(action):
             
         script = 'deploy_commander.command.%s' % current_action['command']
         p, m = script.rsplit('.', 1)
-
+        print  p
+        
         mod = import_module(p)
         command = getattr(mod, m)
          

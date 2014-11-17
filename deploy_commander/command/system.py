@@ -43,8 +43,11 @@ def upload_template(params):
     
     cwd = os.getcwd()
     
-    source = params['source'] % env.params
-    target = params['target'] % env.params
+    for key, value in params.iteritems():
+        params[key] = value % env.params
+    
+    source = params['source']
+    target = params['target']
     
     if 'use_sudo' in params:
         use_sudo = params['use_sudo']
