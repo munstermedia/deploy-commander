@@ -56,8 +56,6 @@ def environment(environment):
         for param_key, param_value in env.post_params.iteritems():
             env.params[param_key] = param_value % env.params
             print(yellow("Set post param `%s` to `%s`" % (param_key, env.params[param_key])))
-    
-    
 
 def load_config(filename):
     """

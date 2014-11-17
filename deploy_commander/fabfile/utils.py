@@ -42,5 +42,7 @@ def init_env_settings(group):
     Set setting by enviroment and group.
     This will be used for generic settings that must be used by the system.
     """
-    env.password = env.roledefs[group]["config"][env.host]["ssh_password"]
-    env.user = env.roledefs[group]["config"][env.host]["ssh_user"]
+
+    if env.host in env.roledefs[group]["config"]:
+        env.password = env.roledefs[group]["config"][env.host]["ssh_password"]
+        env.user = env.roledefs[group]["config"][env.host]["ssh_user"]
