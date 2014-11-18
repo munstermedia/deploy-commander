@@ -1,8 +1,0 @@
-{
-	"site":{
-		"domain":"www.yoursite.com"
-	},
-	"git":{
-		"repo_url":"git@bitbucket.org:demo/demo.git"
-	}
-}
