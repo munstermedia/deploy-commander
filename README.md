@@ -2,7 +2,7 @@
 
 > One app to rule all your apps!
 
-A tool for setting up a different environments like a DTAP.
+A tool for setting up a different environments most used for managing DTAP flows.
 Deploy commander is build directly on python/fabric, but can be used for any project.
 
 ** Note : This application is still in it's development phase. **
@@ -47,12 +47,14 @@ In this quick demo we'll use [virtualbox](https://www.virtualbox.org/) and [vagr
 
 We'll assume you're known with these systems.
 
+We only tested this system on unix like machines, like Ubuntu and MacOS.
+
+
 ## Install
 ```
 // On unix type machines
 pip install deploy-commander
 ```
-
 
 ## Start vagrant
 
@@ -74,6 +76,9 @@ To do this we've created an action called `install-server`
 ```
 deploy-commander go run:install-server
 ```
+
+What just happened?
+
 
 ### Install app
 We're gonna install a new app from the defined repo.
@@ -101,11 +106,18 @@ deploy-commander go run:deploy-app
 This wil prompt you with the same like install but it will ask for a tag.
 The default tag is `master`
 
+### Rollback app
+
+Now we're gonna rollback the app...
+
+```
+deploy-commander go run:rollback-app
+```
+
 - - -
 
-
-
 ## Configuration
+
 The configuration files are located in the ./config folder.
 
 These are json structured configs where you can setup stuff like ssh credentials, symlinks, mysql backup and much more...
@@ -147,7 +159,7 @@ This is an example structure that we'll explain later on:
 		"deploy":{
 			"title":"Deploy project",
 			"commands":{
-				"your-unique-id:{
+				"your-own-description":{
 					"sequence":1,
 					"command":"command.action",
 					"params":{
@@ -184,7 +196,7 @@ In the example we used a path, this is a good way to manage base path's for your
 
 Actions define a set of commands to execute. This is one of the core elements of the system. The key defined will be usable in the command line execute. (fab go run:<action>)
 
-* title : General text to parse when executing
+* description : General text to parse when executing
 * commands : Many command definitions to execute
 
 ##### commands
@@ -195,10 +207,383 @@ We're continuessly developing on these commands to give you as much features.
 * sequence : Numeric value in which order the commands will be executed
 * command : Main command to execute <package>.<action>
 * params : Set of key/values for the command
+* confirm (optional) : Asks if you want to execute this command.. you can enter an own question as it's value
+* description (optional) : Can be used to describe the command
 
-> You can use generic params in the command params to prevent repetition
+> You can use generic params in the command params to prevent repetition.
+> So if you define a key/value in the 'main' params you can use this like '%(param)s'
+
+### Commands
+
+#### system.symlink
+```
+"your-own-description":{
+	"sequence":1,
+	"command":"system.symlink",
+	"params":{
+		"source":"/path/where/to/create/symlink",
+		"target":"/path/where/the/symlink/should/link"
+	}
+}
+```
+
+Functionality:
+
+- Creates symlink, if symlink allready exists it will remove the existing one.
+
+#### system.command
+```
+"list-source":{
+	"sequence":1,
+	"command":"system.command",
+	"params":{
+		"command":"ls -las /home"
+	}
+}
+```
+
+Functionality:
+
+- Run command on server
+
+#### system.upload_template
+```
+"upload-environment-config":{
+	"sequence":1,
+	"command":"system.upload_template",
+	"params":{
+		"source":"some/file/in/the/template/path.ini",
+		"target":"/path/where/to/copy/on/the/server.ini",
+		"yourvar_1":"whatever",
+		"yourvar_2":"you-want"
+	}
+}
+```
+
+Functionality:
+- Uploads template from .template folder/file to server.
+- Renders the template with params.. you can use {{ param_name }} in the template. In this example the path.ini could contain the param {{ yourvar_1 }}.
+- Unlimited own params.. source and target are required
 
 
+#### aptget.install
+
+```
+"your-own-description":{
+	"sequence":1,
+	"command":"aptget.install",
+	"params":{
+		"package":"git"
+	}
+}
+```
+
+Functionality:
+
+- Runs 'apt-get install -y (package)'
+
+
+#### git.install_repo
+
+```
+"your-own-description":{
+	"sequence":1,
+	"command":"git.install_repo",
+	"params":{
+		"repo_path":"/full/path/to/repo",
+		"repo_url":"https://github.com/munstermedia/demo.git"
+	}
+}
+```
+Functionality:
+
+- Checks if repo path exists.. if not it will ask to reinstall and it will reset/remove all existing code in the path.
+- Clones the repository to the path
+
+
+
+#### git.deploy_tag
+```
+"your-own-description":{
+	"sequence":1,
+	"command":"git.deploy_tag",
+	"params":{
+		"repo_path":"/full/path/to/repo",
+		"tag_path":"/full/path/to/source/%(tag)s",
+		("tag":"deploy-0.0.1")
+	}
+}
+```
+
+Functionality:
+
+- Tag in params is optional, you should leave it empty by default unless you have a good reason for it.
+- If tag it's not set (empty) it will list the available tags and prompt for input.
+- If repo path is not existing it will exit. You'll need a valid cloned repo path
+- If tag path is allready existing it will remove it and all it's content. And deploy a completely new version.
+- Allow updates submodules by running 'git submodule update'
+
+
+#### mysql.install_mysql
+```
+"your-own-description":{
+	"sequence":1,
+	"command":"mysql.install_server"
+}
+```
+
+Functionality:
+
+- Runs apt-get -y install mysql-server, with : DEBIAN_FRONTEND='noninteractive' (no prompt)
+
+
+#### mysql.backup_db
+```
+"your-own-description":{
+	"sequence":1,
+	"command":"mysql.backup_db",
+	"params":{
+		"host":"localhost",
+		"user":"root",
+		"password":"root",
+		"database":"your-database",
+		"backup_path":"/full/path/to/database/backup/path"
+	}
+}
+```
+
+Funcationality:
+
+- Runs mysqldump and creates a mysql file in the backup path ... (date isoformat named)
+
+#### mysql.query
+```
+"your-own-description":{
+	"sequence":1,
+	"command":"mysql.query",
+	"params":{
+		"host":"localhost",
+		"user":"root",
+		"password":"root",
+		"query":"CREATE DATABASE IF NOT EXISTS your-db-name"
+	}
+}
+```
+
+Functionality:
+
+- Execute a raw query thru the command line
+
+
+#### mysql.import_file
+```
+"your-own-description":{
+	"sequence":3,
+	"command":"mysql.import_file",
+	"params":{
+		"host":"localhost",
+		"user":"root",
+		"password":"root",
+		"database":"your-database",
+		"import_file":"/full/path/to/repo/.data/install.sql"
+	}
+}
+```
+
+Functionality:
+
+- Executes : 'mysql -h %(host)s -u %(user)s --password='%(password)s' %(database)s  < %(import_file)s'
+
+
+#### mysql.restore_db
+```
+"your-own-description":{
+	"sequence":2,
+	"command":"mysql.restore_db",
+	"params":{
+		"host":"localhost",
+		"user":"root",
+		"password":"password",
+		"database":"your-database",
+		"backup_path":"/full/path/to/database/backup/path",
+		("version":"sql-version")
+	}
+}
+```
+
+Functionality:
+
+- By default the version is left empty, but you can force this.
+- It will list the versions and prompt for a version to restore when params is empty.
+- Requires valid backup version
+
+### Full default.json example
+```
+{
+	"roledefs":{
+		"webserver": {
+			"hosts": ["192.168.56.111"],
+   			"config": {
+				"192.168.56.111":{
+					"ssh_password":"vagrant",
+					"ssh_user":"vagrant"
+				}
+			}
+		}
+	},
+	"environments":{
+		"development":"dev",
+		"production":"prod",
+		"staging":"stg",
+		"testing":"tst"
+	},
+	"params":{
+		"domain":"demo.com",
+		"user":"vagrant"
+		"project_database_host":"localhost",
+		"project_database_user":"root",
+		"project_database_password":"root",
+		"project_database_name":"example"
+	},
+	"post_params":{
+		"base_path":"/home/%(user)s/%(environment)s/%(domain)s/deploy"
+	},
+	"actions":{
+		"install-server":{
+			"description":"Example setup development server",
+			"commands":{
+				"install-base":{
+					"sequence":1,
+					"command":"aptget.install",
+					"params":{
+						"package":"git"
+					}
+				},
+				"install-mysql":{
+					"sequence":2,
+					"command":"mysql.install_server"
+				}
+			}
+		},
+		"install-app":{
+			"description":"Install application on server",
+			"commands":{
+				"git-clone":{
+					"sequence":1,
+					"command":"git.clone",
+					"description":"First repo cloning...",
+					"params":{
+						"repo_path":"%(base_path)s/repo",
+						"repo_url":"will-be-overwritten-by-project"
+					}
+				},
+				"create-mysql-db":{
+					"sequence":2,
+					"command":"mysql.query",
+					"params":{
+						"host":"%(project_database_host)s",
+						"user":"%(project_database_user)s",
+						"password":"%(project_database_password)s",
+						"query":"CREATE DATABASE IF NOT EXISTS %(project_database_name)s"
+					}
+				},
+				"import-project-db":{
+					"sequence":3,
+					"command":"mysql.import_file",
+					"params":{
+						"host":"%(project_database_host)s",
+						"user":"%(project_database_user)s",
+						"password":"%(project_database_password)s",
+						"database":"%(project_database_name)s",
+						"import_file":"%(base_path)s/repo/.data/install.sql"
+					}
+				}
+			}
+		},
+		"deploy-app":{
+			"description":"Deploy project",
+			"commands":{
+				"git-deploy-tag":{
+					"sequence":1,
+					"command":"git.deploy_tag",
+					"params":{
+						"repo_path":"%(base_path)s/repo",
+						"tag_path":"%(base_path)s/source/%(tag)s"
+					}
+				},
+				"upload-environment-config":{
+					"sequence":2,
+					"command":"system.upload_template",
+					"params":{
+						"source":"demo/config.php",
+						"target":"%(base_path)s/source/%(tag)s/config.php",
+						"dbname":"%(project_database_name)s",
+						"dbpassword":"%(project_database_password)s",
+						"dbuser":"%(project_database_user)s"
+					}
+				},
+				"mysql-backup":{
+					"sequence":3,
+					"command":"mysql.backup_db",
+					"params":{
+						"host":"%(project_database_host)s",
+						"user":"%(project_database_user)s",
+						"password":"%(project_database_password)s",
+						"database":"%(project_database_name)s",
+						"backup_path":"%(base_path)s/db_backup"
+					}
+				},
+				"list-source":{
+					"sequence":4,
+					"command":"system.command",
+					"params":{
+						"command":"ls -las %(base_path)s/source/%(tag)s"
+					}
+				},
+				"symlink-current-folder":{
+					"sequence":5,
+					"command":"system.symlink",
+					"params":{
+						"source":"%(base_path)s/current",
+						"target":"%(base_path)s/source/%(tag)s"
+					}
+				}
+			}
+		},
+		"rollback-app":{
+			"description":"Rollback application",
+			"input_params":{
+				"tag":{
+					"param":"tag",
+					"prompt":"Rollback to which tag?"
+				}
+			},
+			"commands":{
+				"symlink-current-folder":{
+					"sequence":1,
+					"command":"system.symlink",
+					"params":{
+						"source":"%(base_path)s/current",
+						"target":"%(base_path)s/source/%(tag)s"
+					}
+				},
+				"mysql-import":{
+					"sequence":2,
+					"command":"mysql.restore_db",
+					"confirm":"Restore a database backup?",
+					"params":{
+						"host":"$(project_database_host}s",
+						"user":"$(project_database_user}s",
+						"password":"$(project_database_password}s",
+						"database":"$(project_database_name}s",
+						"backup_path":"%(base_path)s/db_backup"
+					}
+				}
+			}
+		}
+	}
+}
+```
 
 #### Main settings
 
@@ -220,13 +605,14 @@ Config for the development project.
 This will overwrite the ./.config/default.json, default.json and development.json
 
 
-> For more information about the configuration options please see the examples in ./config
-
+> For more information about the configuration options please see the examples in ./config in the github repo.
 - - -
 
 # Source code setup
 
-## Code
+If you wan't to help developing... you can follow the next steps.
+
+## Checkout
 
 Checkout this code in your local environment.
 
@@ -248,15 +634,14 @@ sudo pip install fabric
 ```
 
 
-## Setup folders
-We'll need to create base folders for the configuration and templates.
+## Code
 
-There is a structure available in the ./config folder.
-This folder contains different examples you can use for different type of projects.
+###/fabfile/
 
-Copy the example structure to get started.
+This folder contains the main init files that will setup the base of the system.
+One of the main features is the settings.py that will load the configs
+Utils are generic utils that can be used by all commands
 
-> Please take a look at the settings and try to understand what is stored in these files.
-> More information can be found further on in this document.
+###/command/
 
-
+This folder containts the commands. These are mapped <filename>.<method> in the config.
