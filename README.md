@@ -53,7 +53,9 @@ We only tested this system on unix like machines, like Ubuntu and MacOS.
 ## Install
 ```
 // On unix type machines
-pip install deploy-commander
+sudo apt-get install python-pip
+
+sudo pip install deploy-commander
 ```
 
 ## Start vagrant
@@ -676,26 +678,37 @@ Functionality:
 
 #### Main settings
 
-##### ./.config/default.json
+##### ./config/default.json
 This is the base config. Everything will be extended from this config.
 
-##### ./.config/*environment*.json
+##### ./config/*environment*.json
 Main config for development environments. 
-This will overwrite the ./.config/default.json
+This will overwrite the ./config/default.json
 
 #### Project settings
 
-##### ./.config/*project*/default.json
+##### ./config/*project*/default.json
 Main Config for the development project. 
-This will overwrite the ./.config/default.json, and development.json
+This will overwrite the ./config/default.json, and development.json
 
-##### ./.config/*project*/*environment*.json
+##### ./config/*project*/*environment*.json
 Config for the development project. 
-This will overwrite the ./.config/default.json, default.json and development.json
+This will overwrite the ./config/default.json, default.json and development.json
 
 
 > For more information about the configuration options please see the examples in ./config in the github repo.
 - - -
+
+## Templates
+
+You can place your templates in a template folder in the root of your deployment app.
+
+```
+./template/[your/path/to/file.txt]
+```
+
+So when using the system.upload_template command you can enter the [your/path/to/file.txt] part as your source
+
 
 # Source code setup
 

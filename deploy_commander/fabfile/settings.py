@@ -40,16 +40,16 @@ def environment(environment):
     env.params['environment'] = environment
     
     # Load default
-    load_config('.config/default.json')
+    load_config('config/default.json')
     
     # Load environment config
-    load_config('.config/%s.json' % environment)
+    load_config('config/%s.json' % environment)
     
     # Load default project settings
-    load_config('.config/%s/default.json' % (env.params['project']))
+    load_config('config/%s/default.json' % (env.params['project']))
     
     # Load specific env settings
-    load_config('.config/%s/%s.json' % (env.params['project'], environment))
+    load_config('config/%s/%s.json' % (env.params['project'], environment))
     
     # Post process params from params
     if env.post_params:
