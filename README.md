@@ -79,6 +79,11 @@ deploy-commander go run:install-server
 
 What just happened?
 
+- Installed mysql
+- Installed git
+
+(Note it might prompt for password, just enter)
+
 
 ### Install app
 We're gonna install a new app from the defined repo.
@@ -91,7 +96,12 @@ Run the command and yust leave the prompt empty... it will use the default setti
 deploy-commander go run:install-app
 ```
 
-This will create base folders and clone the repo into a development enviroment
+What just happened?
+
+- This will create base folders and clone the repo into a development enviroment
+- We've cloned a repo into `/home/<user>/<env>/repo`
+- We've created a database
+- We've installed the default install.sql from repo
 
 > Try to enter different environments, in this example they all point to the vagrant box, but for your production it can point to different servers.
 
@@ -106,6 +116,13 @@ deploy-commander go run:deploy-app
 This wil prompt you with the same like install but it will ask for a tag.
 The default tag is `master`
 
+What just happened?
+
+- We've updated `/home/<user>/<env>/repo`
+- We've created `/home/<user>/<env>/source/<tag>` from the repo
+- We've backupped the database in `/home/<user>/<env>/db_backup`
+- We've created a symlink `/home/<user>/<env>/current` to `/home/<user>/<env>/source/<tag>`
+
 ### Rollback app
 
 Now we're gonna rollback the app...
@@ -113,6 +130,11 @@ Now we're gonna rollback the app...
 ```
 deploy-commander go run:rollback-app
 ```
+
+What just happened?
+
+- We've removed the old symlink `/home/<user>/<env>/current` and linked it to the new tag you've entered.
+- If we answered yes to import database, we could rollback the database to another version.
 
 - - -
 
@@ -133,7 +155,74 @@ When running a deployment for a project it will first load in sequence:
 3.    Project config (project/default.json)
 4.    Project environment config (production.json)
 
+Say you have the following:
 
+```
+// default.json
+{"data":{
+	"one":{
+		"var_1":"1",
+		"var_2":"2"
+	},
+	"two":{
+		"var_3":"3",
+		"var_4":"4"
+	}
+}
+
+// development.json
+{"data":{
+	"env":"development"
+	"one":{
+		"var_1":"2",
+	},
+	"two":{
+		"var_3":"4",
+	}
+}
+
+// project/default.json
+{"data":{
+	"debug":"False",
+	"one":{
+		"var_3":"3",
+		"var_4":"4"
+	},
+	"two":{
+		"var_2":"2",
+		"var_1":"1"
+	}
+}
+
+// project/development.json
+{"data":{
+	"debug":"True"
+}
+
+```
+
+This will result in the following final setting:
+
+```
+{"data":{
+	"debug":"True",
+	"env":"development",
+	"one":{
+		"var_1":"2",
+		"var_2":"2",
+		"var_3":"3",
+		"var_4":"4"
+	},
+	"two":{
+		"var_1":"1",
+		"var_2":"2",
+		"var_3":"4",
+		"var_4":"4"
+	}
+}
+```
+
+ 
 ##### Settings structure
 
 The basic foundation of this system are actions and commands. You can execute actions, and these actions have commands to execute.
