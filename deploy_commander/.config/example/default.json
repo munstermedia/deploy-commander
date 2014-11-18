@@ -1,0 +1,19 @@
+{
+	"params":{
+		"project_database_host":"localhost",
+		"project_database_user":"root",
+		"project_database_password":"",
+		"project_database_name":"example"
+	},
+	"actions":{
+		"install-app":{
+			"commands":{
+				"git-clone":{
+					"params":{
+						"repo_url":"https://github.com/munstermedia/demo.git"
+					}
+				}
+			}
+		}
+	}
+}

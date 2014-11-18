@@ -56,9 +56,7 @@ docs/_build/
 target/
 
 # Hidden project files
-.config/
 .vagrant/
-.templates/
 
 # Eclipse
 .project
