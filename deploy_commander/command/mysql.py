@@ -12,6 +12,7 @@ from fabric.context_managers import shell_env
 from fabric.contrib.files import exists
 from fabric.colors import green
 from fabric.colors import red
+from fabric.context_managers import cd
 
 from fabfile import utils
 
@@ -28,8 +29,7 @@ def backup_db(params):
     This command backups the database based on a backup folder
     The output dump will be a iso date formatted filename
     """
-    for key, value in params.iteritems():
-        params[key] = value % env.params
+    params = utils.format_params(params)
     
     command = """
     mysqldump -h %(host)s -u %(user)s --password='%(password)s' %(database)s > %(backup_file)s
@@ -57,8 +57,7 @@ def query(params):
     """
     Query command for executing raw queries
     """
-    for key, value in params.iteritems():
-        params[key] = value % env.params
+    params = utils.format_params(params)
     
     command = """
     mysql -h %(host)s -u %(user)s --password='%(password)s' -e '%(query)s'
@@ -77,9 +76,9 @@ def import_file(params):
     """
     Given the database credentials and a import file it will import into a database
     """
-    for key, value in params.iteritems():
-        params[key] = value % env.params
-        
+    
+    params = utils.format_params(params)
+     
     command = """
     mysql -h %(host)s -u %(user)s --password='%(password)s' %(database)s  < %(import_file)s
     """
@@ -110,8 +109,10 @@ def restore_db(params):
     
     db_backup_path = params['backup_path']
     if not 'version' in params or params['version'] == '':
-        run('ls -las %s' % db_backup_path)
-        params['version'] = prompt("Enter backup version to restore :")
+        with cd(db_backup_path):
+            run('ls -1')
+        
+        params['version'] = prompt("Enter backup version to restore (without .sql) :")
     
     backup_file = "%s/%s.sql" % (db_backup_path, params['version'])
         

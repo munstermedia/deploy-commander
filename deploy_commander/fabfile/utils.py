@@ -10,6 +10,14 @@ from fabric.colors import yellow
 from fabric.contrib.files import exists
 
 
+def format_params(params):
+    """
+    Take a dict of params and process them with the environment params
+    """
+    for key, value in params.iteritems():
+        params[key] = value % env.params
+    return params
+
 def upload_template(src, dest, *args, **kwargs):
     """
     Wrapper around Fabric's upload_template that sets +r.

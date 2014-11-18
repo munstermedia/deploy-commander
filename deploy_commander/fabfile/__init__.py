@@ -38,11 +38,10 @@ def go():
 @task
 @roles('webserver')   
 def run(action):
-    
     utils.init_env_settings('webserver')
     
-    print(green(env.actions[action]['title']))
-    
+    if 'description' in env.actions[action]:
+        print(green(env.actions[action]['description']))
     
     if 'input_params' in env.actions[action]:
         for param_key, param_value in env.actions[action]['input_params'].items():
@@ -51,19 +50,26 @@ def run(action):
     ordered_actions = sorted(env.actions[action]['commands'].items(), key=lambda (k,v): v['sequence'])
     
     for key_action, current_action in ordered_actions:
-        print("Run `%s`" % key_action)
-       
+        if 'description' in current_action:
+            print(current_action['description'])
+        else:
+            print("Command `%s`" % key_action)
+        
         if 'confirm' in current_action:
             if not confirm(current_action['confirm']):
                 continue
             
         script = 'deploy_commander.command.%s' % current_action['command']
         p, m = script.rsplit('.', 1)
-        print  p
         
         mod = import_module(p)
         command = getattr(mod, m)
          
-        command(params = current_action['params'])
+        if 'params' in current_action:
+            params = current_action['params']
+        else:
+            params = {}
+        
+        command(params = params)
         
     
