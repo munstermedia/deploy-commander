@@ -10,7 +10,6 @@ from fabric.colors import yellow
 from fabric.colors import green
 from fabfile import utils
 
-
 def symlink(params):
     """
     Create a symlink command.
@@ -21,10 +20,10 @@ def symlink(params):
         print(yellow("Symlink `%s` exists and will be removed" % params['source']))
         run('rm %s' % params['source'])
     
-    command = "ln -s %s %s" % (source['target'], params['source'])
+    command = "ln -s %s %s" % (params['target'], params['source'])
     run(command)
     
-    print(green("Symlink from `%s` to `%s`." % (params['source'], source['target']))) 
+    print(green("Symlink from `%s` to `%s`." % (params['source'], params['target']))) 
 
 def command(params):
     """
@@ -32,6 +31,8 @@ def command(params):
     """
     command = params['command'] % env.params
     run(command)
+    
+    print(green("Command `%s` executed" % command)) 
 
 def upload_template(params):
     """
@@ -55,8 +56,8 @@ def upload_template(params):
     else:
         template_dir = "%s/template" % cwd
         
-    utils.upload_template(params['source'], source['target'],
+    utils.upload_template(params['source'], params['target'],
                           use_sudo=use_sudo, use_jinja=True, 
                           context=params, template_dir=template_dir)
     
-    print(green("Upload template from `%s/%s` to `%s`." % (template_dir, params['source'], source['target']))) 
+    print(green("Upload template from `%s/%s` to `%s`." % (template_dir, params['source'], params['target']))) 

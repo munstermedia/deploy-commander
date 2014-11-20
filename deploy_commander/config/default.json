@@ -10,12 +10,12 @@
 			}
 		}
 	},
-	"environments":{
-		"development":"dev",
-		"production":"prod",
-		"staging":"stg",
-		"testing":"tst"
-	},
+	"environments":[
+		"development",
+		"production",
+		"staging",
+		"testing"
+	],
 	"params":{
 		"domain":"demo.com",
 		"user":"vagrant",
@@ -151,10 +151,10 @@
 					"command":"mysql.restore_db",
 					"confirm":"Restore a database backup?",
 					"params":{
-						"host":"$(project_database_host}s",
-						"user":"$(project_database_user}s",
-						"password":"$(project_database_password}s",
-						"database":"$(project_database_name}s",
+						"host":"%(project_database_host)s",
+						"user":"%(project_database_user)s",
+						"password":"%(project_database_password)s",
+						"database":"%(project_database_name)s",
 						"backup_path":"%(base_path)s/db_backup"
 					}
 				}

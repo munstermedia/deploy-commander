@@ -7,8 +7,22 @@ from fabric.operations import sudo
 from fabric.operations import run
 from fabric.api import env
 from fabric.colors import yellow
+from fabric.colors import green
 from fabric.contrib.files import exists
+from fabric.context_managers import hide
 
+from os import listdir
+from os.path import isfile, join
+
+def print_double_line():
+    print("")
+    print(green("================================================================================================="))
+    print("")
+    
+def print_single_line():
+    print("")
+    print(green("-------------------------------------------------------------------------------------------------"))
+    print("")
 
 def format_params(params):
     """
@@ -37,10 +51,11 @@ def ensure_path(path, use_sudo=False):
         tmp_parts = parts[0:(i+1)]
         tmp_path = '/'.join(tmp_parts)
         if not exists(tmp_path):
-            if use_sudo:
-                sudo('mkdir %s' % tmp_path)
-            else:
-                run('mkdir %s' % tmp_path)
+            with hide('output', 'running'):
+                if use_sudo:
+                    sudo('mkdir %s' % tmp_path)
+                else:
+                    run('mkdir %s' % tmp_path)
                 
             print(yellow("Path `%s` did not exist and is created" % tmp_path))
 

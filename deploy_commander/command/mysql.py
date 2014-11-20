@@ -48,7 +48,7 @@ def backup_db(params):
                       'host': params['host'],
                       'backup_file':backup_file}
     
-    with hide('running', 'stdout', 'stderr'):
+    with hide('running'):
         run(command % command_params)      
     
     print(green("Mysql backup successfully stored in `%s`" % backup_file)) 
@@ -90,8 +90,7 @@ def import_file(params):
                       'host': params['host'],
                       'import_file':params['import_file']}
     
-    with hide('running', 'stdout', 'stderr'):
-        run(command % command_params)
+    run(command % command_params)
     
     print(green("Mysql file `%s` successfully imported." % command_params['import_file']))     
     
@@ -100,8 +99,7 @@ def restore_db(params):
     Restore database from a backup folder. This will first list available backups, 
     and then you'll be prompted to enter the version you'll like to import
     """
-    for key, value in params.iteritems():
-        params[key] = value % env.params
+    params = utils.format_params(params)
         
     command = """
     mysql -h %(host)s -u %(user)s --password='%(password)s' %(database)s  < %(backup_file)s
@@ -110,17 +108,30 @@ def restore_db(params):
     db_backup_path = params['backup_path']
     if not 'version' in params or params['version'] == '':
         with cd(db_backup_path):
-            run('ls -1')
+            list = run('ls -1')
         
-        params['version'] = prompt("Enter backup version to restore (without .sql) :")
+        versions = []
+        
+        print(green("Available backups :"))
+        print("")
+        
+        for mysql_file in list.split('\n'):
+            mysql_version = mysql_file.replace('.sql', '')
+            versions.append(mysql_version)
+            print("- %s" % mysql_version)
+        
+        print("")
+        version = prompt("Enter backup version to restore :", default=versions[-1])
+        print("")
+        
+        if version not in versions:
+            print(red("Invalid backup version..."))
+            print("")
+            restore_db(params)
+        
+        params['version'] = version
     
     backup_file = "%s/%s.sql" % (db_backup_path, params['version'])
-        
-    if not exists(backup_file):
-        print(red("Invalid backup version..."))
-        del params['version']
-        restore_db(params)
-    
         
     # Make params
     command_params = {'user': params['user'],
@@ -129,7 +140,7 @@ def restore_db(params):
                       'host': params['host'],
                       'backup_file':backup_file}
     
-    with hide('running', 'stdout', 'stderr'):
-        run(command % command_params)
+
+    run(command % command_params)
     
     print(green("Mysql backup `%s` successfully restored." % backup_file)) 

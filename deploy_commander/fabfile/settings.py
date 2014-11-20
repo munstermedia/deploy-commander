@@ -20,36 +20,28 @@ env.actions = {}
 env.connection_attempts = 3
 env.timeout = 30
 
-@task
-def project(project):
+
+def init():
     """
-    Quick method to set the project
+    Default init
     """
-    if not project:
-        abort(red("Enter project name"))
+    # Load default
+    load_config('config/default.json')
     
-    env.params['project'] = project
-    
-@task
-def environment(environment): 
+
+def environment(): 
     """
     Load environment settings and process the post_params
     """
     
-    # Set environment settings
-    env.params['environment'] = environment
-    
-    # Load default
-    load_config('config/default.json')
-    
     # Load environment config
-    load_config('config/%s.json' % environment)
+    load_config('config/%s.json' % env.params['environment'])
     
     # Load default project settings
     load_config('config/%s/default.json' % (env.params['project']))
     
     # Load specific env settings
-    load_config('config/%s/%s.json' % (env.params['project'], environment))
+    load_config('config/%s/%s.json' % (env.params['project'], env.params['environment']))
     
     # Post process params from params
     if env.post_params:
@@ -67,19 +59,12 @@ def load_config(filename):
     current_path_config_file = "%s/%s" % (cwd, filename)  
     
     if not os.path.isfile(current_path_config_file):
-        print(yellow("No config `%s` found in current path. It will fallback to deploy commander defaults" % (current_path_config_file)))
-        final_config = "%s/%s" % (os.environ['DEPLOY_COMMANDER_ROOT_PATH'], filename)
+        print(yellow("No config `%s` found." % current_path_config_file))
     else:
-        final_config = current_path_config_file
-        
-    # Check if filename exists, if not abort...
-    if os.path.isfile(final_config):
         # Load config and process with set_config
-        print(green("Load config %s" % (final_config)))
-        with open(final_config) as json_file:
+        print(green("Load config %s" % (current_path_config_file)))
+        with open(current_path_config_file) as json_file:
             set_config(json.load(json_file))
-    else:
-        abort(red("Cannot read file `%s` it does not exist!" % final_config))
 
 def update(orig_dict, new_dict):
     """
@@ -103,6 +88,8 @@ def set_config(config):
     This will check certain key/values in the configuration file and 
     tries to merge them together
     """
+    if config.has_key('environments'):
+        env.environments = config['environments']
     
     if config.has_key('roledefs'):
         for setting_name, setting_value in config['roledefs'].iteritems():
