@@ -7,7 +7,7 @@ setup(
     author=u'Ference van Munster',
     author_email='info@munstermedia.nl',
     packages=find_packages(),
-    install_requires=['fabric'],
+    install_requires=['fabric','simple-crypt'],
     url='http://github.com/munstermedia/deploy-commander',
     license='Free',
     description='Simple command line tool to command your deployments',

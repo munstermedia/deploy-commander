@@ -20,6 +20,7 @@ env.actions = {}
 env.connection_attempts = 3
 env.timeout = 30
 
+from fabric.state import output
 
 def init():
     """
@@ -88,6 +89,10 @@ def set_config(config):
     This will check certain key/values in the configuration file and 
     tries to merge them together
     """
+    if config.has_key('output'):
+        for setting_name, setting_value in config['output'].iteritems():
+            output[setting_name] = setting_value
+    
     if config.has_key('environments'):
         env.environments = config['environments']
     
@@ -103,3 +108,5 @@ def set_config(config):
          
     if config.has_key('actions'):
         env.actions = update(env.actions, config['actions'])
+
+def 

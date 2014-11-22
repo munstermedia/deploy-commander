@@ -33,7 +33,10 @@ from fabric.context_managers import hide
 
 from fabric.state import output
 
-print output
+from simplecrypt import encrypt
+from simplecrypt import decrypt
+
+
 output['running'] = False
 output['stdout'] = False
 
@@ -86,10 +89,7 @@ def set_environment():
         settings.environment()
     
  
-
-
-@task
-def go():
+def title_screen():
     print(green("================================================================================================="))
     print(green("    ____             __               ______                                          __         "))
     print(green("   / __ \___  ____  / /___  __  __   / ____/___  ____ ___  ____ ___  ____ _____  ____/ /__  _____"))
@@ -98,6 +98,47 @@ def go():
     print(green("/_____/\___/ .___/_/\____/\__, /   \____/\____/_/ /_/ /_/_/ /_/ /_/\__,_/_/ /_/\__,_/\___/_/     "))
     print(green("          /_/            /____/                                                                  "))
     print(green("================================================================================================="))
+    
+ 
+@task
+def encrypt_config():
+    title_screen()
+    password = prompt('Enter master password to decrypt the config with : ')
+    if not password:
+        abort("No valid password...")
+        
+    for root, dirs, files in os.walk("./config"):
+        for file in files:
+            if file.endswith(".json"):
+                file_path = os.path.join(root, file)
+                encrypt_file_path = "%s.enc" % file_path
+                with open(file_path) as json_config:
+                    ciphertext = encrypt(password, json_config.read())
+                    
+                    encrypted_file = open(encrypt_file_path, "w")
+                    encrypted_file.write(ciphertext)
+                    encrypted_file.close()
+
+@task   
+def decrypt_config():
+    title_screen()
+
+    password = prompt('Enter master password for decryption : ')
+    if not password:
+        abort("No valid password...")
+        
+    for root, dirs, files in os.walk("./config"):
+        for file in files:
+            if file.endswith(".enc"):
+                file_path = os.path.join(root, file)
+                
+                with open(file_path) as ciphertext:
+                    json_config = decrypt(password, ciphertext.read())
+                    print json_config
+
+@task
+def go():
+    title_screen()
     
     settings.init()
     
