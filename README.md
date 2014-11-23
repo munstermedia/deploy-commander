@@ -1,11 +1,16 @@
 # deploy-commander
 
-> One app to rule all your apps!
+> Continuous integration to rule all your applications !
 
 A tool for setting up a different environments most used for managing DTAP flows.
 Deploy commander is build directly on python/fabric, but can be used for any project.
 
 ** Note : This application is still in it's development phase. **
+
+## Soon
+
+- Attach github and bitbucket hooks to automate the deployment process
+
 
 ## Goals
 
@@ -15,6 +20,7 @@ This application is intented to easally manage deployments for multiple apps fro
 - Ease of rollbacks
 - Simplified deployment by simple configurations
 - Based on unix based environments
+- Continuous integration
 
 - - -
 
@@ -24,17 +30,11 @@ This is a command line tool to run on unix based environments.
 
 On a production setup it's best to create a dedicated environment to manage your deployments.
 
-## General command
-	
-```
-deploy-commander go run:<action>
-```
-
-> You'll be asked for the project and the environment when you run the command.
 
 ## Best practices
 
-- Don't commit credentials in the config files, especially with passwords.
+- In production encrypt the config files.
+- Make sure if you make a backup of copy on your dev, that it's secured.
 - For production use a dedicated deployment environment.
 
 - - -
@@ -58,16 +58,29 @@ sudo apt-get install python-pip
 sudo pip install deploy-commander
 ```
 
-## Start vagrant
+## Setup skeleton
 
-[Download vagrant file](https://github.com/munstermedia/deploy-commander/blob/master/Vagrantfile)
+The skeleton contains a basic setup with the following:
+
+- Vagrant file
+- Encrypted configs
+- Configs with different examples
+- Main config.dist for main configuration
+
 
 ```
-// Run in root
+// Clone skeleton
+git clone https://github.com/munstermedia/deploy-commander-skeleton.git
+
+// Go into repo
+cd deploy-commander-skelleton
+
+// Setup main config
+mv .config.dist .config
+
+// Load development server, a ubuntu box with ip 192.168.56.111
 vagrant up
 ```
-
-This will start a ubuntu box with ip 192.168.56.111 which we can use to deploy to.
 
 ## Lets go...
 
@@ -234,12 +247,6 @@ This is an example structure that we'll explain later on:
 
 ```
 {
-	"environments":{
-		"development":{},
-		"production":{},
-		"staging":{},
-		"testing":{}
-	},
 	"params":{
 		"some_param":"param/value"
 	},

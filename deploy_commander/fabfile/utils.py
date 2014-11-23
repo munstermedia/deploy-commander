@@ -7,12 +7,21 @@ from fabric.operations import sudo
 from fabric.operations import run
 from fabric.api import env
 from fabric.colors import yellow
+from fabric.colors import red
 from fabric.colors import green
 from fabric.contrib.files import exists
 from fabric.context_managers import hide
+from fabric.operations import prompt
+from fabric.utils import abort
 
 from os import listdir
 from os.path import isfile, join
+
+def get_master_password():
+    if not env.has_key('master_password') or len(env.master_password) == 0:
+        abort(red("No master password configurated"))
+    
+    return env.master_password
 
 def print_double_line():
     print("")

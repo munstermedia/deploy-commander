@@ -1,0 +1,181 @@
+import collections
+import json
+
+import os
+import utils
+
+from fabric.api import task
+from fabric.api import env
+from fabric.utils import abort
+
+from fabric.colors import red
+from fabric.colors import yellow
+from fabric.colors import green
+
+from simplecrypt import encrypt
+from simplecrypt import decrypt
+from simplecrypt import DecryptionException
+
+env.warn_only = False
+
+env.params = {}
+env.post_params = {}
+env.actions = {}
+
+env.connection_attempts = 3
+env.timeout = 30
+
+from fabric.state import output
+
+def init():
+    """
+    Default init
+    """
+    
+    env.environments = ["development", "production", "staging", "testing"]
+    # Load default
+    load_config('config/default.json')
+    
+
+def environment(): 
+    """
+    Load environment settings and process the post_params
+    """
+    
+    # Load environment config
+    load_config('config/%s.json' % env.params['environment'])
+    
+    # Load default project settings
+    load_config('config/%s/default.json' % (env.params['project']))
+    
+    # Load specific env settings
+    load_config('config/%s/%s.json' % (env.params['project'], env.params['environment']))
+    
+    # Post process params from params
+    if env.post_params:
+        for param_key, param_value in env.post_params.iteritems():
+            env.params[param_key] = param_value % env.params
+            print(yellow("Set post param `%s` to `%s`" % (param_key, env.params[param_key])))
+
+def write_encrypted_config(file_path, config):
+    if file_path.endswith(".json"):
+        encrypt_file_path = "%s.encrypt" % file_path
+        json_config = dicttoconfig(config)
+        with open(file_path) as encrypted_file:
+            password = utils.get_master_password()
+            
+            try:
+                ciphertext = encrypt(password, json_config)
+            except DecryptionException, e:
+                abort(red(e))
+            
+            encrypted_file = open(encrypt_file_path, "w")
+            encrypted_file.write(ciphertext)
+            encrypted_file.close()
+
+def read_config(file_path):
+    if file_path.endswith(".json"):
+        if os.path.isfile(file_path):
+            print(green("Load config %s" % (file_path)))
+            with open(file_path) as json_config:
+                return json.load(json_config)
+        
+        encrypt_file_path = "%s.encrypt" % file_path
+        
+        if not os.path.isfile(encrypt_file_path):
+            abort(red("No config `%s` found." % encrypt_file_path))
+        
+        with open(encrypt_file_path) as ciphertext:
+            password = utils.get_master_password()
+            
+            try:
+                config = decrypt(env.master_password, ciphertext.read()).decode('UTF-8')
+            except DecryptionException, e:
+                abort(red(e))
+            
+            return json.loads(config)
+            
+        return {}
+    
+def dicttoconfig(config):
+    json_content = json.dumps(config,
+                              sort_keys=True,
+                              indent=4)
+    
+    # Some kind of weird formatting happens
+    # So i've removed these characters so it is valid json
+    json_content = json_content.replace('\\n', '\n')
+    json_content = json_content.replace('\\t', '\t')
+    json_content = json_content.replace('\\"', '"')
+    
+    return json_content
+   
+def write_config(file_path, config):
+    json_config = dicttoconfig(config)
+    with open(file_path, "wb") as config_file:
+        config_file.write(json_config)
+        config_file.close()
+    
+def load_main_config():
+    cwd = os.getcwd()
+    
+    file_path = "%s/.config" % (cwd)
+    with open(file_path) as json_config:
+        config = json.load(json_config)
+        if not 'master_password' in config:
+            abort(red('No master password set in main config.'))
+        
+        env.master_password = config['master_password']
+    
+def load_config(filename):
+    """
+    Load config by filename and set it...
+    """
+    
+    cwd = os.getcwd()
+    
+    file_path = "%s/%s" % (cwd, filename)
+    
+    config = read_config(file_path)
+    if config:
+        set_config(config)
+
+def update(orig_dict, new_dict):
+    """
+    Method to recusively overwrite dicts.
+    This is used to merge the configs to one config
+    """
+    
+    for key, val in new_dict.iteritems():
+        if isinstance(val, collections.Mapping):
+            tmp = update(orig_dict.get(key, { }), val)
+            orig_dict[key] = tmp
+        elif isinstance(val, list):
+            orig_dict[key] = (orig_dict[key] + val)
+        else:
+            orig_dict[key] = new_dict[key]
+    return orig_dict
+
+def set_config(config):
+    """
+    Main set config.
+    This will check certain key/values in the configuration file and 
+    tries to merge them together
+    """
+    if config.has_key('output'):
+        for setting_name, setting_value in config['output'].iteritems():
+            output[setting_name] = setting_value
+    
+    if config.has_key('roledefs'):
+        for setting_name, setting_value in config['roledefs'].iteritems():
+            env.roledefs[setting_name] = setting_value
+    
+    if config.has_key('params'):
+        env.params = update(env.params, config['params'])
+       
+    if config.has_key('post_params'):
+        env.post_params = update(env.post_params, config['post_params'])
+         
+    if config.has_key('actions'):
+        env.actions = update(env.actions, config['actions'])
+

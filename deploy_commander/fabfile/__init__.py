@@ -3,7 +3,7 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import fabfile.utils
-import fabfile.settings
+import fabfile.config
 
 from importlib import import_module
 
@@ -33,13 +33,13 @@ from fabric.context_managers import hide
 
 from fabric.state import output
 
-from simplecrypt import encrypt
-from simplecrypt import decrypt
+
 
 
 output['running'] = False
 output['stdout'] = False
 
+config.load_main_config()
 
 def set_project():
     if not 'project' in env.params or env.params['project']:
@@ -86,9 +86,8 @@ def set_environment():
         # Set environment settings
         env.params['environment'] = environment_name
     
-        settings.environment()
-    
- 
+        config.environment()
+
 def title_screen():
     print(green("================================================================================================="))
     print(green("    ____             __               ______                                          __         "))
@@ -98,49 +97,63 @@ def title_screen():
     print(green("/_____/\___/ .___/_/\____/\__, /   \____/\____/_/ /_/ /_/_/ /_/ /_/\__,_/_/ /_/\__,_/\___/_/     "))
     print(green("          /_/            /____/                                                                  "))
     print(green("================================================================================================="))
-    
- 
+
 @task
 def encrypt_config():
     title_screen()
-    password = prompt('Enter master password to decrypt the config with : ')
-    if not password:
-        abort("No valid password...")
-        
+    password = utils.get_master_password()
+    
     for root, dirs, files in os.walk("./config"):
         for file in files:
             if file.endswith(".json"):
                 file_path = os.path.join(root, file)
-                encrypt_file_path = "%s.enc" % file_path
-                with open(file_path) as json_config:
-                    ciphertext = encrypt(password, json_config.read())
-                    
-                    encrypted_file = open(encrypt_file_path, "w")
-                    encrypted_file.write(ciphertext)
-                    encrypted_file.close()
+                
+                config.write_encrypted_config(file_path,
+                                              config.read_config(file_path))
+                print(green("File `%s` encrypted." % file_path))
+                os.remove(file_path)
 
 @task   
 def decrypt_config():
     title_screen()
-
-    password = prompt('Enter master password for decryption : ')
-    if not password:
-        abort("No valid password...")
-        
+    password = utils.get_master_password()
+    
+    print(green("Decrypting..."))
+    
     for root, dirs, files in os.walk("./config"):
         for file in files:
-            if file.endswith(".enc"):
+            if file.endswith(".encrypt"):
+                encrypt_file_path = os.path.join(root, file)
+                with open(encrypt_file_path) as ciphertext:
+                    file_path = encrypt_file_path[:-8]
+                    
+                    config.write_config(file_path,
+                                        config.read_config(file_path))
+                    print(green("File `%s` decrypted." % encrypt_file_path))
+                    os.remove(encrypt_file_path)
+                    
+
+@task
+def cleanup_config():
+    title_screen()
+    for root, dirs, files in os.walk("./config"):
+        for file in files:
+            if file.endswith(".json"):
                 file_path = os.path.join(root, file)
+                encrypt_file_path = "%s.encrypt" % file_path
                 
-                with open(file_path) as ciphertext:
-                    json_config = decrypt(password, ciphertext.read())
-                    print json_config
+                if os.path.isfile(encrypt_file_path):
+                    abort(red("Cannot remove `%s`, missing encrypt file. This needs to be present!" % file_path))
+                
+                os.remove(file_path)
+                print("- %s" % file_path)
+
 
 @task
 def go():
     title_screen()
     
-    settings.init()
+    config.init()
     
     utils.print_single_line()
     
@@ -200,6 +213,3 @@ def run(action):
         command(params = params)
         
         utils.print_single_line()
-    
-        
-    
