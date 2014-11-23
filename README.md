@@ -1,9 +1,12 @@
 # deploy-commander
 
-> Continuous integration to rule all your applications !
+> Continuous Integration Deployments to rule all your applications !
 
 A tool for setting up a different environments most used for managing DTAP flows.
 Deploy commander is build directly on python/fabric, but can be used for any project.
+
+Main goal of this system is to configure your deployment, and not programm it.
+There are a other flavors for setting up your dtap... we're focussing on simplicity and transparancy. Next to that we want to create a centralized system to manage different deployments for multiple apps on different servers.
 
 ** Note : This application is still in it's development phase. **
 
@@ -11,10 +14,15 @@ Deploy commander is build directly on python/fabric, but can be used for any pro
 
 - Attach github and bitbucket hooks to automate the deployment process
 
+## So it's not...?
+
+- Puppet
+- Chef
+- Sys ops server management
+- Jenkins
+- Capistrano
 
 ## Goals
-
-This application is intented to easally manage deployments for multiple apps from different codebases with different programming languages.
 
 - Ease of deployments
 - Ease of rollbacks
@@ -33,7 +41,9 @@ On a production setup it's best to create a dedicated environment to manage your
 
 ## Best practices
 
+
 - In production encrypt the config files.
+- On unix based machines make sure the user directory (best to use deploy user) is encrypted/secured
 - Make sure if you make a backup of copy on your dev, that it's secured.
 - For production use a dedicated deployment environment.
 
@@ -45,59 +55,47 @@ On a production setup it's best to create a dedicated environment to manage your
 
 In this quick demo we'll use [virtualbox](https://www.virtualbox.org/) and [vagrant](https://www.vagrantup.com/).
 
-We'll assume you're known with these systems.
+We'll assume you have worked with then...
 
 We only tested this system on unix like machines, like Ubuntu and MacOS.
+Currently we don't support other flavors... sorry... (allthough it must work on centos too...)
 
 
 ## Install
 ```
-// On unix type machines
+// On ubuntu type machines
 sudo apt-get install python-pip
 
+// Install the python package
 sudo pip install deploy-commander
 ```
 
-## Setup skeleton
+## Setup example
 
-The skeleton contains a basic setup with the following:
+We have examples available for download and it contains a basic setup with the following:
 
-- Vagrant file
+- Vagrant file (for your local dev machine)
+- Setup server with puppet
 - Encrypted configs
 - Configs with different examples
 - Main config.dist for main configuration
 
 
 ```
-// Clone skeleton
-git clone https://github.com/munstermedia/deploy-commander-skeleton.git
+// Clone an example
+git clone https://github.com/munstermedia/deploy-commander-php-example.git
 
 // Go into repo
-cd deploy-commander-skelleton
+cd deploy-commander-php-example
 
 // Setup main config
 mv .config.dist .config
 
-// Load development server, a ubuntu box with ip 192.168.56.111
+// Load development server, a ubuntu trusty box with ip 192.168.56.111
 vagrant up
 ```
 
 ## Lets go...
-
-### Install server
-The newly created ubuntu box need some stuff to be installed.
-To do this we've created an action called `install-server`
-
-```
-deploy-commander go run:install-server
-```
-
-What just happened?
-
-- Installed mysql
-- Installed git
-
-(Note it might prompt for password, just enter)
 
 
 ### Install app
@@ -129,7 +127,7 @@ deploy-commander go run:deploy-app
 ```
 
 This wil prompt you with the same like install but it will ask for a tag.
-The default tag is `master`
+The default tag is the latest from the list.
 
 What just happened?
 
@@ -158,6 +156,39 @@ What just happened?
 The configuration files are located in the ./config folder.
 
 These are json structured configs where you can setup stuff like ssh credentials, symlinks, mysql backup and much more...
+
+### Main configurtion
+
+The main configuration file must be located in the root folder and named ".config"
+This config file contains json structured params, like your master password.
+
+Don't commit this file to your repo because the master password should be stored elsewhere.
+
+### Encrypted config's
+
+The config files can be encrypted before you want to push them to some repo.
+So you can maintain your deploy setup in git without exposing login credentials and other critical information.
+
+There is a main password set in the .config file. Please change this password with a [strong password generator](https://strongpasswordgenerator.com/) (and make sure it's escaped for json :) )
+
+The config files are encrypted with a AES256 encryption. For more technical info see [simple-crypt](https://pypi.python.org/pypi/simple-crypt)
+
+To encrypt all .json config files:
+
+```
+deploy-commander encrypt_config
+```
+
+To decrypt the .json.encrypt config files:
+
+```
+deploy-commander decrypt_config
+```
+
+Note that the files are encrypted/decrypted by the master password located in the main configuration file. (.config). Do not expose this password anywhere.
+
+So remember to setup this password on your production server manually...
+
 
 ### Settings
 It's important to understand how settings are loaded and which settings are possible.
@@ -240,7 +271,7 @@ This will result in the following final setting:
  
 ##### Settings structure
 
-The basic foundation of this system are actions and commands. You can execute actions, and these actions have commands to execute.
+The basic foundation of this system are commands and action. You can initiate a command, and these have actions to execute.
 
 This is an example structure that we'll explain later on:
 
@@ -253,13 +284,13 @@ This is an example structure that we'll explain later on:
 	"post_params":{
 		"dynamic_post_param":"/some/%(some_param)s/path"
 	},
-	"actions":{
+	"commands":{
 		"deploy":{
 			"title":"Deploy project",
-			"commands":{
+			"actions":{
 				"your-own-description":{
 					"sequence":1,
-					"command":"command.action",
+					"execute":"command.action",
 					"params":{
 						"dynamic_param":"%(dynamic_param)s/repo",
 						"dynamic_post_param":"%(dynamic_post_param)s/source/%(tag)s"
@@ -317,7 +348,7 @@ We're continuessly developing on these commands to give you as much features.
 ```
 "your-own-description":{
 	"sequence":1,
-	"command":"system.symlink",
+	"execute":"system.symlink",
 	"params":{
 		"source":"/path/where/to/create/symlink",
 		"target":"/path/where/the/symlink/should/link"
@@ -333,7 +364,7 @@ Functionality:
 ```
 "list-source":{
 	"sequence":1,
-	"command":"system.command",
+	"execute":"system.command",
 	"params":{
 		"command":"ls -las /home"
 	}
@@ -348,7 +379,7 @@ Functionality:
 ```
 "upload-environment-config":{
 	"sequence":1,
-	"command":"system.upload_template",
+	"execute":"system.upload_template",
 	"params":{
 		"source":"some/file/in/the/template/path.ini",
 		"target":"/path/where/to/copy/on/the/server.ini",
@@ -359,6 +390,7 @@ Functionality:
 ```
 
 Functionality:
+
 - Uploads template from .template folder/file to server.
 - Renders the template with params.. you can use {{ param_name }} in the template. In this example the path.ini could contain the param {{ yourvar_1 }}.
 - Unlimited own params.. source and target are required
@@ -369,7 +401,7 @@ Functionality:
 ```
 "your-own-description":{
 	"sequence":1,
-	"command":"aptget.install",
+	"execute":"aptget.install",
 	"params":{
 		"package":"git"
 	}
@@ -386,7 +418,7 @@ Functionality:
 ```
 "your-own-description":{
 	"sequence":1,
-	"command":"git.install_repo",
+	"execute":"git.install_repo",
 	"params":{
 		"repo_path":"/full/path/to/repo",
 		"repo_url":"https://github.com/munstermedia/demo.git"
@@ -404,7 +436,7 @@ Functionality:
 ```
 "your-own-description":{
 	"sequence":1,
-	"command":"git.deploy_tag",
+	"execute":"git.deploy_tag",
 	"params":{
 		"repo_path":"/full/path/to/repo",
 		"tag_path":"/full/path/to/source/%(tag)s",
@@ -414,6 +446,8 @@ Functionality:
 ```
 
 Functionality:
+
+It will use the code in the repo path to go to a certain branch/tag. This will be copied to a tag path so you'll have versioned codebases living next to each other.
 
 - Tag in params is optional, you should leave it empty by default unless you have a good reason for it.
 - If tag it's not set (empty) it will list the available tags and prompt for input.
@@ -426,7 +460,7 @@ Functionality:
 ```
 "your-own-description":{
 	"sequence":1,
-	"command":"mysql.install_server"
+	"execute":"mysql.install_server"
 }
 ```
 
@@ -439,7 +473,7 @@ Functionality:
 ```
 "your-own-description":{
 	"sequence":1,
-	"command":"mysql.backup_db",
+	"execute":"mysql.backup_db",
 	"params":{
 		"host":"localhost",
 		"user":"root",
@@ -458,7 +492,7 @@ Funcationality:
 ```
 "your-own-description":{
 	"sequence":1,
-	"command":"mysql.query",
+	"execute":"mysql.query",
 	"params":{
 		"host":"localhost",
 		"user":"root",
@@ -477,7 +511,7 @@ Functionality:
 ```
 "your-own-description":{
 	"sequence":3,
-	"command":"mysql.import_file",
+	"execute":"mysql.import_file",
 	"params":{
 		"host":"localhost",
 		"user":"root",
@@ -497,7 +531,7 @@ Functionality:
 ```
 "your-own-description":{
 	"sequence":2,
-	"command":"mysql.restore_db",
+	"execute":"mysql.restore_db",
 	"params":{
 		"host":"localhost",
 		"user":"root",
@@ -552,14 +586,14 @@ Functionality:
 			"commands":{
 				"install-base":{
 					"sequence":1,
-					"command":"aptget.install",
+					"execute":"aptget.install",
 					"params":{
 						"package":"git"
 					}
 				},
 				"install-mysql":{
 					"sequence":2,
-					"command":"mysql.install_server"
+					"execute":"mysql.install_server"
 				}
 			}
 		},
@@ -568,7 +602,7 @@ Functionality:
 			"commands":{
 				"git-clone":{
 					"sequence":1,
-					"command":"git.clone",
+					"execute":"git.clone",
 					"description":"First repo cloning...",
 					"params":{
 						"repo_path":"%(base_path)s/repo",
@@ -577,7 +611,7 @@ Functionality:
 				},
 				"create-mysql-db":{
 					"sequence":2,
-					"command":"mysql.query",
+					"execute":"mysql.query",
 					"params":{
 						"host":"%(project_database_host)s",
 						"user":"%(project_database_user)s",
@@ -587,7 +621,7 @@ Functionality:
 				},
 				"import-project-db":{
 					"sequence":3,
-					"command":"mysql.import_file",
+					"execute":"mysql.import_file",
 					"params":{
 						"host":"%(project_database_host)s",
 						"user":"%(project_database_user)s",
@@ -603,7 +637,7 @@ Functionality:
 			"commands":{
 				"git-deploy-tag":{
 					"sequence":1,
-					"command":"git.deploy_tag",
+					"execute":"git.deploy_tag",
 					"params":{
 						"repo_path":"%(base_path)s/repo",
 						"tag_path":"%(base_path)s/source/%(tag)s"
@@ -611,7 +645,7 @@ Functionality:
 				},
 				"upload-environment-config":{
 					"sequence":2,
-					"command":"system.upload_template",
+					"execute":"system.upload_template",
 					"params":{
 						"source":"demo/config.php",
 						"target":"%(base_path)s/source/%(tag)s/config.php",
@@ -622,7 +656,7 @@ Functionality:
 				},
 				"mysql-backup":{
 					"sequence":3,
-					"command":"mysql.backup_db",
+					"execute":"mysql.backup_db",
 					"params":{
 						"host":"%(project_database_host)s",
 						"user":"%(project_database_user)s",
@@ -633,14 +667,14 @@ Functionality:
 				},
 				"list-source":{
 					"sequence":4,
-					"command":"system.command",
+					"execute":"system.command",
 					"params":{
 						"command":"ls -las %(base_path)s/source/%(tag)s"
 					}
 				},
 				"symlink-current-folder":{
 					"sequence":5,
-					"command":"system.symlink",
+					"execute":"system.symlink",
 					"params":{
 						"source":"%(base_path)s/current",
 						"target":"%(base_path)s/source/%(tag)s"
@@ -659,7 +693,7 @@ Functionality:
 			"commands":{
 				"symlink-current-folder":{
 					"sequence":1,
-					"command":"system.symlink",
+					"execute":"system.symlink",
 					"params":{
 						"source":"%(base_path)s/current",
 						"target":"%(base_path)s/source/%(tag)s"
@@ -667,7 +701,7 @@ Functionality:
 				},
 				"mysql-import":{
 					"sequence":2,
-					"command":"mysql.restore_db",
+					"execute":"mysql.restore_db",
 					"confirm":"Restore a database backup?",
 					"params":{
 						"host":"$(project_database_host}s",

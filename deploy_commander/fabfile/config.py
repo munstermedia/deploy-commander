@@ -12,6 +12,10 @@ from fabric.colors import red
 from fabric.colors import yellow
 from fabric.colors import green
 
+from fabric.state import output
+
+
+
 from simplecrypt import encrypt
 from simplecrypt import decrypt
 from simplecrypt import DecryptionException
@@ -20,7 +24,7 @@ env.warn_only = False
 
 env.params = {}
 env.post_params = {}
-env.actions = {}
+env.commands = {}
 
 env.connection_attempts = 3
 env.timeout = 30
@@ -29,10 +33,18 @@ from fabric.state import output
 
 def init():
     """
-    Default init
+    Default init for all commands
     """
     
+    # Default output settings
+    output['running'] = False
+    output['stdout'] = False
+
     env.environments = ["development", "production", "staging", "testing"]
+    
+    # Load main config
+    load_main_config()
+    
     # Load default
     load_config('config/default.json')
     
@@ -58,6 +70,10 @@ def environment():
             print(yellow("Set post param `%s` to `%s`" % (param_key, env.params[param_key])))
 
 def write_encrypted_config(file_path, config):
+    """
+    Takes a config dict and formats it to a json string
+    It will be encrypted and then stored as json.encrypt file
+    """
     if file_path.endswith(".json"):
         encrypt_file_path = "%s.encrypt" % file_path
         json_config = dicttoconfig(config)
@@ -74,6 +90,11 @@ def write_encrypted_config(file_path, config):
             encrypted_file.close()
 
 def read_config(file_path):
+    """
+    Tries to read config from 2 types of files.
+    If json file is available it will use that one.
+    If there is no json file it will use the encrypted file.
+    """
     if file_path.endswith(".json"):
         if os.path.isfile(file_path):
             print(green("Load config %s" % (file_path)))
@@ -98,6 +119,9 @@ def read_config(file_path):
         return {}
     
 def dicttoconfig(config):
+    """
+    Generic function to create json string from dict
+    """
     json_content = json.dumps(config,
                               sort_keys=True,
                               indent=4)
@@ -111,12 +135,19 @@ def dicttoconfig(config):
     return json_content
    
 def write_config(file_path, config):
+    """
+    Write binary config file
+    """
+    
     json_config = dicttoconfig(config)
     with open(file_path, "wb") as config_file:
         config_file.write(json_config)
         config_file.close()
     
 def load_main_config():
+    """
+    Load main config file.
+    """
     cwd = os.getcwd()
     
     file_path = "%s/.config" % (cwd)
@@ -176,6 +207,6 @@ def set_config(config):
     if config.has_key('post_params'):
         env.post_params = update(env.post_params, config['post_params'])
          
-    if config.has_key('actions'):
-        env.actions = update(env.actions, config['actions'])
+    if config.has_key('commands'):
+        env.commands = update(env.commands, config['commands'])
 

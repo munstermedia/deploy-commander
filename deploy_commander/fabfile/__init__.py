@@ -2,6 +2,8 @@ import os.path
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+import pprint
+
 import fabfile.utils
 import fabfile.config
 
@@ -24,24 +26,18 @@ from fabric.colors import red
 from fabric.colors import yellow
 from fabric.colors import green
 
-import pprint
-
 from fabric.contrib.console import confirm
 from fabric.operations import prompt
 from fabric.context_managers import hide
 
 
-from fabric.state import output
-
-
-
-
-output['running'] = False
-output['stdout'] = False
-
-config.load_main_config()
+config.init()
 
 def set_project():
+    """
+    Checks if project is set, and if not it will prompt you to enter
+    a valid project
+    """
     if not 'project' in env.params or env.params['project']:
         cwd = os.getcwd()
         config_folder = "%s/config" % (cwd)
@@ -66,6 +62,10 @@ def set_project():
         env.params['project'] = project_name
     
 def set_environment():
+    """
+    Checks if environment is set, and if not it will prompt you to enter
+    a valid project
+    """
     if not 'environment' in env.params or env.params['environment']:
         if len(env.environments) == 0:
             abort("No environmens available.")
@@ -89,6 +89,9 @@ def set_environment():
         config.environment()
 
 def title_screen():
+    """
+    Prints out the title screen,... YEAH..
+    """
     print(green("================================================================================================="))
     print(green("    ____             __               ______                                          __         "))
     print(green("   / __ \___  ____  / /___  __  __   / ____/___  ____ ___  ____ ___  ____ _____  ____/ /__  _____"))
@@ -100,6 +103,9 @@ def title_screen():
 
 @task
 def encrypt_config():
+    """
+    Encrypt all json files to json.encrypt
+    """
     title_screen()
     password = utils.get_master_password()
     
@@ -115,6 +121,9 @@ def encrypt_config():
 
 @task   
 def decrypt_config():
+    """
+    Decrypt all json.encrypt files to .json files
+    """
     title_screen()
     password = utils.get_master_password()
     
@@ -131,29 +140,14 @@ def decrypt_config():
                                         config.read_config(file_path))
                     print(green("File `%s` decrypted." % encrypt_file_path))
                     os.remove(encrypt_file_path)
-                    
-
-@task
-def cleanup_config():
-    title_screen()
-    for root, dirs, files in os.walk("./config"):
-        for file in files:
-            if file.endswith(".json"):
-                file_path = os.path.join(root, file)
-                encrypt_file_path = "%s.encrypt" % file_path
-                
-                if os.path.isfile(encrypt_file_path):
-                    abort(red("Cannot remove `%s`, missing encrypt file. This needs to be present!" % file_path))
-                
-                os.remove(file_path)
-                print("- %s" % file_path)
 
 
 @task
 def go():
+    """
+    Default init for project actions
+    """
     title_screen()
-    
-    config.init()
     
     utils.print_single_line()
     
@@ -167,46 +161,53 @@ def go():
 
 @task
 @roles('webserver')   
-def run(action):
+def run(command):
+    """
+    Run command to execute the actions.
+    Here's where it's all starting...
+    """
     utils.init_env_settings('webserver')
     
     utils.print_double_line()
     
-    if 'description' in env.actions[action]:
-        print(green(env.actions[action]['description']))
+    if 'description' in env.commands[command]:
+        print(green(env.commands[command]['description']))
     
-    if 'input_params' in env.actions[action]:
-        for param_key, param_value in env.actions[action]['input_params'].items():
+    if 'input_params' in env.commands[command]:
+        for param_key, param_value in env.commands[command]['input_params'].items():
             env.params[param_value['param']] = prompt(param_value['prompt'])
     
-    ordered_actions = sorted(env.actions[action]['commands'].items(), key=lambda (k,v): v['sequence'])
+    ordered_commands = sorted(env.commands[command]['actions'].items(), key=lambda (k,v): v['sequence'])
     
     utils.print_single_line()
     
-    for key_action, current_action in ordered_actions:
+    for key_command, current_command in ordered_commands:
         
-        if 'description' in current_action:
-            print(current_action['description'])
+        if 'description' in current_command:
+            print(current_command['description'])
         else:
-            print("Starting `%s`" % key_action)
+            print("Starting `%s`" % key_command)
         
-        print("Command : %s" % current_action['command'])
+        if not 'execute' in current_command:
+            abort(red("No valid execute value in config"))
+        
+        print("Execute : %s" % current_command['execute'])
         print("")
         
         
         
-        if 'confirm' in current_action:
-            if not confirm(current_action['confirm']):
+        if 'confirm' in current_command:
+            if not confirm(current_command['confirm']):
                 continue
             
-        script = 'command.%s' % current_action['command']
+        script = 'command.%s' % current_command['execute']
         p, m = script.rsplit('.', 1)
         
         mod = import_module(p)
         command = getattr(mod, m)
          
-        if 'params' in current_action:
-            params = current_action['params']
+        if 'params' in current_command:
+            params = current_command['params']
         else:
             params = {}
         
