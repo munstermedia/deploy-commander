@@ -128,9 +128,9 @@ def dicttoconfig(config):
     
     # Some kind of weird formatting happens
     # So i've removed these characters so it is valid json
-    json_content = json_content.replace('\\n', '\n')
-    json_content = json_content.replace('\\t', '\t')
-    json_content = json_content.replace('\\"', '"')
+#     json_content = json_content.replace('\\n', '\n')
+#     json_content = json_content.replace('\\t', '\t')
+#     json_content = json_content.replace('\\"', '"')
     
     return json_content
    

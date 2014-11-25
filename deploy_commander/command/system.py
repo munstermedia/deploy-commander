@@ -6,6 +6,10 @@ import os
 from fabric.api import env
 from fabric.contrib.files import is_link
 from fabric.operations import run
+from fabric.operations import get
+
+from fabric.utils import abort
+
 from fabric.colors import yellow
 from fabric.colors import green
 from fabfile import utils
@@ -34,6 +38,18 @@ def command(params):
     
     print(green("Command `%s` executed" % command)) 
 
+
+def download_from_remote(params):
+    params = utils.format_params(params)
+    
+    if not 'remote_path' in params:
+        abort('No remote path set')
+        
+    if not 'local_path' in params:
+        abort('No local path set')
+    
+    get(**params) 
+    
 def upload_template(params):
     """
     Upload a template and render it with the given params.

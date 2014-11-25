@@ -194,6 +194,10 @@ def run(command):
         print("Execute : %s" % current_command['execute'])
         print("")
         
+        if 'enabled' in current_command and (current_command['enabled'] == False or current_command['enabled'] == "False"):
+            print("Skipped : %s" % current_command['execute'])
+            continue
+        
         
         
         if 'confirm' in current_command:

@@ -50,13 +50,16 @@ def deploy_tag(params):
     
     if 'tag' in params:
         env['params']['tag'] = params['tag']
+    elif 'tag' in env['params']:
+        # TODO : Check tag
+        env['params']['tag'] = env['params']['tag']
     else:
         with cd(params['repo_path']):
             print("Fetching latest tags...just a moment...")
             print("")
-            with hide('output', 'running'):
-                run('git fetch --tags')
-                tags = run('git tag -l')
+            
+            run('git fetch --tags')
+            tags = run('git tag -l')
             
             latest_tag = 'master'
             
@@ -79,21 +82,21 @@ def deploy_tag(params):
     # If exist remove full source
     if exists(tag_path):
         print(yellow("Deploy source path `%s` allready existed... source data be removed and reset." % tag_path))
-        with hide('output', 'running'):
-            run('rm -Rf %s' % tag_path)
+        run('rm -Rf %s' % tag_path)
     
     utils.ensure_path(tag_path)
     
     with cd(params['repo_path']):
-        with hide('output', 'running'):
-            # Update local repo with latest code
-            run('git checkout %s' % (env['params']['tag']))
-         
-            run('git pull origin %s --recurse-submodules' % (env['params']['tag']))
-             
-            run('git submodule update')
-    
-    # Copy source code to version
-    run('cp -R %s/* %s' % (params['repo_path'], tag_path))
+        run('git fetch')
+        
+        # Update local repo with latest code
+        run('git checkout %s' % (env['params']['tag']))
+        
+        run('git pull origin %s' % (env['params']['tag']))
+        
+        run('git submodule update')
+        
+        # Copy source code to version
+        run('cp -Rf %s/* %s/' % (params['repo_path'], tag_path))
     
             
