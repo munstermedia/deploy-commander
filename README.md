@@ -6,7 +6,7 @@ A tool for setting up a different environments most used for managing DTAP flows
 Deploy commander is build directly on python/fabric, but can be used for any project.
 
 Main goal of this system is to configure your deployment, and not programm it.
-There are a other flavors for setting up your dtap... we're focussing on simplicity and transparancy. Next to that we want to create a centralized system to manage different deployments for multiple apps on different servers.
+There are other flavors for setting up your dtap... we're focussing on simplicity and transparancy. Next to that we want to create a centralized system to manage different deployments for multiple apps on different servers.
 
 ** Note : This application is still in it's development phase. **
 
@@ -62,6 +62,8 @@ Currently we don't support other flavors... sorry... (allthough it must work on 
 
 
 ## Install
+We need to install the basic python libraries and the deploy-commander codebase.
+
 ```
 // On ubuntu type machines
 sudo apt-get install python-pip
@@ -395,6 +397,24 @@ Functionality:
 - Renders the template with params.. you can use {{ param_name }} in the template. In this example the path.ini could contain the param {{ yourvar_1 }}.
 - Unlimited own params.. source and target are required
 
+
+#### system.download_from_remote
+```
+"download":{
+	"sequence":1,
+	"execute":"system.download_from_remote",
+	"params":{
+		"remote_path":"/some/remote/path/*.jpg",
+		"local_path":"./templates/tmp"
+	}
+}
+```
+
+Functionality:
+
+- Will download file(s)
+- Can use wildcards for files.
+- Can download one or more files/folders
 
 #### aptget.install
 

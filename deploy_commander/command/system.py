@@ -40,6 +40,9 @@ def command(params):
 
 
 def download_from_remote(params):
+    """
+    Download folder to local path
+    """
     params = utils.format_params(params)
     
     if not 'remote_path' in params:
@@ -49,7 +52,7 @@ def download_from_remote(params):
         abort('No local path set')
     
     get(**params) 
-    
+
 def upload_template(params):
     """
     Upload a template and render it with the given params.
