@@ -3,11 +3,11 @@ from setuptools import setup, find_packages
 
 setup(
     name='deploy-commander',
-    version='0.0.20',
+    version='0.0.21',
     author=u'Ference van Munster',
     author_email='info@munstermedia.nl',
     packages=find_packages(),
-    install_requires=['fabric','simple-crypt'],
+    install_requires=['fabric==1.10.0','simple-crypt'],
     url='http://github.com/munstermedia/deploy-commander',
     license='Free',
     description='Simple command line tool to command your deployments',

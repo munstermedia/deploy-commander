@@ -4,6 +4,8 @@ import json
 import os
 import utils
 
+import time
+
 from fabric.api import task
 from fabric.api import env
 from fabric.utils import abort
@@ -13,8 +15,6 @@ from fabric.colors import yellow
 from fabric.colors import green
 
 from fabric.state import output
-
-
 
 from simplecrypt import encrypt
 from simplecrypt import decrypt
@@ -35,7 +35,7 @@ def init():
     """
     Default init for all commands
     """
-    
+
     # Default output settings
     output['running'] = False
     output['stdout'] = False
@@ -44,6 +44,8 @@ def init():
     
     # Load main config
     load_main_config()
+      
+    env.params['timestamp'] = int(time.time())
     
     # Load default
     load_config('config/default.json')
