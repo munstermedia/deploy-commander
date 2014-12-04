@@ -78,3 +78,5 @@ def init_env_settings(group):
     if env.host in env.roledefs[group]["config"]:
         env.password = env.roledefs[group]["config"][env.host]["ssh_password"]
         env.user = env.roledefs[group]["config"][env.host]["ssh_user"]
+        if 'ssh_keyfile' in env.roledefs[group]["config"][env.host]:
+            env.key_filename = env.roledefs[group]["config"][env.host]["ssh_keyfile"]

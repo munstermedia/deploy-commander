@@ -67,7 +67,9 @@ We need to install the basic python libraries and the deploy-commander codebase.
 ```
 // On ubuntu type machines
 sudo apt-get install python-pip
+sudo apt-get install python-dev
 
+sudo pip install ecdsa
 // Install the python package
 sudo pip install deploy-commander
 ```
