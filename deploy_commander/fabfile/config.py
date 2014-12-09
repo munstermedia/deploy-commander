@@ -101,8 +101,11 @@ def read_config(file_path):
         if os.path.isfile(file_path):
             print(green("Load config %s" % (file_path)))
             with open(file_path) as json_config:
-                return json.load(json_config)
-        
+                try:
+                    return json.load(json_config)
+                except Exception, e:
+                    abort(red("Cannot read config, is the config correct?. `%s`" % e))
+                
         encrypt_file_path = "%s.encrypt" % file_path
         
         if not os.path.isfile(encrypt_file_path):
@@ -115,8 +118,10 @@ def read_config(file_path):
                 config = decrypt(env.master_password, ciphertext.read()).decode('UTF-8')
             except DecryptionException, e:
                 abort(red(e))
-            
-            return json.loads(config)
+            try:
+                return json.loads(config)
+            except Exception, e:
+                abort(red("Cannot read config, is the config correct? `%s`" % e))
             
         return {}
     
@@ -124,16 +129,11 @@ def dicttoconfig(config):
     """
     Generic function to create json string from dict
     """
-    json_content = json.dumps(config,
-                              sort_keys=True,
-                              indent=4)
-    
-    # Some kind of weird formatting happens
-    # So i've removed these characters so it is valid json
-#     json_content = json_content.replace('\\n', '\n')
-#     json_content = json_content.replace('\\t', '\t')
-#     json_content = json_content.replace('\\"', '"')
-    
+    try:
+        json_content = json.dumps(config, sort_keys=True, indent=4)
+    except Exception, e:
+        abort(red(e))
+        
     return json_content
    
 def write_config(file_path, config):
@@ -153,12 +153,15 @@ def load_main_config():
     cwd = os.getcwd()
     
     file_path = "%s/.config" % (cwd)
-    with open(file_path) as json_config:
-        config = json.load(json_config)
-        if not 'master_password' in config:
-            abort(red('No master password set in main config.'))
-        
-        env.master_password = config['master_password']
+    if not os.path.isfile(file_path):
+        abort(red("No main config file found. Did you setup your project in the `%s` file?" % (file_path)))
+    else:
+        with open(file_path) as json_config:
+            config = json.load(json_config)
+            if not 'master_password' in config:
+                abort(red('No master password set in main config.'))
+            
+            env.master_password = config['master_password']
     
 def load_config(filename):
     """

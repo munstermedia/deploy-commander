@@ -3,11 +3,11 @@ from setuptools import setup, find_packages
 
 setup(
     name='deploy-commander',
-    version='0.0.22',
+    version='0.0.23',
     author=u'Ference van Munster',
     author_email='info@munstermedia.nl',
     packages=find_packages(),
-    install_requires=['ecdsa', 'jinja2', 'fabric==1.10.0','simple-crypt'],
+    install_requires=['pycrypto==2.6.1', 'ecdsa', 'jinja2', 'fabric==1.10.0','simple-crypt'],
     url='http://github.com/munstermedia/deploy-commander',
     license='Free',
     description='Simple command line tool to command your deployments',

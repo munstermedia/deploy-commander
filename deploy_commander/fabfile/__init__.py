@@ -33,60 +33,64 @@ from fabric.context_managers import hide
 
 config.init()
 
-def set_project():
+def set_project(project=None):
     """
     Checks if project is set, and if not it will prompt you to enter
     a valid project
     """
-    if not 'project' in env.params or env.params['project']:
+    if not 'project' in env.params:
         cwd = os.getcwd()
         config_folder = "%s/config" % (cwd)
-        
-        print(green("Available projects :"))
-        print("")
         available_projects = []
-        for project in os.listdir(config_folder):
-            if os.path.isdir(os.path.join(config_folder, project)):
-                available_projects.append(project)
-                print("- %s" % project)
-            
-        if len(available_projects) == 0:
-            abort("No projects available.")
-            
-        print("")
-        project_name = prompt('Enter project name : ', default=available_projects[0])
-        if project_name not in available_projects:
-            print(red("`%s` is not a valid project !" % project_name))
-            set_project()
+        for tmp_project in os.listdir(config_folder):
+            if os.path.isdir(os.path.join(config_folder, tmp_project)):
+                available_projects.append(tmp_project)
         
-        env.params['project'] = project_name
+        if len(available_projects) == 0:
+            abort(red("No projects available."))
+            
+        if not project:
+            print(green("Available projects :"))
+            print("")
+            for project in available_projects:
+                print("- %s" % project)
+             
+            print("")
+            project = prompt('Enter project name : ', default=available_projects[0])
+        
+        if project not in available_projects:
+            print(red("`%s` is not a valid project !" % project))
+            set_project()
+        else:
+            env.params['project'] = project
     
-def set_environment():
+def set_environment(environment=None):
     """
     Checks if environment is set, and if not it will prompt you to enter
     a valid project
     """
-    if not 'environment' in env.params or env.params['environment']:
+    if not 'environment' in env.params:
         if len(env.environments) == 0:
-            abort("No environmens available.")
+            abort(red("No environmens available."))
         
-        print(green("Available environments :"))
-        print("")
-        for environment in env.environments:
-            print("- %s" % environment)
-        
-        print("")
-        environment_name = prompt('Enter environment : ', default=env.environments[0])
-        
-        if environment_name not in env.environments:
+        if not environment:
+            print(green("Available environments :"))
             print("")
-            print(red("`%s` is not a valid environment !" % environment_name))
-            set_environment()
+            for environment in env.environments:
+                print("- %s" % environment)
+            
+            print("")
+            environment = prompt('Enter environment : ', default=env.environments[0])
         
-        # Set environment settings
-        env.params['environment'] = environment_name
+        if environment not in env.environments:
+            print("")
+            print(red("`%s` is not a valid environment !" % environment))
+            set_environment()
+        else:
+            # Set environment settings
+            env.params['environment'] = environment
     
-        config.environment()
+            config.environment()
 
 def title_screen():
     """
@@ -143,7 +147,7 @@ def decrypt_config():
 
 
 @task
-def go():
+def go(project=None, environment=None):
     """
     Default init for project actions
     """
@@ -151,13 +155,29 @@ def go():
     
     utils.print_single_line()
     
-    set_project()
+    set_project(project)
     
     utils.print_single_line()
     
-    set_environment()
+    set_environment(environment)
     
     utils.print_double_line()
+
+@task
+def list_config():
+    # If commands in config
+    if 'commands' in env:
+        for key, val in env['commands'].iteritems():
+            if 'actions' in env['commands'][key]:
+                # Validate the basic settings
+                for k, v in val['actions'].items():
+                    if 'sequence' not in v:
+                        v['sequence'] = "0"
+                 
+                actions = sorted(env['commands'][key]['actions'].items(), key=lambda (k,v): v['sequence'])
+                
+                for key_action, current_action in actions:
+                    pprint.pprint(current_action)
 
 @task
 @roles('webserver')   
