@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='deploy-commander',
-    version='0.0.23',
+    version='0.0.24',
     author=u'Ference van Munster',
     author_email='info@munstermedia.nl',
     packages=find_packages(),

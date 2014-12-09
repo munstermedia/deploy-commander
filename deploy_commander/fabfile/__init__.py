@@ -1,11 +1,11 @@
 import os.path
 import sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
+import json
 import pprint
-
 import fabfile.utils
 import fabfile.config
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from importlib import import_module
 
@@ -164,10 +164,23 @@ def go(project=None, environment=None):
     utils.print_double_line()
 
 @task
-def list_config():
+def show_config():
+    """
+    Show current config settings from project and environment
+    """
     # If commands in config
+    
+    utils.print_double_line()
+    print json.dumps(env.params, sort_keys=True, indent=4)
+    utils.print_double_line()
+    print json.dumps(env.post_params, sort_keys=True, indent=4)
+    utils.print_double_line()
+    
     if 'commands' in env:
         for key, val in env['commands'].iteritems():
+            utils.print_double_line()
+            print "Command `%s`" % key
+            utils.print_double_line()
             if 'actions' in env['commands'][key]:
                 # Validate the basic settings
                 for k, v in val['actions'].items():
@@ -177,7 +190,9 @@ def list_config():
                 actions = sorted(env['commands'][key]['actions'].items(), key=lambda (k,v): v['sequence'])
                 
                 for key_action, current_action in actions:
-                    pprint.pprint(current_action)
+                    print json.dumps(current_action, sort_keys=True, indent=4)
+                    utils.print_single_line()
+                    #pprint.pprint(current_action)
 
 @task
 @roles('webserver')   

@@ -69,7 +69,6 @@ We need to install the basic python libraries and the deploy-commander codebase.
 sudo apt-get install python-pip
 sudo apt-get install python-dev
 
-sudo pip install ecdsa
 // Install the python package
 sudo pip install deploy-commander
 ```
@@ -192,6 +191,8 @@ deploy-commander decrypt_config
 Note that the files are encrypted/decrypted by the master password located in the main configuration file. (.config). Do not expose this password anywhere.
 
 So remember to setup this password on your production server manually...
+
+
 
 
 ### Settings
@@ -602,10 +603,10 @@ Functionality:
 	"post_params":{
 		"base_path":"/home/%(user)s/%(environment)s/%(domain)s/deploy"
 	},
-	"actions":{
+	"commands":{
 		"install-server":{
 			"description":"Example setup development server",
-			"commands":{
+			"actions":{
 				"install-base":{
 					"sequence":1,
 					"execute":"aptget.install",
@@ -621,7 +622,7 @@ Functionality:
 		},
 		"install-app":{
 			"description":"Install application on server",
-			"commands":{
+			"actions":{
 				"git-clone":{
 					"sequence":1,
 					"execute":"git.clone",
@@ -656,7 +657,7 @@ Functionality:
 		},
 		"deploy-app":{
 			"description":"Deploy project",
-			"commands":{
+			"actions":{
 				"git-deploy-tag":{
 					"sequence":1,
 					"execute":"git.deploy_tag",
@@ -712,7 +713,7 @@ Functionality:
 					"prompt":"Rollback to which tag?"
 				}
 			},
-			"commands":{
+			"actions":{
 				"symlink-current-folder":{
 					"sequence":1,
 					"execute":"system.symlink",
@@ -760,6 +761,13 @@ This will overwrite the ./config/default.json, default.json and development.json
 
 
 > For more information about the configuration options please see the examples in ./config in the github repo.
+
+To view the configuration from the command line you can run:
+
+```
+deploy-commander go show_config
+```
+
 - - -
 
 ## Templates

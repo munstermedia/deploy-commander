@@ -28,7 +28,7 @@ def symlink(params):
     run(command)
     
     print(green("Symlink from `%s` to `%s`." % (params['source'], params['target']))) 
-
+    
 def command(params):
     """
     Run a command
