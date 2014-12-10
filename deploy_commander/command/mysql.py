@@ -2,6 +2,7 @@
 MYSQL Commands for deploy commander
 """
 import datetime
+import os
 
 from fabric.api import env
 from fabric.operations import run
@@ -13,6 +14,7 @@ from fabric.contrib.files import exists
 from fabric.colors import green
 from fabric.colors import red
 from fabric.context_managers import cd
+from fabric.utils import abort
 
 from fabfile import utils
 
@@ -93,7 +95,39 @@ def import_file(params):
     run(command % command_params)
     
     print(green("Mysql file `%s` successfully imported." % command_params['import_file']))     
+
+def cleanup_old_backups(params):
+    """
+    Cleanup sql backup files from folder
+    """
+    params = utils.format_params(params)
     
+    if not 'path' in params:
+        abort(red("No path param set!"))
+        
+    if not 'max_backup_history' in params:
+        params['max_backup_history'] = 10
+            
+    with cd(params['path']):
+        folder_result = run('ls -tr1')
+        if len(folder_result) > 0:
+            files = folder_result.split('\n')
+            current_file_count = len(files)
+            print("%s backup files found..." % current_file_count)
+            
+            if len(files) > params['max_backup_history']:
+                total_to_remove = len(files) - params['max_backup_history']
+                print("Going to remove `%s` files" % total_to_remove)
+                for file in files[0:total_to_remove]:
+                    file_path = "%s/%s" % (params['path'], file.strip())
+                    print("- %s" % file_path)
+                    run("rm %s" % (file_path))
+                    
+            else:
+                print("No sql backup files to remove...")
+        else:
+            print(green("No sql backup files available..."))
+
 def restore_db(params):
     """
     Restore database from a backup folder. This will first list available backups, 

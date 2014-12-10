@@ -11,3 +11,6 @@
 
 ## 0.0.24
 - 	Added show_config option
+
+## 0.0.25
+- 	Added mysql.cleanup_old_backups
