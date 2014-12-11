@@ -15,6 +15,7 @@ from fabric.colors import green
 from fabric.colors import red
 from fabric.context_managers import cd
 from fabric.utils import abort
+from fabric.operations import get
 
 from fabfile import utils
 
@@ -37,23 +38,31 @@ def backup_db(params):
     mysqldump -h %(host)s -u %(user)s --password='%(password)s' %(database)s > %(backup_file)s
     """
     
-    backup_path = params['backup_path']
+    backup_path = os.path.dirname(params['backup_file'])
     utils.ensure_path(backup_path)
-    
-    backup_file = "%s/%s.sql" % (backup_path,
-                                 datetime.datetime.now().isoformat())
-        
+     
     # Make params
     command_params = {'user': params['user'],
                       'password': params['password'],
                       'database': params['database'],
                       'host': params['host'],
-                      'backup_file':backup_file}
+                      'backup_file':params['backup_file']}
     
     with hide('running'):
         run(command % command_params)      
     
-    print(green("Mysql backup successfully stored in `%s`" % backup_file)) 
+    with cd(backup_path):
+        filename = os.path.basename(params['backup_file'])
+        clean_filename = os.path.splitext(filename)[0]
+        tarfilename = "%s.tar.gz" % clean_filename
+        run("tar czvf %s %s" % (tarfilename, filename))
+        run("rm %s" % filename)
+        
+    full_tar_file_path = "%s/%s" % (backup_path ,tarfilename)
+    print(green("Mysql backup `%s` successfully stored." % full_tar_file_path)) 
+    
+    if 'download_tar_to_local_file' in params:
+        get(remote_path=full_tar_file_path, local_path=params['download_tar_to_local_file'])
 
 def query(params):
     """
@@ -96,7 +105,7 @@ def import_file(params):
     
     print(green("Mysql file `%s` successfully imported." % command_params['import_file']))     
 
-def cleanup_old_backups(params):
+def cleanup_db_backups(params):
     """
     Cleanup sql backup files from folder
     """
@@ -106,12 +115,13 @@ def cleanup_old_backups(params):
         abort(red("No path param set!"))
         
     if not 'max_backup_history' in params:
-        params['max_backup_history'] = 10
+        params['max_backup_history'] = 5
             
     with cd(params['path']):
-        folder_result = run('ls -tr1')
+        folder_result = run("ls -tr1 | grep '\.tar.gz$'")
         if len(folder_result) > 0:
             files = folder_result.split('\n')
+            
             current_file_count = len(files)
             print("%s backup files found..." % current_file_count)
             
@@ -124,10 +134,10 @@ def cleanup_old_backups(params):
                     run("rm %s" % (file_path))
                     
             else:
-                print("No sql backup files to remove...")
+                print("No sql backup files to remove... limit is set to `%s`" % params['max_backup_history'])
         else:
             print(green("No sql backup files available..."))
-
+    
 def restore_db(params):
     """
     Restore database from a backup folder. This will first list available backups, 
@@ -142,7 +152,7 @@ def restore_db(params):
     db_backup_path = params['backup_path']
     if not 'version' in params or params['version'] == '':
         with cd(db_backup_path):
-            list = run('ls -1')
+            list = run("ls -1 | grep '\.tar.gz$'")
         
         versions = []
         
@@ -150,7 +160,7 @@ def restore_db(params):
         print("")
         
         for mysql_file in list.split('\n'):
-            mysql_version = mysql_file.replace('.sql', '')
+            mysql_version = mysql_file.replace('.tar.gz', '')
             versions.append(mysql_version)
             print("- %s" % mysql_version)
         
@@ -162,8 +172,11 @@ def restore_db(params):
             print(red("Invalid backup version..."))
             print("")
             restore_db(params)
-        
-        params['version'] = version
+        else:
+            params['version'] = version
+    
+    with cd(db_backup_path):
+        run("tar zxvf %s.tar.gz" % params['version'])
     
     backup_file = "%s/%s.sql" % (db_backup_path, params['version'])
         
@@ -177,4 +190,6 @@ def restore_db(params):
 
     run(command % command_params)
     
-    print(green("Mysql backup `%s` successfully restored." % backup_file)) 
+    print(green("Mysql backup `%s` successfully restored." % backup_file))
+    
+    run("rm %s" % backup_file)

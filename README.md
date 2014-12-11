@@ -502,14 +502,36 @@ Functionality:
 		"user":"root",
 		"password":"root",
 		"database":"your-database",
-		"backup_path":"/full/path/to/database/backup/path"
+		"backup_file":"/full/path/to/database/backup/path/file.sql"
+		("download_tar_to_local_file":"./local/path/db/backup.tar.gz")
 	}
 }
 ```
 
 Funcationality:
 
-- Runs mysqldump and creates a mysql file in the backup path ... (date isoformat named)
+- Runs mysqldump and creates a mysql sql that will be compressed to tar.gz.
+- The generated sql file will be removed. 
+- Tries to create the path on remote if it doesn't exist
+- If download_tar_to_local_file is given it will download the tar.gz for local backup
+
+#### mysql.cleanup_db_backups
+```
+"your-own-description":{
+	"sequence":1,
+	"execute":"mysql.cleanup_db_dumps",
+	"params":{
+		"path":"/full/path/to/database/backup/path",
+		("max_backup_history":"5")
+	}
+}
+```
+
+Funcationality:
+
+- Reads path for *.tar.gz files... and removes the oldest files. (by filesystem)
+- max_backup_history is optional, defaults to 5
+
 
 #### mysql.query
 ```

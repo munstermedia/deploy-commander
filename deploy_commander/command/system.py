@@ -52,7 +52,13 @@ def download_from_remote(params):
     if not 'local_path' in params:
         abort('No local path set')
     
-    get(**params) 
+    print("Reading from `%s`" % params['remote_path'])
+    print("Target to `%s`" % params['local_path'])
+    
+    try:
+        get(**params) 
+    except Exception, e:
+        print e
 
 def upload_template(params):
     """

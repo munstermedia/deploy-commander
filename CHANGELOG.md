@@ -13,4 +13,8 @@
 - 	Added show_config option
 
 ## 0.0.25
-- 	Added mysql.cleanup_old_backups
+- 	Added mysql.cleanup_db_backups .. that will remove old backup files from remote
+- 	Changed backup_db so it's possible to modify the backup file
+-	Changed backup_db that it will create a compressed backup
+- 	Added download from tar.gz to local option (download_tar_to_local_file)
+-	Changed restore_db that is will restore from a compressed backup
