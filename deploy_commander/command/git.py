@@ -26,6 +26,12 @@ def install_repo(params):
     The clone command can be used to clone a new repo.
     If it's allready an existing path it will prompt for overwrite
     """
+    if 'repo_path' not in params:
+        abort(red("repo_path can't be empty?"))
+    
+    if 'repo_url' not in params:
+        abort(red("repo_url can't be empty?"))
+    
     params = utils.format_params(params)
     
     if exists(params['repo_path']):

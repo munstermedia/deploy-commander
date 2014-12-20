@@ -401,9 +401,24 @@ Functionality:
 - Unlimited own params.. source and target are required
 
 
+#### system.ensure_path
+```
+"your-own-description":{
+	"sequence":1,
+	"execute":"system.ensure_path",
+	"params":{
+		"path":"/the/full/path/you/need"
+	}
+}
+```
+
+Functionality:
+
+- Checks if folders exists, if not it will try to create the path
+
 #### system.download_from_remote
 ```
-"download":{
+"your-own-description":{
 	"sequence":1,
 	"execute":"system.download_from_remote",
 	"params":{

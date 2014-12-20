@@ -18,3 +18,7 @@
 -	Changed backup_db that it will create a compressed backup
 - 	Added download from tar.gz to local option (download_tar_to_local_file)
 -	Changed restore_db that is will restore from a compressed backup
+
+## 0.0.26
+-	Added validation for repo_url and repo path to git.install_repo
+- 	Added ensure path command

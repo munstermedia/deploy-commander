@@ -20,7 +20,13 @@ def symlink(params):
     Create a symlink command.
     """
     params = utils.format_params(params)
-       
+    
+    if not 'source' in params:
+        abort('No source set')
+    
+    if not 'target' in params:
+        abort('No target set')
+    
     if is_link(params['source']):
         print(yellow("Symlink `%s` exists and will be removed" % params['source']))
         run('rm %s' % params['source'])
@@ -34,12 +40,29 @@ def command(params):
     """
     Run a command
     """
+    params = utils.format_params(params)
+    
+    if not 'command' in params:
+        abort('No command set')
+        
     command = params['command'] % env.params
     run(command)
     
     print(green("Command `%s` executed" % command)) 
 
-
+def ensure_path(params):
+    """
+    Ensure a certain path
+    """
+    params = utils.format_params(params)
+    
+    if not 'path' in params:
+        abort('No path set')
+    
+    utils.ensure_path(path=params['path'])
+    
+    print(green("Ensure path `%s`." % (params['path']))) 
+    
 def download_from_remote(params):
     """
     Download folder to local path
@@ -69,6 +92,9 @@ def upload_template(params):
     
     params = utils.format_params(params)
     
+    if not 'use_sudo' in params:
+        abort('No use_sudo set')
+        
     if 'use_sudo' in params:
         use_sudo = params['use_sudo']
     else:

@@ -67,7 +67,6 @@ def ensure_path(path, use_sudo=False):
                     run('mkdir %s' % tmp_path)
                 
             print(yellow("Path `%s` did not exist and is created" % tmp_path))
-
     
 def init_env_settings(group):
     """
