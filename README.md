@@ -16,7 +16,7 @@ There are other flavors for setting up your dtap... we're focussing on simplicit
 
 ## So it's not...?
 
-- Puppet
+- Puppet)
 - Chef
 - Sys ops server management
 - Jenkins
@@ -25,7 +25,7 @@ There are other flavors for setting up your dtap... we're focussing on simplicit
 ## Goals
 
 - Ease of deployments
-- Ease of rollbacks
+- Ease of sysadmin tasks
 - Simplified deployment by simple configurations
 - Based on unix based environments
 - Continuous integration
@@ -451,7 +451,7 @@ Functionality:
 - Runs 'apt-get install -y (package)'
 
 
-#### git.install_repo
+#### git.install_repo (deprecated)
 
 ```
 "your-own-description":{
@@ -468,9 +468,27 @@ Functionality:
 - Checks if repo path exists.. if not it will ask to reinstall and it will reset/remove all existing code in the path.
 - Clones the repository to the path
 
+#### git.clone
+(previous git.install_repo)
 
+```
+"your-own-description":{
+	"sequence":1,
+	"execute":"git.install_repo",
+	"params":{
+		"repo_path":"/full/path/to/repo",
+		"repo_url":"https://github.com/munstermedia/demo.git"
+	}
+}
+```
+Functionality:
 
-#### git.deploy_tag
+- Checks if repo path exists.. if not it will ask to reinstall and it will reset/remove all existing code in the path.
+- Clones the repository to the path
+
+#### git.deploy_tag (depricated)
+(depricated from version 1.0.0, use deploy instead)
+
 ```
 "your-own-description":{
 	"sequence":1,
@@ -494,7 +512,34 @@ It will use the code in the repo path to go to a certain branch/tag. This will b
 - Allow updates submodules by running 'git submodule update'
 
 
-#### mysql.install_mysql
+#### git.deploy
+(Previous command deploy_tag)
+
+```
+"your-own-description":{
+	"sequence":1,
+	"execute":"git.deploy",
+	"params":{
+		"repo_path":"/full/path/to/repo",
+		"target_oath":"/full/path/to/source/%(tag)s",
+		("branch":"deploy-0.0.1")
+	}
+}
+```
+
+Functionality:
+
+It will use the code in the repo path to go to a certain branch/tag. This will be copied to a tag path so you'll have versioned codebases living next to each other.
+
+- Branch in params is optional, you should leave it empty by default unless you have a good reason for it.
+- If branch it's not set (empty) it will list the available tags and prompt for input.
+- If repo path is not existing it will exit. You'll need a valid cloned repo path
+- If target path is allready existing it will remove it and all it's content. And deploy a completely new version.
+- Allow updates submodules by running 'git submodule update'
+
+#### mysql.install_mysql (deprecated)
+(Will be removed in 1.0.0, use puppet or something else...)
+
 ```
 "your-own-description":{
 	"sequence":1,

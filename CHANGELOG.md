@@ -22,3 +22,9 @@
 ## 0.0.26
 -	Added validation for repo_url and repo path to git.install_repo
 - 	Added ensure path command
+-	Changed git.deploy_tag to git.deploy
+- 	Changed params for git.deploy tag to branch and target_path
+-	Refactored some code for git.deploy (made it nicer)
+-	system.upload_template use_sudo defaults to false
+- 	Added sudo option to system.command
+-	git.install_repo forwarded to git.clone

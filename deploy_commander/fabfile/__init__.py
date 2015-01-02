@@ -205,6 +205,9 @@ def run(command):
     
     utils.print_double_line()
     
+    if command not in env.commands:
+        abort(red("Command `%s` does not exist!" % command))
+        
     if 'description' in env.commands[command]:
         print(green(env.commands[command]['description']))
     

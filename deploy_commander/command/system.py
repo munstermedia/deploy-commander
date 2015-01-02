@@ -6,6 +6,7 @@ import os
 from fabric.api import env
 from fabric.contrib.files import is_link
 from fabric.operations import run
+from fabric.operations import sudo
 from fabric.operations import get
 
 from fabric.utils import abort
@@ -45,10 +46,12 @@ def command(params):
     if not 'command' in params:
         abort('No command set')
         
-    command = params['command'] % env.params
-    run(command)
+    if 'use_sudo' in params:
+        sudo(params['command'])
+    else:
+        run(params['command'])
     
-    print(green("Command `%s` executed" % command)) 
+    print(green("Command `%s` executed" % params['command'])) 
 
 def ensure_path(params):
     """
@@ -93,7 +96,7 @@ def upload_template(params):
     params = utils.format_params(params)
     
     if not 'use_sudo' in params:
-        abort('No use_sudo set')
+        params['use_sudo'] = False
         
     if 'use_sudo' in params:
         use_sudo = params['use_sudo']
