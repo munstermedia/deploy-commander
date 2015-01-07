@@ -55,15 +55,27 @@ def environment():
     """
     Load environment settings and process the post_params
     """
-    
-    # Load environment config
-    load_config('config/%s.json' % env.params['environment'])
-    
-    # Load default project settings
-    load_config('config/%s/default.json' % (env.params['project']))
-    
-    # Load specific env settings
-    load_config('config/%s/%s.json' % (env.params['project'], env.params['environment']))
+    project_config = 'config/%s/config.json' % (env.params['project'])
+    if os.path.isfile(project_config):
+        print(green("Load project config %s" % (project_config)))
+        with open(project_config) as json_config:
+            try:
+                main_config = json.load(json_config)
+            except Exception, e:
+                abort(red("Cannot read main config, is the config correct?. `%s`" % e))
+            
+            if 'config' in main_config:
+                for config_file in main_config['config']:
+                    load_config(config_file % env.params)
+    else:
+        # Load environment config
+        load_config('config/%s.json' % env.params['environment'])
+        
+        # Load default project settings
+        load_config('config/%s/default.json' % (env.params['project']))
+        
+        # Load specific env settings
+        load_config('config/%s/%s.json' % (env.params['project'], env.params['environment']))
     
     # Post process params from params
     if env.post_params:

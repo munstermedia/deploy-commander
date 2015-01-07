@@ -73,87 +73,6 @@ sudo apt-get install python-dev
 sudo pip install deploy-commander
 ```
 
-## Setup example
-
-We have examples available for download and it contains a basic setup with the following:
-
-- Vagrant file (for your local dev machine)
-- Setup server with puppet
-- Encrypted configs
-- Configs with different examples
-- Main config.dist for main configuration
-
-
-```
-// Clone an example
-git clone https://github.com/munstermedia/deploy-commander-php-example.git
-
-// Go into repo
-cd deploy-commander-php-example
-
-// Setup main config
-mv .config.dist .config
-
-// Load development server, a ubuntu trusty box with ip 192.168.56.111
-vagrant up
-```
-
-## Lets go...
-
-
-### Install app
-We're gonna install a new app from the defined repo.
-Run the command and yust leave the prompt empty... it will use the default settings:
-
-* project : example
-* environment : development
-
-```
-deploy-commander go run:install-app
-```
-
-What just happened?
-
-- This will create base folders and clone the repo into a development enviroment
-- We've cloned a repo into `/home/<user>/<env>/repo`
-- We've created a database
-- We've installed the default install.sql from repo
-
-> Try to enter different environments, in this example they all point to the vagrant box, but for your production it can point to different servers.
-
-### Deploy app
-
-Now we're gonna deploy the source code and use the master branch to do so.
-
-```
-deploy-commander go run:deploy-app
-```
-
-This wil prompt you with the same like install but it will ask for a tag.
-The default tag is the latest from the list.
-
-What just happened?
-
-- We've updated `/home/<user>/<env>/repo`
-- We've created `/home/<user>/<env>/source/<tag>` from the repo
-- We've backupped the database in `/home/<user>/<env>/db_backup`
-- We've created a symlink `/home/<user>/<env>/current` to `/home/<user>/<env>/source/<tag>`
-
-### Rollback app
-
-Now we're gonna rollback the app...
-
-```
-deploy-commander go run:rollback-app
-```
-
-What just happened?
-
-- We've removed the old symlink `/home/<user>/<env>/current` and linked it to the new tag you've entered.
-- If we answered yes to import database, we could rollback the database to another version.
-
-- - -
-
 ## Configuration
 
 The configuration files are located in the ./config folder.
@@ -199,12 +118,26 @@ So remember to setup this password on your production server manually...
 It's important to understand how settings are loaded and which settings are possible.
 We've implemented a nice feature to inherit settings based on environments and projects.
 
-When running a deployment for a project it will first load in sequence:
+When running a deployment for a project it will first load in sequence (if available):
 
 1.    Generic config (default.json)
 2.    Generic environment config (production.json)
 3.    Project config (project/default.json)
 4.    Project environment config (production.json)
+
+If you want to load a different config strategy for jouw project, you can create a file '<project>/config.json'
+
+With the json config:
+
+```
+{
+	"config_strategy":[
+		"config/%(environment)s.json",
+		"config/%(project)s/default.json",
+		"Your other config config .."
+ 	]
+}
+```
 
 Say you have the following:
 

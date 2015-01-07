@@ -28,3 +28,6 @@
 -	system.upload_template use_sudo defaults to false
 - 	Added sudo option to system.command
 -	git.install_repo forwarded to git.clone
+
+## 0.0.27
+- 	Added overwrite of config loading with config_strategy
