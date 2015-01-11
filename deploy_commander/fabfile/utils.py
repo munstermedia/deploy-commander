@@ -60,11 +60,10 @@ def ensure_path(path, use_sudo=False):
         tmp_parts = parts[0:(i+1)]
         tmp_path = '/'.join(tmp_parts)
         if not exists(tmp_path):
-            with hide('output', 'running'):
-                if use_sudo:
-                    sudo('mkdir %s' % tmp_path)
-                else:
-                    run('mkdir %s' % tmp_path)
+            if use_sudo:
+                sudo('mkdir %s' % tmp_path)
+            else:
+                run('mkdir %s' % tmp_path)
                 
             print(yellow("Path `%s` did not exist and is created" % tmp_path))
     

@@ -12,6 +12,7 @@ from fabric.context_managers import hide
 from fabric.context_managers import shell_env
 from fabric.contrib.files import exists
 from fabric.colors import green
+from fabric.colors import yellow
 from fabric.colors import red
 from fabric.context_managers import cd
 from fabric.utils import abort
@@ -90,20 +91,24 @@ def import_file(params):
     
     params = utils.format_params(params)
      
-    command = """
-    mysql -h %(host)s -u %(user)s --password='%(password)s' %(database)s  < %(import_file)s
-    """
+     
+    if not exists(params['import_file']):
+        print(yellow("Mysql file `%s` does not exist, so no import is executed." % params['import_file']))    
+    else:
+        command = """
+        mysql -h %(host)s -u %(user)s --password='%(password)s' %(database)s  < %(import_file)s
+        """
+            
+        # Make params
+        command_params = {'user': params['user'],
+                          'password': params['password'],
+                          'database': params['database'],
+                          'host': params['host'],
+                          'import_file':params['import_file']}
         
-    # Make params
-    command_params = {'user': params['user'],
-                      'password': params['password'],
-                      'database': params['database'],
-                      'host': params['host'],
-                      'import_file':params['import_file']}
-    
-    run(command % command_params)
-    
-    print(green("Mysql file `%s` successfully imported." % command_params['import_file']))     
+        run(command % command_params)
+        
+        print(green("Mysql file `%s` successfully imported." % command_params['import_file']))     
 
 def cleanup_db_backups(params):
     """

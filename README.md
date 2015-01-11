@@ -6,28 +6,40 @@ A tool for setting up a different environments most used for managing DTAP flows
 Deploy commander is build directly on python/fabric, but can be used for any project.
 
 Main goal of this system is to configure your deployment, and not programm it.
-There are other flavors for setting up your dtap... we're focussing on simplicity and transparancy. Next to that we want to create a centralized system to manage different deployments for multiple apps on different servers.
+There are other flavors for setting up your dtap... we're focussing on simplicity and transparancy. 
+
+Next to that we want to create a centralized system to manage `different deployments` (applications) for `multiple apps` build in `different languages` on `different servers`.
+
+We're building a lot if handy features for sysadmins and developers that will make your life easier. 
+
+- Git checkout and update made easy
+- Create folders dynamicly
+- Backup database on deployment
+- Import database
+- Download files (like assets) for backup.
+- Upload files (like assets) for preperation
 
 ** Note : This application is still in it's development phase. **
 
 ## Soon
 
-- Attach github and bitbucket hooks to automate the deployment process
+- django-deploy-commander : Attach github and bitbucket hooks to automate the deployment process
 
 ## So it's not...?
 
-- Puppet)
-- Chef
-- Sys ops server management
-- Jenkins
-- Capistrano
+- Puppet, (can be used for setting up server software but verry handy in your project!)
+- Chef (See Puppet)
+- Sys ops server management (See puppet/Chef)
+- Jenkins (CI Server, we have a equivelent called django-deploy-commander :))
+- Capistrano (Allso used for deployments... but mostly used per project/site...)
 
 ## Goals
 
+- Centralized deployment
 - Ease of deployments
 - Ease of sysadmin tasks
 - Simplified deployment by simple configurations
-- Based on unix based environments
+- Unix based environments
 - Continuous integration
 
 - - -
@@ -59,6 +71,7 @@ We'll assume you have worked with then...
 
 We only tested this system on unix like machines, like Ubuntu and MacOS.
 Currently we don't support other flavors... sorry... (allthough it must work on centos too...)
+So for now, this quick demo can't be run if you are using a windows machine.
 
 
 ## Install
@@ -81,10 +94,24 @@ These are json structured configs where you can setup stuff like ssh credentials
 
 ### Main configurtion
 
-The main configuration file must be located in the root folder and named ".config"
+The main configuration file must be located in the root folder and named "config.json"
 This config file contains json structured params, like your master password.
 
 Don't commit this file to your repo because the master password should be stored elsewhere.
+
+```
+{
+	"master_password":"1234",
+	"env":{
+		"debug":"True",
+		"warning_only":"True",
+		"running":"True",
+		"stdout":"True"
+	}
+}
+```
+
+
 
 ### Encrypted config's
 
@@ -563,6 +590,8 @@ Functionality:
 Functionality:
 
 - Executes : 'mysql -h %(host)s -u %(user)s --password='%(password)s' %(database)s  < %(import_file)s'
+- If import_file does not exist it will show a warning and will continue to the next command
+
 
 
 #### mysql.restore_db

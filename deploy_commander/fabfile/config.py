@@ -14,41 +14,47 @@ from fabric.colors import red
 from fabric.colors import yellow
 from fabric.colors import green
 
-from fabric.state import output
 
 from simplecrypt import encrypt
 from simplecrypt import decrypt
 from simplecrypt import DecryptionException
 
-env.warn_only = False
 
-env.params = {}
-env.post_params = {}
-env.commands = {}
-
+# Set default connection_attempts
 env.connection_attempts = 3
+
+# Set default timeout
 env.timeout = 30
 
-from fabric.state import output
+
+# Base params settings
+env.params = {}
+
+# Base post params setting
+env.post_params = {}
+
+# Commands setting
+env.commands = {}
+
 
 def init():
     """
     Default init for all commands
     """
-
-    # Default output settings
-    output['running'] = False
-    output['stdout'] = False
-
+    env.stdout = False
+    env.running = False
     env.environments = ["development", "production", "staging", "testing"]
     
     # Load main config
     load_main_config()
-      
+     
+    env.debug = False 
+    env.warning_only = True
+    env.stdout = False
+    env.running = False
     env.params['timestamp'] = int(time.time())
     
-    # Load default
-    load_config('config/default.json')
+    
     
 
 def environment(): 
@@ -64,10 +70,13 @@ def environment():
             except Exception, e:
                 abort(red("Cannot read main config, is the config correct?. `%s`" % e))
             
-            if 'config' in main_config:
-                for config_file in main_config['config']:
+            if 'config_load_strategy' in main_config:
+                for config_file in main_config['config_load_strategy']:
                     load_config(config_file % env.params)
     else:
+        # Load default
+        load_config('config/default.json')
+    
         # Load environment config
         load_config('config/%s.json' % env.params['environment'])
         
@@ -158,13 +167,24 @@ def write_config(file_path, config):
         config_file.write(json_config)
         config_file.close()
     
+
+def str2bool(v):
+  """
+  Helper to check true/false value of config setting
+  """
+  return v.lower() in ("yes", "true", "t", "1")
+
 def load_main_config():
     """
     Load main config file.
     """
     cwd = os.getcwd()
     
-    file_path = "%s/.config" % (cwd)
+    old_file_path = "%s/.config" % (cwd)
+    if os.path.isfile(old_file_path):
+        abort(red("The main config file `%s` is deprecated in this version of deploy commander, please rename file to config.json" % (old_file_path)))
+    
+    file_path = "%s/config.json" % (cwd)
     if not os.path.isfile(file_path):
         abort(red("No main config file found. Did you setup your project in the `%s` file?" % (file_path)))
     else:
@@ -173,6 +193,23 @@ def load_main_config():
             if not 'master_password' in config:
                 abort(red('No master password set in main config.'))
             
+            # If environment is set in config
+            if 'env' in config:
+                
+                
+                if 'debug' in config['env']:
+                    env.debug = str2bool(config['env']['debug'])
+                    
+                if 'warning_only' in config['env']:
+                    env.warning_only = str2bool(config['env']['warning_only'])
+            
+                if 'running' in config['env']:
+                    env.running = str2bool(config['env']['running'])
+            
+                if 'stdout' in config['env']:
+                    env.stdout = str2bool(config['env']['stdout'])
+                
+
             env.master_password = config['master_password']
     
 def load_config(filename):
@@ -210,9 +247,6 @@ def set_config(config):
     This will check certain key/values in the configuration file and 
     tries to merge them together
     """
-    if config.has_key('output'):
-        for setting_name, setting_value in config['output'].iteritems():
-            output[setting_name] = setting_value
     
     if config.has_key('roledefs'):
         for setting_name, setting_value in config['roledefs'].iteritems():
