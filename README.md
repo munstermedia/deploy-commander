@@ -61,20 +61,13 @@ On a production setup it's best to create a dedicated environment to manage your
 
 - - -
 
-#Quick demo setup
+## Example deployment
 
-## Requirements
-
-In this quick demo we'll use [virtualbox](https://www.virtualbox.org/) and [vagrant](https://www.vagrantup.com/).
-
-We'll assume you have worked with then...
-
-We only tested this system on unix like machines, like Ubuntu and MacOS.
-Currently we don't support other flavors... sorry... (allthough it must work on centos too...)
-So for now, this quick demo can't be run if you are using a windows machine.
+We have an example repo available [deploy-commander-example](https://github.com/munstermedia/deploy-commander-example)
 
 
-## Install
+
+## Install deploy-commander
 We need to install the basic python libraries and the deploy-commander codebase.
 
 ```
@@ -92,7 +85,7 @@ The configuration files are located in the ./config folder.
 
 These are json structured configs where you can setup stuff like ssh credentials, symlinks, mysql backup and much more...
 
-### Main configurtion
+### Main configuration
 
 The main configuration file must be located in the root folder and named "config.json"
 This config file contains json structured params, like your master password.
@@ -152,7 +145,7 @@ When running a deployment for a project it will first load in sequence (if avail
 3.    Project config (project/default.json)
 4.    Project environment config (production.json)
 
-If you want to load a different config strategy for jouw project, you can create a file '<project>/config.json'
+If you want to load a different config strategy for your project, you can create a file '<project>/config.json'
 
 With the json config:
 
@@ -166,7 +159,7 @@ With the json config:
 }
 ```
 
-Say you have the following:
+Example inheritance:
 
 ```
 // default.json
@@ -804,7 +797,7 @@ Config for the development project.
 This will overwrite the ./config/default.json, default.json and development.json
 
 
-> For more information about the configuration options please see the examples in ./config in the github repo.
+> For more information about the configuration options please see the examples in ./config in the example github repo.
 
 To view the configuration from the command line you can run:
 
