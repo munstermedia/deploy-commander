@@ -195,8 +195,6 @@ def load_main_config():
             
             # If environment is set in config
             if 'env' in config:
-                
-                
                 if 'debug' in config['env']:
                     env.debug = str2bool(config['env']['debug'])
                     

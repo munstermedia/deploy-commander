@@ -41,6 +41,16 @@ def format_params(params):
         params[key] = value % env.params
     return params
 
+def get_global_params(return_params, *params):
+    """
+    Tries to get global param values by name 
+    """
+    for param in params:
+        if param in env.params:
+            return_params[param] = env.params[param]
+            
+    return return_params
+
 def upload_template(src, dest, *args, **kwargs):
     """
     Wrapper around Fabric's upload_template that sets +r.

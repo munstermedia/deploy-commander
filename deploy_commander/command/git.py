@@ -19,43 +19,51 @@ from fabfile import utils
 
 
 def install_repo(params):
-    print(red("install_repo is deprecated from version 1.0.0"))
-    clone(params)
+    abort(red("install_repo is deprecated, use git.clone instead."))
 
 def clone(params):
     """
     The clone command can be used to clone a new repo.
     If it's allready an existing path it will prompt for overwrite
     """
-    if 'repo_path' not in params:
-        abort(red("repo_path can't be empty?"))
     
-    if 'repo_url' not in params:
-        abort(red("repo_url can't be empty?"))
+    if 'repo_path' in params:
+        abort(red("repo_path is deprecated, use git_repo_path"))
+        
+    if 'repo_url' in params:
+        abort(red("repo_url is deprecated, use git_repo_url"))
+      
+    # Try to get global params
+    params = utils.get_global_params(params,
+                                     'git_repo_path', 
+                                     'git_repo_url')
+    
+    if 'git_repo_path' not in params:
+        abort(red("git_repo_path can't be empty?"))
+    
+    if 'git_repo_url' not in params:
+        abort(red("git_repo_url can't be empty?"))
     
     params = utils.format_params(params)
     
-    if exists(params['repo_path']):
-        if confirm("Repo path `%s` found, do you want to reinstall?" % params['repo_path']):
-            print(yellow("Repo path `%s` will be deleted" % params['repo_path']))
-            run('rm -Rf %s' % params['repo_path'])
+    if exists(params['git_repo_path']):
+        if confirm("Repo path `%s` found, do you want to reinstall?" % params['git_repo_path']):
+            print(yellow("Repo path `%s` will be deleted" % params['git_repo_path']))
+            run('rm -Rf %s' % params['git_repo_path'])
         else:
             abort("Aborted...")
         
-    utils.ensure_path(params['repo_path'])
+    utils.ensure_path(params['git_repo_path'])
     
-    run('git clone --recursive %s %s' % (params['repo_url'], params['repo_path']))
+    run('git clone --recursive %s %s' % (params['git_repo_url'], params['git_repo_path']))
          
-    print(green("Repo `%s` successfully cloned" % params['repo_url']))
+    print(green("Repo `%s` successfully cloned" % params['git_repo_url']))
 
 def deploy_tag(params):
     """
     Deprecated command, use deploy instead
     """
-    
-    print(red("Warning git.deploy_tag is deprecated from version 1.0.0 !!! Use git.deploy instead!"))
-    
-    deploy(params);
+    abort(red("Warning git.deploy_tag is deprecated, Use git.deploy instead!"))
 
 def deploy(params):
     """
@@ -64,18 +72,42 @@ def deploy(params):
     When executed it will prompt for the tag to deploy if it's not known
     """
     
-    params = utils.format_params(params)
+    # Try to get global params
+    params = utils.get_global_params(params,
+                                     'git_repo_path', 
+                                     'git_repo_url',
+                                     'git_branch',
+                                     'git_source_path')
     
+    # Old params
     if 'tag_path' in params:
-        params['target_path'] = params['tag_path']
-        print(red("Warning tag_path is deprecated from version 1.0.0 !!! Use target_path instead!"))
+        abort(red("Warning tag_path is deprecated, Use git_source_path !"))
+    
+    if 'target_path' in params:
+        abort(red("Warning target_path is deprecated, Use git_source_path !"))
     
     if 'tag' in params:
-        params['branch'] = params['tag']
-        print(red("Warning tag is deprecated from version 1.0.0 !!! Use branch instead!"))
+        abort(red("Warning tag is deprecated, Use git_branch !"))
         
-    if 'branch' not in params:
-        with cd(params['repo_path']):
+    if 'branch' in params:
+        abort(red("Warning branch is deprecated, Use git_branch !"))
+       
+    if 'repo_path' in params:
+        abort(red("repo_path is deprecated, use git_repo_path !")) 
+        
+    
+    # Check required params
+    if 'git_source_path' not in params:
+        abort(red("git_source_path is required !")) 
+    
+    if 'git_repo_url' not in params:
+        abort(red("git_repo_url is required !")) 
+    
+    if 'git_repo_path' not in params:
+        abort(red("git_repo_path is required !")) 
+        
+    if 'git_branch' not in params:
+        with cd(params['git_repo_path']):
             print("Fetching latest tags...just a moment...")
             print("")
             
@@ -91,29 +123,31 @@ def deploy(params):
                 
             print("")
         
-        params['branch'] = prompt("Enter branch/tag to deploy : ", default=latest_tag)
+        params['git_branch'] = prompt("Enter branch/tag to deploy : ", default=latest_tag)
     
-    if not exists(params['repo_path']):
+    params = utils.format_params(params)
+    
+    if not exists(params['git_repo_path']):
         abort(red("Repo path not existing... is the project installed?"))
     
     # If exist remove full source
-    if exists(params['target_path']):
-        print(yellow("Deploy target path `%s` allready existed... source data be removed and reset." % params['target_path']))
-        run('rm -Rf %s' % params['target_path'])
+    if exists(params['git_source_path']):
+        print(yellow("Deploy target path `%s` allready existed... source data be removed and reset." % params['git_source_path']))
+        run('rm -Rf %s' % params['git_source_path'])
     
-    utils.ensure_path(params['target_path'])
+    utils.ensure_path(params['git_source_path'])
     
-    with cd(params['repo_path']):
+    with cd(params['git_repo_path']):
         run('git fetch')
         
         # Update local repo with latest code
-        run('git checkout %s' % (params['branch']))
+        run('git checkout %s' % (params['git_branch']))
         
-        run('git pull origin %s' % (params['branch']))
+        run('git pull origin %s' % (params['git_branch']))
         
         run('git submodule update')
         
         # Copy source code to version
-        run('cp -Rf %s/* %s/' % (params['repo_path'], params['target_path']))
+        run('cp -Rf %s/* %s/' % (params['git_repo_path'], params['git_source_path']))
     
             

@@ -387,95 +387,37 @@ Functionality:
 - Can use wildcards for files.
 - Can download one or more files/folders
 
-#### aptget.install
 
-```
-"your-own-description":{
-	"sequence":1,
-	"execute":"aptget.install",
-	"params":{
-		"package":"git"
-	}
-}
-```
-
-Functionality:
-
-- Runs 'apt-get install -y (package)'
-
-
-#### git.install_repo (deprecated)
-
-```
-"your-own-description":{
-	"sequence":1,
-	"execute":"git.install_repo",
-	"params":{
-		"repo_path":"/full/path/to/repo",
-		"repo_url":"https://github.com/munstermedia/demo.git"
-	}
-}
-```
-Functionality:
-
-- Checks if repo path exists.. if not it will ask to reinstall and it will reset/remove all existing code in the path.
-- Clones the repository to the path
 
 #### git.clone
-(previous git.install_repo)
 
 ```
 "your-own-description":{
 	"sequence":1,
 	"execute":"git.install_repo",
 	"params":{
-		"repo_path":"/full/path/to/repo",
-		"repo_url":"https://github.com/munstermedia/demo.git"
+		"git_repo_path":"/full/path/to/repo",
+		"git_repo_url":"https://github.com/munstermedia/demo.git"
 	}
 }
 ```
+
 Functionality:
 
 - Checks if repo path exists.. if not it will ask to reinstall and it will reset/remove all existing code in the path.
 - Clones the repository to the path
-
-#### git.deploy_tag (depricated)
-(depricated from version 1.0.0, use deploy instead)
-
-```
-"your-own-description":{
-	"sequence":1,
-	"execute":"git.deploy_tag",
-	"params":{
-		"repo_path":"/full/path/to/repo",
-		"tag_path":"/full/path/to/source/%(tag)s",
-		("tag":"deploy-0.0.1")
-	}
-}
-```
-
-Functionality:
-
-It will use the code in the repo path to go to a certain branch/tag. This will be copied to a tag path so you'll have versioned codebases living next to each other.
-
-- Tag in params is optional, you should leave it empty by default unless you have a good reason for it.
-- If tag it's not set (empty) it will list the available tags and prompt for input.
-- If repo path is not existing it will exit. You'll need a valid cloned repo path
-- If tag path is allready existing it will remove it and all it's content. And deploy a completely new version.
-- Allow updates submodules by running 'git submodule update'
 
 
 #### git.deploy
-(Previous command deploy_tag)
 
 ```
 "your-own-description":{
 	"sequence":1,
 	"execute":"git.deploy",
 	"params":{
-		"repo_path":"/full/path/to/repo",
-		"target_oath":"/full/path/to/source/%(tag)s",
-		("branch":"deploy-0.0.1")
+		"git_repo_path":"/full/path/to/repo",
+		"git_source_path":"/full/path/to/source/%(tag)s",
+		"git_branch":"deploy-0.0.1"
 	}
 }
 ```
@@ -489,20 +431,6 @@ It will use the code in the repo path to go to a certain branch/tag. This will b
 - If repo path is not existing it will exit. You'll need a valid cloned repo path
 - If target path is allready existing it will remove it and all it's content. And deploy a completely new version.
 - Allow updates submodules by running 'git submodule update'
-
-#### mysql.install_mysql (deprecated)
-(Will be removed in 1.0.0, use puppet or something else...)
-
-```
-"your-own-description":{
-	"sequence":1,
-	"execute":"mysql.install_server"
-}
-```
-
-Functionality:
-
-- Runs apt-get -y install mysql-server, with : DEBIAN_FRONTEND='noninteractive' (no prompt)
 
 
 #### mysql.backup_db
@@ -521,7 +449,7 @@ Functionality:
 }
 ```
 
-Funcationality:
+Functionality:
 
 - Runs mysqldump and creates a mysql sql that will be compressed to tar.gz.
 - The generated sql file will be removed. 
@@ -529,6 +457,7 @@ Funcationality:
 - If download_tar_to_local_file is given it will download the tar.gz for local backup
 
 #### mysql.cleanup_db_backups
+(Gonna be depricated, this is something we should implement with the backup_db)
 ```
 "your-own-description":{
 	"sequence":1,
@@ -663,11 +592,7 @@ Functionality:
 				"git-clone":{
 					"sequence":1,
 					"execute":"git.clone",
-					"description":"First repo cloning...",
-					"params":{
-						"repo_path":"%(base_path)s/repo",
-						"repo_url":"will-be-overwritten-by-project"
-					}
+					"description":"First repo cloning..."
 				},
 				"create-mysql-db":{
 					"sequence":2,
@@ -697,11 +622,7 @@ Functionality:
 			"actions":{
 				"git-deploy-tag":{
 					"sequence":1,
-					"execute":"git.deploy_tag",
-					"params":{
-						"repo_path":"%(base_path)s/repo",
-						"tag_path":"%(base_path)s/source/%(tag)s"
-					}
+					"execute":"git.deploy_tag"
 				},
 				"upload-environment-config":{
 					"sequence":2,

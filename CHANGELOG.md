@@ -1,4 +1,12 @@
 # Changelog
+## 0.1.0
+-	Prepping for a final release
+-	Format params of git command after branch input is requested
+-	Refactored git functionality, new params, added required checks
+- 	Added global params util, to reuse general params
+-	Removed apt-get, this is something that should be solved with puppet or chef
+-	Updated README
+
 ## 0.0.27
 - 	Added overwrite of config loading with config_strategy
 -	Changed config of root from '.config' to 'config.json'
