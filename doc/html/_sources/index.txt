@@ -1,9 +1,12 @@
+.. _index:
+
+=================================
 deploy-commander's documentation!
 =================================
 
 .. rubric:: Stuff you'll need to know for deploy commander.
 
-If you're not familiar with deploy-commander you might want to read :doc:`what deploy commander is <what-is-deploy-commander>`.
+Not familiar with deploy-commander? :doc:`Read this <what-is-deploy-commander>`.
 
 
 Contents
@@ -24,11 +27,4 @@ Contents
    Security <security>
    Cheatsheet <cheatsheet>
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 
