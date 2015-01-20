@@ -1,0 +1,294 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Key concepts &mdash; deploy-commander 0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="deploy-commander 0 documentation" href="index.html" />
+    <link rel="next" title="Usage" href="usage.html" />
+    <link rel="prev" title="deploy-commander installation" href="installation.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="usage.html" title="Usage"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="deploy-commander installation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">deploy-commander 0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="key-concepts">
+<h1>Key concepts<a class="headerlink" href="#key-concepts" title="Permalink to this headline">¶</a></h1>
+<p>Although we try to make this application as simple as possible we expect you to understand
+the basic principles we have for deploy-commander.</p>
+<div class="section" id="project-environment-and-tasks">
+<h2>Project, Environment and Tasks<a class="headerlink" href="#project-environment-and-tasks" title="Permalink to this headline">¶</a></h2>
+<p>Deploy commander is based on 3 main principles.</p>
+<ul class="simple">
+<li>The project you want something to do with. (<cite>Can be defined by the config</cite>)</li>
+<li>The environment where this will be executed. (<cite>testing, acceptance, production</cite>)</li>
+<li>The task you want to execute. (<cite>Deploy, Backup DB, Clear cache</cite>)</li>
+</ul>
+<p>The projects, environments and tasks must be defined in the settings.</p>
+</div>
+<div class="section" id="config">
+<h2>Config<a class="headerlink" href="#config" title="Permalink to this headline">¶</a></h2>
+<div class="sidebar">
+<p class="first sidebar-title">Security</p>
+<p class="last">Settings can be encrypted, see the <a class="reference internal" href="security.html"><em>security</em></a> section.</p>
+</div>
+<p>Configuration is stores in .json files. You can find them in the config folder.
+The configuration holds all information related to deploy-commander and your project.</p>
+<p>More information about the configuration can be found in our <a class="reference internal" href="config.html"><em>config</em></a> section.</p>
+</div>
+<div class="section" id="tasks">
+<h2>Tasks<a class="headerlink" href="#tasks" title="Permalink to this headline">¶</a></h2>
+<p>Tasks define a set of actions to execute. This is one of the core elements of the system.
+The key defined will be usable in the command line execute. (deploy-commander go run:&lt;task&gt;)
+You can define as many tasks as you want.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;tasks&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;tasks-1&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;Test task 1&quot;</span><span class="p">,</span>
+      <span class="s">&quot;actions&quot;</span><span class="p">:</span> <span class="p">{}</span>
+    <span class="p">},</span>
+    <span class="s">&quot;tasks-2&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;Test task 2&quot;</span><span class="p">,</span>
+      <span class="s">&quot;actions&quot;</span><span class="p">:</span> <span class="p">{}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="actions">
+<h2>Actions<a class="headerlink" href="#actions" title="Permalink to this headline">¶</a></h2>
+<p>Actions define the command to execute and extra params that the command needs.</p>
+<p>So in a normal deploy/build you&#8217;ll make a task <cite>deploy</cite> and define actions something like:</p>
+<ul class="simple">
+<li>Backup database (mysql.backup_db)</li>
+<li>Checkout/update git repo (git.deploy)</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;commands&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;deploy&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;Deploy app example&quot;</span><span class="p">,</span>
+      <span class="s">&quot;actions&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&quot;mysql-backup-db&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s">&quot;command&quot;</span><span class="p">:</span> <span class="s">&quot;mysql.backup_db&quot;</span><span class="p">,</span>
+          <span class="s">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">1</span>
+        <span class="p">},</span>
+        <span class="s">&quot;git-clone&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s">&quot;command&quot;</span><span class="p">:</span> <span class="s">&quot;git.deploy&quot;</span><span class="p">,</span>
+          <span class="s">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">2</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Possible options:</p>
+<ul class="simple">
+<li>sequence : Numeric value in which order the commands will be executed (Required)</li>
+<li>command : Main command to execute &lt;package&gt;.&lt;action&gt; (Required)</li>
+<li>params : Set of key/values for the command. (Default: none)</li>
+<li>confirm : Asks if you want to execute this command.. you can enter an own question as it&#8217;s value. (Default: none)</li>
+<li>description : Can be used to describe the command (Default: none)</li>
+<li>enabled : Is this action enabled in the sequence? (Default: true)</li>
+</ul>
+<p>Every command can have it&#8217;s own params... see the <a class="reference internal" href="commands.html"><em>commands</em></a> for their options.</p>
+<p>So a full example would look like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;tasks&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;deploy&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;Deploy app example&quot;</span><span class="p">,</span>
+      <span class="s">&quot;actions&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&quot;mysql-backup-db&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;Make a backup from the mysql database&quot;</span><span class="p">,</span>
+          <span class="s">&quot;enabled&quot;</span><span class="p">:</span> <span class="s">&quot;True&quot;</span><span class="p">,</span>
+          <span class="s">&quot;command&quot;</span><span class="p">:</span> <span class="s">&quot;mysql.backup_db&quot;</span><span class="p">,</span>
+          <span class="s">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+          <span class="s">&quot;confirm&quot;</span><span class="p">:</span> <span class="s">&quot;Lets backup the database?&quot;</span><span class="p">,</span>
+          <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&quot;host&quot;</span><span class="p">:</span> <span class="s">&quot;</span><span class="si">%(db_host)s</span><span class="s">&quot;</span><span class="p">,</span>
+            <span class="s">&quot;user&quot;</span><span class="p">:</span> <span class="s">&quot;root&quot;</span><span class="p">,</span>
+            <span class="s">&quot;password&quot;</span><span class="p">:</span> <span class="s">&quot;root&quot;</span><span class="p">,</span>
+            <span class="s">&quot;database&quot;</span><span class="p">:</span> <span class="s">&quot;your-database&quot;</span><span class="p">,</span>
+            <span class="s">&quot;backup_file&quot;</span><span class="p">:</span> <span class="s">&quot;/full/path/to/</span><span class="si">%(user)s</span><span class="s">/backup/path/file.sql&quot;</span><span class="p">,</span>
+            <span class="s">&quot;download_tar_to_local_file&quot;</span><span class="p">:</span> <span class="s">&quot;./local/path/db/backup.tar.gz&quot;</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="s">&quot;git-clone&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;We&#39;re executing a git clone action!&quot;</span><span class="p">,</span>
+          <span class="s">&quot;enabled&quot;</span><span class="p">:</span> <span class="s">&quot;True&quot;</span><span class="p">,</span>
+          <span class="s">&quot;command&quot;</span><span class="p">:</span> <span class="s">&quot;git.deploy&quot;</span><span class="p">,</span>
+          <span class="s">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+          <span class="s">&quot;confirm&quot;</span><span class="p">:</span> <span class="s">&quot;Sure you want to clone ?&quot;</span><span class="p">,</span>
+          <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&quot;git_repo_path&quot;</span><span class="p">:</span> <span class="s">&quot;/full/path/to/repo&quot;</span><span class="p">,</span>
+            <span class="s">&quot;git_source_path&quot;</span><span class="p">:</span> <span class="s">&quot;/full/path/to/source/</span><span class="si">%(tag)s</span><span class="s">&quot;</span><span class="p">,</span>
+            <span class="s">&quot;git_branch&quot;</span><span class="p">:</span> <span class="s">&quot;develop&quot;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>You can use generic params in the command params to prevent repetition.
+So if you define a key/value in the &#8216;main&#8217; params you can use this like &#8216;%(param)s&#8217;</p>
+</div>
+<div class="section" id="commands">
+<h2>Commands<a class="headerlink" href="#commands" title="Permalink to this headline">¶</a></h2>
+<p>Commands can best be defined as an isolated predefined functions with certain functionality.
+We try to put as much functionality for each command to keep the config simple.</p>
+<p>See the <a class="reference internal" href="commands.html"><em>commands section</em></a> for a full list</p>
+</div>
+<div class="section" id="params">
+<h2>Params<a class="headerlink" href="#params" title="Permalink to this headline">¶</a></h2>
+<p>Params can be used for creating dynamic variables in your settings.</p>
+<p>Params can be (re)used in post param values and command param values.
+This is an easy way to manage central &#8216;constants&#8217; that can be used by different commands</p>
+<p>You can use the params in all the other tasks/actions based on your input.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;Minime&quot;</span><span class="p">,</span>
+    <span class="s">&quot;yourvar&quot;</span><span class="p">:</span> <span class="s">&quot;what you want&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Much of the params for actions/commands can be defined in the global params without defining them in the action itself.
+(See the difference in the &#8220;action&#8221; examples.)
+You can find the global params in the <a class="reference internal" href="commands.html"><em>commands section</em></a></p>
+<p>Next to that we have system params. (that can be overwritten)</p>
+<ul class="simple">
+<li>timestamp (unix timestamp)</li>
+<li>user (current unix user logged in to remote server)</li>
+<li>project (initial set from the command line)</li>
+<li>environment (initial set from the command line)</li>
+</ul>
+</div>
+<div class="section" id="post-params">
+<h2>Post params<a class="headerlink" href="#post-params" title="Permalink to this headline">¶</a></h2>
+<p>Post params are build/formatted with the param values. This is an easy way to generate generic reusable params for your commands.
+In the example we used a path, this is a good way to manage base path&#8217;s for your commands</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;Minime&quot;</span><span class="p">,</span>
+    <span class="s">&quot;yourvar&quot;</span><span class="p">:</span> <span class="s">&quot;what you want&quot;</span>
+  <span class="p">},</span>
+  <span class="s">&quot;post_params&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;some_path&quot;</span><span class="p">:</span> <span class="s">&quot;/home/</span><span class="si">%(user)s</span><span class="s">/</span><span class="si">%(name)s</span><span class="s">/&quot;</span><span class="p">,</span>
+    <span class="s">&quot;base_path&quot;</span><span class="p">:</span> <span class="s">&quot;/home/</span><span class="si">%(user)s</span><span class="s">/</span><span class="si">%(project)s</span><span class="s">/</span><span class="si">%(environment)s</span><span class="s">/&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Now <cite>some_path</cite> will evaluate as : <cite>/home/root/Minime/</cite></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Key concepts</a><ul>
+<li><a class="reference internal" href="#project-environment-and-tasks">Project, Environment and Tasks</a></li>
+<li><a class="reference internal" href="#config">Config</a></li>
+<li><a class="reference internal" href="#tasks">Tasks</a></li>
+<li><a class="reference internal" href="#actions">Actions</a></li>
+<li><a class="reference internal" href="#commands">Commands</a></li>
+<li><a class="reference internal" href="#params">Params</a></li>
+<li><a class="reference internal" href="#post-params">Post params</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="installation.html"
+                        title="previous chapter">deploy-commander installation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="usage.html"
+                        title="next chapter">Usage</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/key-concepts.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="usage.html" title="Usage"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="deploy-commander installation"
+             >previous</a> |</li>
+        <li><a href="index.html">deploy-commander 0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Ference van Munster.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

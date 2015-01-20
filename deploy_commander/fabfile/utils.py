@@ -1,5 +1,5 @@
 """" 
-Main utils that can be used by the commands.
+Main utils that can be used by the tasks.
 """
 
 from fabric.contrib.files import upload_template as orig_upload_template

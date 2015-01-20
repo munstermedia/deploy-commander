@@ -169,8 +169,6 @@ def show_config():
     """
     Show current config settings from project and environment
     """
-    # If commands in config
-    
     utils.print_double_line()
     print json.dumps(env.params, sort_keys=True, indent=4)
     utils.print_double_line()
@@ -178,17 +176,21 @@ def show_config():
     utils.print_double_line()
     
     if 'commands' in env:
-        for key, val in env['commands'].iteritems():
+        print(red("Commands are deprecated, use the name `tags` instead"))
+        env.tasks = env.commands
+        
+    if 'tasks' in env:
+        for key, val in env['tasks'].iteritems():
             utils.print_double_line()
-            print "Command `%s`" % key
+            print "Task `%s`" % key
             utils.print_double_line()
-            if 'actions' in env['commands'][key]:
+            if 'actions' in env['tasks'][key]:
                 # Validate the basic settings
                 for k, v in val['actions'].items():
                     if 'sequence' not in v:
                         v['sequence'] = "0"
                  
-                actions = sorted(env['commands'][key]['actions'].items(), key=lambda (k,v): v['sequence'])
+                actions = sorted(env['tasks'][key]['actions'].items(), key=lambda (k,v): v['sequence'])
                 
                 for key_action, current_action in actions:
                     print json.dumps(current_action, sort_keys=True, indent=4)
@@ -197,63 +199,66 @@ def show_config():
 
 @task
 @roles('webserver')   
-def run(command):
+def run(task):
     """
-    Run command to execute the actions.
+    Run task to execute the actions.
     Here's where it's all starting...
     """
     utils.init_env_settings('webserver')
     
     utils.print_double_line()
     
-    if command not in env.commands:
-        abort(red("Command `%s` does not exist!" % command))
+    if task not in env.tasks:
+        abort(red("Task `%s` does not exist!" % task))
         
-    if 'description' in env.commands[command]:
-        print(green(env.commands[command]['description']))
+    if 'description' in env.tasks[task]:
+        print(green(env.tasks[task]['description']))
     
-    if 'input_params' in env.commands[command]:
-        for param_key, param_value in env.commands[command]['input_params'].items():
+    if 'input_params' in env.tasks[task]:
+        for param_key, param_value in env.tasks[task]['input_params'].items():
             env.params[param_value['param']] = prompt(param_value['prompt'])
     
-    ordered_commands = sorted(env.commands[command]['actions'].items(), key=lambda (k,v): v['sequence'])
+    ordered_tasks = sorted(env.tasks[task]['actions'].items(), key=lambda (k,v): v['sequence'])
     
     utils.print_single_line()
     
-    for key_command, current_command in ordered_commands:
+    for key_task, current_task in ordered_tasks:
         
-        if 'description' in current_command:
-            print(current_command['description'])
+        if 'description' in current_task:
+            print(current_task['description'])
         else:
-            print("Starting `%s`" % key_command)
+            print("Starting `%s`" % key_task)
         
-        if not 'execute' in current_command:
-            abort(red("No valid execute value in config"))
+        if 'execute' in current_task:
+            print(red("The `execute` key is deprecated, use `command` instead!"))
         
-        print("Execute : %s" % current_command['execute'])
+        if not 'command' in current_task:
+            abort(red("No valid command value in config"))
+        
+        print("Command : %s" % current_task['command'])
         print("")
         
-        if 'enabled' in current_command and (current_command['enabled'] == False or current_command['enabled'] == "False"):
-            print("Skipped : %s" % current_command['execute'])
+        if 'enabled' in current_task and (current_task['enabled'] == False or current_task['enabled'] == "False"):
+            print("Skipped : %s" % current_task['command'])
             continue
         
         
         
-        if 'confirm' in current_command:
-            if not confirm(current_command['confirm']):
+        if 'confirm' in current_task:
+            if not confirm(current_task['confirm']):
                 continue
             
-        script = 'command.%s' % current_command['execute']
+        script = 'command.%s' % current_task['command']
         p, m = script.rsplit('.', 1)
         
         mod = import_module(p)
-        command = getattr(mod, m)
+        task = getattr(mod, m)
          
-        if 'params' in current_command:
-            params = current_command['params']
+        if 'params' in current_task:
+            params = current_task['params']
         else:
             params = {}
         
-        command(params = params)
+        task(params = params)
         
         utils.print_single_line()

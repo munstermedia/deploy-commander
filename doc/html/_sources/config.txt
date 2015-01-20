@@ -1,0 +1,134 @@
+Config
+======
+
+This page contains some example configuration that will give you some more insight of the possible parameters.
+
+In your config you can setup stuff like ssh credentials, symlinks, mysql backup and much more...
+
+It's important to understand how settings are loaded and which settings are possible.
+We've implemented a nice feature to inherit settings based on environments and projects.
+
+We'll start by explaining each config file by it's location on the filesystem.
+
+
+Root config
+-----------
+
+The main configuration file must be located in the root folder and named "config.json"
+This config file contains json structured params, like your master password.
+
+.. note:: Don't commit this file to your repo because the master password should be stored elsewhere.
+
+/config.json
+
+::
+
+	{
+	  "master_password": "abc1234",
+	  "env": {
+	    "debug": "False",
+	    "warning_only": "True",
+	    "running": "False",
+	    "stdout": "False"
+	  }
+	}
+
+
+Initial project config
+----------------------
+
+This config file is located in the /config/<project> folder. 
+Here you can define settings related to deploy commander.
+
+/<project>/config.json
+
+::
+
+	{
+	  "config_load_strategy": [
+	    "config/default.json",
+	    "config/%(environment)s.json",
+	    "config/%(project)s/default.json",
+	    "Your own config here"
+	  ]
+	}
+
+
+.. note:: config_load_strategy is optional, leave it empty by default
+
+Global project config
+---------------------
+
+The basic foundation of this system are tasks and actions. You can initiate a task, and these have actions to execute.
+
+The default config strategy (if not set in /<project>/config.json) will be:
+
+**/config/default.json**
+
+This is the base config. Everything will be extended from this config.
+
+**/config/%(environment)s.json**
+
+Main config for development environments. 
+This will overwrite the ./config/default.json
+
+**/config/%(project)s/default.json**
+
+Main Config for the development project. 
+This will overwrite the ./config/default.json, and development.json
+
+**/config/%(project)s/%(environment)s.json**
+
+Config for the development project. 
+This will overwrite the ./config/default.json, default.json and development.json
+
+
+> For more information about the configuration options please see the examples in ./config in the example github repo.
+
+To view the configuration from the command line you can run:
+
+```
+deploy-commander go show_config
+```
+
+When running a deployment for a project it will first load in sequence (if available):
+
+1.    Generic config (default.json)
+2.    Generic environment config (<environment>.json)
+3.    Project config (<project>/default.json)
+4.    Project environment config (<project>/<environment>.json)
+
+If you want to load a different config strategy for your project, you can create a file '<project>/config.json'
+(See the documentation below)
+
+So in this case, the 2'nd config will append and overwrite the 1'st. The 3'rd the 2'nd etc..
+
+
+This is an example structure of a project config:
+
+::
+
+	{
+	  "params": {
+	    "some_param": "param/value"
+	  },
+	  "post_params": {
+	    "dynamic_post_param": "/some/%(some_param)s/path"
+	  },
+	  "tasks": {
+	    "deploy": {
+	      "title": "Deploy project",
+	      "actions": {
+	        "your-own-description": {
+	          "sequence": 1,
+	          "execute": "command.action",
+	          "params": {
+	            "dynamic_param": "%(dynamic_param)s/repo",
+	            "dynamic_post_param": "%(dynamic_post_param)s/source/%(tag)s"
+	          }
+	        }
+	      }
+	    }
+	  }
+	}
+	

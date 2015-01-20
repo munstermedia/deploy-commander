@@ -1,0 +1,25 @@
+Usage
+=====
+
+Usage is very simple, by executing a command from the terminal you can initiate `tasks`
+
+If this is the first time you're using this, you might want to start with a :doc:`tuturial <tuturials>` and understand the `key concepts <key-concepts>`.
+
+Command line execute
+--------------------
+
+There are 2 options when executing a `deploy-command` from the command line.
+
+::
+
+	$ deploy-commander go run:<action>
+	
+The `go` part will ask you for the project and environment you want to use.
+The `run` part will execute several actions (`Like git clone, mysql import`) combined. We defined this as `the command`.
+
+You can bypass the prompt for the project and environment by setting them in your command.
+
+::
+	
+	$ deploy-commander go:<project>,<enviroment> run:<action>
+

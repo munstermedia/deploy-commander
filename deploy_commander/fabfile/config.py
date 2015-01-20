@@ -33,9 +33,11 @@ env.params = {}
 # Base post params setting
 env.post_params = {}
 
-# Commands setting
+# Commands setting deprecated
 env.commands = {}
 
+# Tasks setting
+env.tasks = {}
 
 def init():
     """
@@ -256,6 +258,6 @@ def set_config(config):
     if config.has_key('post_params'):
         env.post_params = update(env.post_params, config['post_params'])
          
-    if config.has_key('commands'):
-        env.commands = update(env.commands, config['commands'])
+    if config.has_key('tasks'):
+        env.tasks = update(env.tasks, config['tasks'])
 

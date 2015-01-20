@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Config &mdash; deploy-commander 0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="deploy-commander 0 documentation" href="index.html" />
+    <link rel="next" title="Commands" href="commands.html" />
+    <link rel="prev" title="Tuturial" href="tuturials.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="commands.html" title="Commands"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tuturials.html" title="Tuturial"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">deploy-commander 0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="config">
+<h1>Config<a class="headerlink" href="#config" title="Permalink to this headline">¶</a></h1>
+<p>This page contains some example configuration that will give you some more insight of the possible parameters.</p>
+<p>In your config you can setup stuff like ssh credentials, symlinks, mysql backup and much more...</p>
+<p>It&#8217;s important to understand how settings are loaded and which settings are possible.
+We&#8217;ve implemented a nice feature to inherit settings based on environments and projects.</p>
+<p>We&#8217;ll start by explaining each config file by it&#8217;s location on the filesystem.</p>
+<div class="section" id="root-config">
+<h2>Root config<a class="headerlink" href="#root-config" title="Permalink to this headline">¶</a></h2>
+<p>The main configuration file must be located in the root folder and named &#8220;config.json&#8221;
+This config file contains json structured params, like your master password.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Don&#8217;t commit this file to your repo because the master password should be stored elsewhere.</p>
+</div>
+<p>/config.json</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;master_password&quot;</span><span class="p">:</span> <span class="s">&quot;abc1234&quot;</span><span class="p">,</span>
+  <span class="s">&quot;env&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;debug&quot;</span><span class="p">:</span> <span class="s">&quot;False&quot;</span><span class="p">,</span>
+    <span class="s">&quot;warning_only&quot;</span><span class="p">:</span> <span class="s">&quot;True&quot;</span><span class="p">,</span>
+    <span class="s">&quot;running&quot;</span><span class="p">:</span> <span class="s">&quot;False&quot;</span><span class="p">,</span>
+    <span class="s">&quot;stdout&quot;</span><span class="p">:</span> <span class="s">&quot;False&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="initial-project-config">
+<h2>Initial project config<a class="headerlink" href="#initial-project-config" title="Permalink to this headline">¶</a></h2>
+<p>This config file is located in the /config/&lt;project&gt; folder.
+Here you can define settings related to deploy commander.</p>
+<p>/&lt;project&gt;/config.json</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;config_load_strategy&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s">&quot;config/default.json&quot;</span><span class="p">,</span>
+    <span class="s">&quot;config/</span><span class="si">%(environment)s</span><span class="s">.json&quot;</span><span class="p">,</span>
+    <span class="s">&quot;config/</span><span class="si">%(project)s</span><span class="s">/default.json&quot;</span><span class="p">,</span>
+    <span class="s">&quot;Your own config here&quot;</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">config_load_strategy is optional, leave it empty by default</p>
+</div>
+</div>
+<div class="section" id="global-project-config">
+<h2>Global project config<a class="headerlink" href="#global-project-config" title="Permalink to this headline">¶</a></h2>
+<p>The basic foundation of this system are tasks and actions. You can initiate a task, and these have actions to execute.</p>
+<p>The default config strategy (if not set in /&lt;project&gt;/config.json) will be:</p>
+<p><strong>/config/default.json</strong></p>
+<p>This is the base config. Everything will be extended from this config.</p>
+<p><strong>/config/%(environment)s.json</strong></p>
+<p>Main config for development environments.
+This will overwrite the ./config/default.json</p>
+<p><strong>/config/%(project)s/default.json</strong></p>
+<p>Main Config for the development project.
+This will overwrite the ./config/default.json, and development.json</p>
+<p><strong>/config/%(project)s/%(environment)s.json</strong></p>
+<p>Config for the development project.
+This will overwrite the ./config/default.json, default.json and development.json</p>
+<p>&gt; For more information about the configuration options please see the examples in ./config in the example github repo.</p>
+<p>To view the configuration from the command line you can run:</p>
+<p><tt class="docutils literal"><span class="pre">`</span>
+<span class="pre">deploy-commander</span> <span class="pre">go</span> <span class="pre">show_config</span>
+<span class="pre">`</span></tt></p>
+<p>When running a deployment for a project it will first load in sequence (if available):</p>
+<ol class="arabic simple">
+<li>Generic config (default.json)</li>
+<li>Generic environment config (&lt;environment&gt;.json)</li>
+<li>Project config (&lt;project&gt;/default.json)</li>
+<li>Project environment config (&lt;project&gt;/&lt;environment&gt;.json)</li>
+</ol>
+<p>If you want to load a different config strategy for your project, you can create a file &#8216;&lt;project&gt;/config.json&#8217;
+(See the documentation below)</p>
+<p>So in this case, the 2&#8217;nd config will append and overwrite the 1&#8217;st. The 3&#8217;rd the 2&#8217;nd etc..</p>
+<p>This is an example structure of a project config:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;some_param&quot;</span><span class="p">:</span> <span class="s">&quot;param/value&quot;</span>
+  <span class="p">},</span>
+  <span class="s">&quot;post_params&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;dynamic_post_param&quot;</span><span class="p">:</span> <span class="s">&quot;/some/</span><span class="si">%(some_param)s</span><span class="s">/path&quot;</span>
+  <span class="p">},</span>
+  <span class="s">&quot;tasks&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;deploy&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;title&quot;</span><span class="p">:</span> <span class="s">&quot;Deploy project&quot;</span><span class="p">,</span>
+      <span class="s">&quot;actions&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&quot;your-own-description&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+          <span class="s">&quot;execute&quot;</span><span class="p">:</span> <span class="s">&quot;command.action&quot;</span><span class="p">,</span>
+          <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&quot;dynamic_param&quot;</span><span class="p">:</span> <span class="s">&quot;</span><span class="si">%(dynamic_param)s</span><span class="s">/repo&quot;</span><span class="p">,</span>
+            <span class="s">&quot;dynamic_post_param&quot;</span><span class="p">:</span> <span class="s">&quot;</span><span class="si">%(dynamic_post_param)s</span><span class="s">/source/</span><span class="si">%(tag)s</span><span class="s">&quot;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Config</a><ul>
+<li><a class="reference internal" href="#root-config">Root config</a></li>
+<li><a class="reference internal" href="#initial-project-config">Initial project config</a></li>
+<li><a class="reference internal" href="#global-project-config">Global project config</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tuturials.html"
+                        title="previous chapter">Tuturial</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="commands.html"
+                        title="next chapter">Commands</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/config.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="commands.html" title="Commands"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tuturials.html" title="Tuturial"
+             >previous</a> |</li>
+        <li><a href="index.html">deploy-commander 0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Ference van Munster.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

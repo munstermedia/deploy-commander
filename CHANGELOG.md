@@ -1,4 +1,8 @@
 # Changelog
+## 0.0.1
+-	Renamed/refactored commands in config to tasks
+- 	Renamed/refactored the execute to command in actions
+
 ## 0.1.0
 -	Prepping for a final release
 -	Format params of git command after branch input is requested

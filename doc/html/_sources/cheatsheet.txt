@@ -1,0 +1,16 @@
+Cheatsheet
+==========
+
+Quick overview of the command line possibilities.
+
+::
+	
+	// Run a command
+	$ deploy-commander go:<project>,<environment> run:<action>
+	
+	// List config
+	$ deploy-commander go:<project>,<environment> show_config
+
+	// Encrypt/Decrypt config
+	$ deploy-commander go:<project>,<environment> encrypt_config
+	$ deploy-commander go:<project>,<environment> decrypt_config

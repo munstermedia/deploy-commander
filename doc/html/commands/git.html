@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Git commands &mdash; deploy-commander 0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="deploy-commander 0 documentation" href="../index.html" />
+    <link rel="up" title="Commands" href="../commands.html" />
+    <link rel="next" title="MySql commands" href="mysql.html" />
+    <link rel="prev" title="System commands" href="system.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="mysql.html" title="MySql commands"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="system.html" title="System commands"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">deploy-commander 0 documentation</a> &raquo;</li>
+          <li><a href="../commands.html" accesskey="U">Commands</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="git-commands">
+<h1>Git commands<a class="headerlink" href="#git-commands" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="git-clone">
+<h2>git.clone<a class="headerlink" href="#git-clone" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre>&quot;your-own-description&quot;:{
+        &quot;sequence&quot;:1,
+        &quot;command&quot;:&quot;git.install_repo&quot;,
+        &quot;params&quot;:{
+                &quot;git_repo_path&quot;:&quot;/full/path/to/repo&quot;,
+                &quot;git_repo_url&quot;:&quot;https://github.com/munstermedia/demo.git&quot;
+        }
+}
+</pre></div>
+</div>
+<p>Functionality:</p>
+<ul class="simple">
+<li>Checks if repo path exists.. if not it will ask to reinstall and it will reset/remove all existing code in the path.</li>
+<li>Clones the repository to the path</li>
+</ul>
+</div>
+<div class="section" id="git-deploy">
+<h2>git.deploy<a class="headerlink" href="#git-deploy" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre>&quot;your-own-description&quot;:{
+        &quot;sequence&quot;:1,
+        &quot;command&quot;:&quot;git.deploy&quot;,
+        &quot;params&quot;:{
+                &quot;git_repo_url&quot;:&quot;http://www.somegit.repo&quot;,
+                &quot;git_repo_path&quot;:&quot;/full/path/to/repo&quot;,
+                &quot;git_source_path&quot;:&quot;/full/path/to/source/%(tag)s&quot;,
+                &quot;git_branch&quot;:&quot;deploy-0.0.1&quot;
+        }
+}
+</pre></div>
+</div>
+<p>Functionality:</p>
+<p>It will use the code in the repo path to go to a certain branch/tag. This will be copied to a tag path so you&#8217;ll have versioned codebases living next to each other.</p>
+<ul class="simple">
+<li>Branch in params is optional, you should leave it empty by default unless you have a good reason for it.</li>
+<li>If branch it&#8217;s not set (empty) it will list the available tags and prompt for input.</li>
+<li>If repo path is not existing it will exit. You&#8217;ll need a valid cloned repo path</li>
+<li>If target path is allready existing it will remove it and all it&#8217;s content. And deploy a completely new version.</li>
+<li>Allow updates submodules by running &#8216;git submodule update&#8217;</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Git commands</a><ul>
+<li><a class="reference internal" href="#git-clone">git.clone</a></li>
+<li><a class="reference internal" href="#git-deploy">git.deploy</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="system.html"
+                        title="previous chapter">System commands</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mysql.html"
+                        title="next chapter">MySql commands</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/commands/git.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="mysql.html" title="MySql commands"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="system.html" title="System commands"
+             >previous</a> |</li>
+        <li><a href="../index.html">deploy-commander 0 documentation</a> &raquo;</li>
+          <li><a href="../commands.html" >Commands</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Ference van Munster.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,59 @@
+What is deploy commander?
+=========================
+
+A command line tool for unix based OS mainly used for remotely executing sysadmin tasks.
+As the name might give you a clue... it's power lies with managing deployments/software builds for continues integration flows.
+
+Deploy commander is build directly on python/fabric, but can be used for any project.
+
+Main goal of this system is to configure your deployment by using a generic set of predefined actions.
+There are other flavors for setting up your dtap... we're focussing on simplicity and transparancy. 
+
+Next to that we want to create a centralized system to manage `different deployments` (applications) for `multiple apps` build in `different languages` on `different servers`.
+
+We're building a lot if handy features for sysadmins and developers that will make your life easier. 
+
+Stuff like:
+
+- Git checkout and update made easy
+- Create folders dynamicly
+- Backup database on deployment
+- Import database
+- Download files (like assets) for backup.
+- Upload files (like assets) for preperation
+
+.. NOTE::
+	This application is still in it's development phase.
+
+Continuous integration
+----------------------
+
+We're still in beta mode, but soon you'll be able to attach github and bitbucket hooks to automate the deployment process
+
+
+What it's not!
+---------------
+
+- Puppet, (can be used for setting up server software but verry handy in your project!)
+- Chef (See Puppet)
+- Sys ops server management (See puppet/Chef)
+- Jenkins (CI Server, we might build an equivelent :))
+- Capistrano (Allso used for deployments... but mostly used per project/site...)
+
+Cases
+-----
+
+- You would like to setup a project on different ubuntu machines.
+- Download assets from server x, and upload them to server y.
+- Deploy a new version of your app to a server, and backup the database before running migrations
+- More...
+
+Main goals
+----------
+
+- Centralized deployment
+- Ease of deployments
+- Ease of sysadmin tasks
+- Simplified deployment by simple configurations
+- Unix based environments
+- Continuous integration

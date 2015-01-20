@@ -1,0 +1,48 @@
+Security
+========
+
+Because your config files contain critical credentials for your database/ssh you should consider some security measures.
+
+Environment
+-----------
+
+This application will probably run on a dedicated server.
+
+- Be sure to use long passwords, better to generate them... like 15 characters and mixed symbols, digits, uppercase, lowercase
+- Use an encrypted home... so if the hardware is stolen it can't be used
+- Setup a firewall with minimal access.
+- Setup a firewall on the server where you'll deploy to!
+
+
+Encrypted config's
+------------------
+
+.. sidebar:: Main password
+
+	There is a main password set in the .config file. With this password the configuration files are encrypted/decrypted...
+	
+	Please set this password with a `strong password generator <https://strongpasswordgenerator.com/>`_ (and make sure it's escaped for json :) )
+
+The config files can be encrypted before you want to push them to some repo.
+This way you can maintain your deploy setup in git without exposing login credentials and other critical information.
+
+The config files are encrypted with a AES256 encryption. For more technical info see the `simple-crypt <https://pypi.python.org/pypi/simple-crypt>`_ library.
+Remember to setup this password on your production server manually, and do not commit this in any repo!
+
+There are 2 commands available to encrypt and decrypt all the config files.
+
+To encrypt all .json config files:
+
+::
+
+	$ deploy-commander encrypt_config
+
+
+To decrypt the .json.encrypt config files:
+
+::
+
+	$ deploy-commander decrypt_config
+
+* It will only encrypt or decrypt files that needs to be encrypted/decrypted. It might take a while if your configuration is large.
+

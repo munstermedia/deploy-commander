@@ -1,0 +1,243 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>MySql commands &mdash; deploy-commander 0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="deploy-commander 0 documentation" href="../index.html" />
+    <link rel="up" title="Commands" href="../commands.html" />
+    <link rel="next" title="Security" href="../security.html" />
+    <link rel="prev" title="Git commands" href="git.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../security.html" title="Security"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="git.html" title="Git commands"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">deploy-commander 0 documentation</a> &raquo;</li>
+          <li><a href="../commands.html" accesskey="U">Commands</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mysql-commands">
+<h1>MySql commands<a class="headerlink" href="#mysql-commands" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="mysql-backup-db">
+<h2>mysql.backup_db<a class="headerlink" href="#mysql-backup-db" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>::</dt>
+<dd><dl class="first docutils">
+<dt>&#8220;your-own-description&#8221;:{</dt>
+<dd><p class="first">&#8220;sequence&#8221;:1,
+&#8220;command&#8221;:&#8221;mysql.backup_db&#8221;,
+&#8220;params&#8221;:{</p>
+<blockquote>
+<div>&#8220;host&#8221;:&#8221;localhost&#8221;,
+&#8220;user&#8221;:&#8221;root&#8221;,
+&#8220;password&#8221;:&#8221;root&#8221;,
+&#8220;database&#8221;:&#8221;your-database&#8221;,
+&#8220;backup_file&#8221;:&#8221;/full/path/to/database/backup/path/file.sql&#8221;
+(&#8220;download_tar_to_local_file&#8221;:&#8221;./local/path/db/backup.tar.gz&#8221;)</div></blockquote>
+<p class="last">}</p>
+</dd>
+</dl>
+<p class="last">}</p>
+</dd>
+</dl>
+<p>Functionality:</p>
+<ul class="simple">
+<li>Runs mysqldump and creates a mysql sql that will be compressed to tar.gz.</li>
+<li>The generated sql file will be removed.</li>
+<li>Tries to create the path on remote if it doesn&#8217;t exist</li>
+<li>If download_tar_to_local_file is given it will download the tar.gz for local backup</li>
+</ul>
+</div>
+<div class="section" id="mysql-cleanup-db-backups">
+<h2>mysql.cleanup_db_backups<a class="headerlink" href="#mysql-cleanup-db-backups" title="Permalink to this headline">¶</a></h2>
+<p>(Gonna be depricated, this is something we should implement with the backup_db)</p>
+<div class="highlight-python"><div class="highlight"><pre>&quot;your-own-description&quot;:{
+        &quot;sequence&quot;:1,
+        &quot;command&quot;:&quot;mysql.cleanup_db_dumps&quot;,
+        &quot;params&quot;:{
+                &quot;path&quot;:&quot;/full/path/to/database/backup/path&quot;,
+                (&quot;max_backup_history&quot;:&quot;5&quot;)
+        }
+}
+</pre></div>
+</div>
+<p>Functionality:</p>
+<ul class="simple">
+<li>Reads path for <a href="#id1"><span class="problematic" id="id2">*</span></a>.tar.gz files... and removes the oldest files. (by filesystem)</li>
+<li>max_backup_history is optional, defaults to 5</li>
+</ul>
+</div>
+<div class="section" id="mysql-query">
+<h2>mysql.query<a class="headerlink" href="#mysql-query" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>::</dt>
+<dd><dl class="first docutils">
+<dt>&#8220;your-own-description&#8221;:{</dt>
+<dd><p class="first">&#8220;sequence&#8221;:1,
+&#8220;command&#8221;:&#8221;mysql.query&#8221;,
+&#8220;params&#8221;:{</p>
+<blockquote>
+<div>&#8220;host&#8221;:&#8221;localhost&#8221;,
+&#8220;user&#8221;:&#8221;root&#8221;,
+&#8220;password&#8221;:&#8221;root&#8221;,
+&#8220;query&#8221;:&#8221;CREATE DATABASE IF NOT EXISTS your-db-name&#8221;</div></blockquote>
+<p class="last">}</p>
+</dd>
+</dl>
+<p class="last">}</p>
+</dd>
+</dl>
+<p>Functionality:</p>
+<ul class="simple">
+<li>Execute a raw query thru the command line</li>
+</ul>
+</div>
+<div class="section" id="mysql-import-file">
+<h2>mysql.import_file<a class="headerlink" href="#mysql-import-file" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre>&quot;your-own-description&quot;:{
+        &quot;sequence&quot;:3,
+        &quot;command&quot;:&quot;mysql.import_file&quot;,
+        &quot;params&quot;:{
+                &quot;host&quot;:&quot;localhost&quot;,
+                &quot;user&quot;:&quot;root&quot;,
+                &quot;password&quot;:&quot;root&quot;,
+                &quot;database&quot;:&quot;your-database&quot;,
+                &quot;import_file&quot;:&quot;/full/path/to/repo/.data/install.sql&quot;
+        }
+}
+</pre></div>
+</div>
+<p>Functionality:</p>
+<ul class="simple">
+<li>Executes : &#8216;mysql -h %(host)s -u %(user)s &#8211;password=&#8217;%(password)s&#8217; %(database)s  &lt; %(import_file)s&#8217;</li>
+<li>If import_file does not exist it will show a warning and will continue to the next command</li>
+</ul>
+</div>
+<div class="section" id="mysql-restore-db">
+<h2>mysql.restore_db<a class="headerlink" href="#mysql-restore-db" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre>&quot;your-own-description&quot;:{
+        &quot;sequence&quot;:2,
+        &quot;command&quot;:&quot;mysql.restore_db&quot;,
+        &quot;params&quot;:{
+                &quot;host&quot;:&quot;localhost&quot;,
+                &quot;user&quot;:&quot;root&quot;,
+                &quot;password&quot;:&quot;password&quot;,
+                &quot;database&quot;:&quot;your-database&quot;,
+                &quot;backup_path&quot;:&quot;/full/path/to/database/backup/path&quot;,
+                (&quot;version&quot;:&quot;sql-version&quot;)
+        }
+}
+</pre></div>
+</div>
+<p>Functionality:</p>
+<ul class="simple">
+<li>By default the version is left empty, but you can force this.</li>
+<li>It will list the versions and prompt for a version to restore when params is empty.</li>
+<li>Requires valid backup version</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">MySql commands</a><ul>
+<li><a class="reference internal" href="#mysql-backup-db">mysql.backup_db</a></li>
+<li><a class="reference internal" href="#mysql-cleanup-db-backups">mysql.cleanup_db_backups</a></li>
+<li><a class="reference internal" href="#mysql-query">mysql.query</a></li>
+<li><a class="reference internal" href="#mysql-import-file">mysql.import_file</a></li>
+<li><a class="reference internal" href="#mysql-restore-db">mysql.restore_db</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="git.html"
+                        title="previous chapter">Git commands</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../security.html"
+                        title="next chapter">Security</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/commands/mysql.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../security.html" title="Security"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="git.html" title="Git commands"
+             >previous</a> |</li>
+        <li><a href="../index.html">deploy-commander 0 documentation</a> &raquo;</li>
+          <li><a href="../commands.html" >Commands</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Ference van Munster.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

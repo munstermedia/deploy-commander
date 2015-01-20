@@ -1,0 +1,120 @@
+MySql commands
+==============
+
+mysql.backup_db
+---------------
+
+::
+	"your-own-description":{
+		"sequence":1,
+		"command":"mysql.backup_db",
+		"params":{
+			"host":"localhost",
+			"user":"root",
+			"password":"root",
+			"database":"your-database",
+			"backup_file":"/full/path/to/database/backup/path/file.sql"
+			("download_tar_to_local_file":"./local/path/db/backup.tar.gz")
+		}
+	}
+
+
+Functionality:
+
+- Runs mysqldump and creates a mysql sql that will be compressed to tar.gz.
+- The generated sql file will be removed. 
+- Tries to create the path on remote if it doesn't exist
+- If download_tar_to_local_file is given it will download the tar.gz for local backup
+
+
+mysql.cleanup_db_backups
+------------------------
+
+(Gonna be depricated, this is something we should implement with the backup_db)
+
+::
+
+	"your-own-description":{
+		"sequence":1,
+		"command":"mysql.cleanup_db_dumps",
+		"params":{
+			"path":"/full/path/to/database/backup/path",
+			("max_backup_history":"5")
+		}
+	}
+
+
+Functionality:
+
+- Reads path for *.tar.gz files... and removes the oldest files. (by filesystem)
+- max_backup_history is optional, defaults to 5
+
+
+mysql.query
+-----------
+
+::
+	"your-own-description":{
+		"sequence":1,
+		"command":"mysql.query",
+		"params":{
+			"host":"localhost",
+			"user":"root",
+			"password":"root",
+			"query":"CREATE DATABASE IF NOT EXISTS your-db-name"
+		}
+	}
+
+Functionality:
+
+- Execute a raw query thru the command line
+
+
+mysql.import_file
+-----------------
+
+::
+
+	"your-own-description":{
+		"sequence":3,
+		"command":"mysql.import_file",
+		"params":{
+			"host":"localhost",
+			"user":"root",
+			"password":"root",
+			"database":"your-database",
+			"import_file":"/full/path/to/repo/.data/install.sql"
+		}
+	}
+
+
+Functionality:
+
+- Executes : 'mysql -h %(host)s -u %(user)s --password='%(password)s' %(database)s  < %(import_file)s'
+- If import_file does not exist it will show a warning and will continue to the next command
+
+
+
+mysql.restore_db
+----------------
+
+::
+
+	"your-own-description":{
+		"sequence":2,
+		"command":"mysql.restore_db",
+		"params":{
+			"host":"localhost",
+			"user":"root",
+			"password":"password",
+			"database":"your-database",
+			"backup_path":"/full/path/to/database/backup/path",
+			("version":"sql-version")
+		}
+	}
+
+Functionality:
+
+- By default the version is left empty, but you can force this.
+- It will list the versions and prompt for a version to restore when params is empty.
+- Requires valid backup version
