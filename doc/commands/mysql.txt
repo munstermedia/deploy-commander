@@ -31,7 +31,7 @@ Functionality:
 mysql.cleanup_db_backups
 ------------------------
 
-(Gonna be depricated, this is something we should implement with the backup_db)
+(Gonna be deprecated, this is something we should implement with the backup_db)
 
 ::
 
