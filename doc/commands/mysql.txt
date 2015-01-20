@@ -5,6 +5,7 @@ mysql.backup_db
 ---------------
 
 ::
+
 	"your-own-description":{
 		"sequence":1,
 		"command":"mysql.backup_db",

@@ -55,26 +55,20 @@
 <h1>MySql commands<a class="headerlink" href="#mysql-commands" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="mysql-backup-db">
 <h2>mysql.backup_db<a class="headerlink" href="#mysql-backup-db" title="Permalink to this headline">¶</a></h2>
-<dl class="docutils">
-<dt>::</dt>
-<dd><dl class="first docutils">
-<dt>&#8220;your-own-description&#8221;:{</dt>
-<dd><p class="first">&#8220;sequence&#8221;:1,
-&#8220;command&#8221;:&#8221;mysql.backup_db&#8221;,
-&#8220;params&#8221;:{</p>
-<blockquote>
-<div>&#8220;host&#8221;:&#8221;localhost&#8221;,
-&#8220;user&#8221;:&#8221;root&#8221;,
-&#8220;password&#8221;:&#8221;root&#8221;,
-&#8220;database&#8221;:&#8221;your-database&#8221;,
-&#8220;backup_file&#8221;:&#8221;/full/path/to/database/backup/path/file.sql&#8221;
-(&#8220;download_tar_to_local_file&#8221;:&#8221;./local/path/db/backup.tar.gz&#8221;)</div></blockquote>
-<p class="last">}</p>
-</dd>
-</dl>
-<p class="last">}</p>
-</dd>
-</dl>
+<div class="highlight-python"><div class="highlight"><pre>&quot;your-own-description&quot;:{
+        &quot;sequence&quot;:1,
+        &quot;command&quot;:&quot;mysql.backup_db&quot;,
+        &quot;params&quot;:{
+                &quot;host&quot;:&quot;localhost&quot;,
+                &quot;user&quot;:&quot;root&quot;,
+                &quot;password&quot;:&quot;root&quot;,
+                &quot;database&quot;:&quot;your-database&quot;,
+                &quot;backup_file&quot;:&quot;/full/path/to/database/backup/path/file.sql&quot;
+                (&quot;download_tar_to_local_file&quot;:&quot;./local/path/db/backup.tar.gz&quot;)
+        }
+}
+</pre></div>
+</div>
 <p>Functionality:</p>
 <ul class="simple">
 <li>Runs mysqldump and creates a mysql sql that will be compressed to tar.gz.</li>

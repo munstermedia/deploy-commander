@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="deploy-commander 0 documentation" href="index.html" />
     <link rel="next" title="Commands" href="commands.html" />
-    <link rel="prev" title="Tuturial" href="tuturials.html" /> 
+    <link rel="prev" title="Tuturials" href="tuturials.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,7 +38,7 @@
           <a href="commands.html" title="Commands"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="tuturials.html" title="Tuturial"
+          <a href="tuturials.html" title="Tuturials"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">deploy-commander 0 documentation</a> &raquo;</li> 
       </ul>
@@ -99,24 +99,35 @@ Here you can define settings related to deploy commander.</p>
 </div>
 <div class="section" id="global-project-config">
 <h2>Global project config<a class="headerlink" href="#global-project-config" title="Permalink to this headline">¶</a></h2>
+<div class="sidebar">
+<p class="first sidebar-title">Config Examples</p>
+<p class="last">For more information about the configuration options please see the examples in ./config in the <a class="reference external" href="https://github.com/munstermedia/deploy-commander-example">example github repo</a>.</p>
+</div>
 <p>The basic foundation of this system are tasks and actions. You can initiate a task, and these have actions to execute.</p>
 <p>The default config strategy (if not set in /&lt;project&gt;/config.json) will be:</p>
-<p><strong>/config/default.json</strong></p>
+<ol class="arabic simple">
+<li><strong>/config/default.json</strong></li>
+</ol>
 <p>This is the base config. Everything will be extended from this config.</p>
-<p><strong>/config/%(environment)s.json</strong></p>
+<ol class="arabic simple" start="2">
+<li><strong>/config/%(environment)s.json</strong></li>
+</ol>
 <p>Main config for development environments.
 This will overwrite the ./config/default.json</p>
-<p><strong>/config/%(project)s/default.json</strong></p>
+<ol class="arabic simple" start="3">
+<li><strong>/config/%(project)s/default.json</strong></li>
+</ol>
 <p>Main Config for the development project.
 This will overwrite the ./config/default.json, and development.json</p>
-<p><strong>/config/%(project)s/%(environment)s.json</strong></p>
+<ol class="arabic simple" start="4">
+<li><strong>/config/%(project)s/%(environment)s.json</strong></li>
+</ol>
 <p>Config for the development project.
 This will overwrite the ./config/default.json, default.json and development.json</p>
-<p>&gt; For more information about the configuration options please see the examples in ./config in the example github repo.</p>
 <p>To view the configuration from the command line you can run:</p>
-<p><tt class="docutils literal"><span class="pre">`</span>
-<span class="pre">deploy-commander</span> <span class="pre">go</span> <span class="pre">show_config</span>
-<span class="pre">`</span></tt></p>
+<div class="highlight-python"><div class="highlight"><pre>$ deploy-commander go show_config
+</pre></div>
+</div>
 <p>When running a deployment for a project it will first load in sequence (if available):</p>
 <ol class="arabic simple">
 <li>Generic config (default.json)</li>
@@ -124,8 +135,11 @@ This will overwrite the ./config/default.json, default.json and development.json
 <li>Project config (&lt;project&gt;/default.json)</li>
 <li>Project environment config (&lt;project&gt;/&lt;environment&gt;.json)</li>
 </ol>
-<p>If you want to load a different config strategy for your project, you can create a file &#8216;&lt;project&gt;/config.json&#8217;
-(See the documentation below)</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you want to load a different config strategy for your project, you can create a file &#8216;&lt;project&gt;/config.json&#8217;
+(See <cite>Initial project config</cite>)</p>
+</div>
 <p>So in this case, the 2&#8217;nd config will append and overwrite the 1&#8217;st. The 3&#8217;rd the 2&#8217;nd etc..</p>
 <p>This is an example structure of a project config:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
@@ -174,7 +188,7 @@ This will overwrite the ./config/default.json, default.json and development.json
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="tuturials.html"
-                        title="previous chapter">Tuturial</a></p>
+                        title="previous chapter">Tuturials</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="commands.html"
                         title="next chapter">Commands</a></p>
@@ -210,7 +224,7 @@ This will overwrite the ./config/default.json, default.json and development.json
           <a href="commands.html" title="Commands"
              >next</a> |</li>
         <li class="right" >
-          <a href="tuturials.html" title="Tuturial"
+          <a href="tuturials.html" title="Tuturials"
              >previous</a> |</li>
         <li><a href="index.html">deploy-commander 0 documentation</a> &raquo;</li> 
       </ul>
