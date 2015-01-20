@@ -55,6 +55,7 @@ mysql.query
 -----------
 
 ::
+
 	"your-own-description":{
 		"sequence":1,
 		"command":"mysql.query",
