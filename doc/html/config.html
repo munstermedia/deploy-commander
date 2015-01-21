@@ -81,6 +81,8 @@ This config file contains json structured params, like your master password.</p>
 <h2>Initial project config<a class="headerlink" href="#initial-project-config" title="Permalink to this headline">¶</a></h2>
 <p>This config file is located in the /config/&lt;project&gt; folder.
 Here you can define settings related to deploy commander.</p>
+<p>This file is optional, and not required to be present.
+The application autodetects the presence of this file.</p>
 <p>/&lt;project&gt;/config.json</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
   <span class="s">&quot;config_load_strategy&quot;</span><span class="p">:</span> <span class="p">[</span>
@@ -128,7 +130,7 @@ This will overwrite the ./config/default.json, default.json and development.json
 <div class="highlight-python"><div class="highlight"><pre>$ deploy-commander go show_config
 </pre></div>
 </div>
-<p>When running a deployment for a project it will first load in sequence (if available):</p>
+<p>When running a task it will load in sequence (if available) and combine the configuration of:</p>
 <ol class="arabic simple">
 <li>Generic config (default.json)</li>
 <li>Generic environment config (&lt;environment&gt;.json)</li>
@@ -142,6 +144,9 @@ This will overwrite the ./config/default.json, default.json and development.json
 </div>
 <p>So in this case, the 2&#8217;nd config will append and overwrite the 1&#8217;st. The 3&#8217;rd the 2&#8217;nd etc..</p>
 <p>This is an example structure of a project config:</p>
+<ol class="arabic simple">
+<li><strong>/config/default.json</strong></li>
+</ol>
 <div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
   <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="s">&quot;some_param&quot;</span><span class="p">:</span> <span class="s">&quot;param/value&quot;</span>
@@ -151,7 +156,75 @@ This will overwrite the ./config/default.json, default.json and development.json
   <span class="p">},</span>
   <span class="s">&quot;tasks&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="s">&quot;deploy&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="s">&quot;title&quot;</span><span class="p">:</span> <span class="s">&quot;Deploy project&quot;</span><span class="p">,</span>
+      <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;Deploy project&quot;</span><span class="p">,</span>
+      <span class="s">&quot;actions&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&quot;your-own-description&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+          <span class="s">&quot;execute&quot;</span><span class="p">:</span> <span class="s">&quot;command.action&quot;</span><span class="p">,</span>
+          <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&quot;dynamic_param&quot;</span><span class="p">:</span> <span class="s">&quot;</span><span class="si">%(dynamic_param)s</span><span class="s">/repo&quot;</span><span class="p">,</span>
+            <span class="s">&quot;dynamic_post_param&quot;</span><span class="p">:</span> <span class="s">&quot;</span><span class="si">%(dynamic_post_param)s</span><span class="s">/source/</span><span class="si">%(tag)s</span><span class="s">&quot;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><strong>/config/testing.json</strong></li>
+</ol>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;environment&quot;</span><span class="p">:</span> <span class="s">&quot;testing&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><strong>/config/test/default.json</strong></li>
+</ol>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;project_name&quot;</span><span class="p">:</span> <span class="s">&quot;test&quot;</span>
+  <span class="p">},</span>
+  <span class="s">&quot;post_params&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;post_test&quot;</span><span class="p">:</span> <span class="s">&quot;</span><span class="si">%(project_name)s</span><span class="s">-</span><span class="si">%(environment)-%</span><span class="s">(password)s&quot;</span>
+  <span class="p">},</span>
+  <span class="s">&quot;tasks&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;deploy&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;Lets change the title&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><strong>/config/test/testing.json</strong></li>
+</ol>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;password&quot;</span><span class="p">:</span> <span class="s">&quot;1234&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>When executing : $ deploy-commander     <a class="reference external" href="go:test,testing">go:test,testing</a> show_config it will output as:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;some_param&quot;</span><span class="p">:</span> <span class="s">&quot;param/value&quot;</span><span class="p">,</span>
+    <span class="s">&quot;password&quot;</span><span class="p">:</span> <span class="s">&quot;1234&quot;</span><span class="p">,</span>
+    <span class="s">&quot;project_name&quot;</span><span class="p">:</span> <span class="s">&quot;test&quot;</span><span class="p">,</span>
+    <span class="s">&quot;environment&quot;</span><span class="p">:</span> <span class="s">&quot;testing&quot;</span>
+  <span class="p">},</span>
+  <span class="s">&quot;post_params&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;dynamic_post_param&quot;</span><span class="p">:</span> <span class="s">&quot;/some/</span><span class="si">%(some_param)s</span><span class="s">/path&quot;</span><span class="p">,</span>
+    <span class="s">&quot;post_test&quot;</span><span class="p">:</span> <span class="s">&quot;</span><span class="si">%(project_name)s</span><span class="s">-</span><span class="si">%(environment)-%</span><span class="s">(password)s&quot;</span>
+  <span class="p">},</span>
+  <span class="s">&quot;tasks&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;deploy&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;Lets change the title&quot;</span><span class="p">,</span>
       <span class="s">&quot;actions&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s">&quot;your-own-description&quot;</span><span class="p">:</span> <span class="p">{</span>
           <span class="s">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>

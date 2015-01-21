@@ -12,7 +12,7 @@ There are 2 options when executing a `deploy-command` from the command line.
 
 ::
 
-	$ deploy-commander go run:<action>
+	$ deploy-commander go run:<task>
 	
 The `go` part will ask you for the project and environment you want to use.
 The `run` part will execute several actions (`Like git clone, mysql import`) combined. We defined this as `the task`.
@@ -21,5 +21,5 @@ You can bypass the prompt for the project and environment by setting them in you
 
 ::
 	
-	$ deploy-commander go:<project>,<enviroment> run:<action>
+	$ deploy-commander go:<project>,<enviroment> run:<task>
 

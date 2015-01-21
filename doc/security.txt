@@ -8,8 +8,8 @@ Environment
 
 This application will probably run on a dedicated server.
 
-- Be sure to use long passwords, better to generate them... like 15 characters and mixed symbols, digits, uppercase, lowercase
-- Use an encrypted home... so if the hardware is stolen it can't be used
+- Be sure to use long passwords, better to generate them... like 15 characters and mixed symbols, digits, uppercase, lowercase.
+- Use an encrypted home... so if the hardware is stolen it can't be used.
 - Setup a firewall with minimal access.
 - Setup a firewall on the server where you'll deploy to!
 
@@ -21,7 +21,7 @@ Encrypted config's
 
 	There is a main password set in the .config file. With this password the configuration files are encrypted/decrypted...
 	
-	Please set this password with a `strong password generator <https://strongpasswordgenerator.com/>`_ (and make sure it's escaped for json :) )
+	Please set this password with a `strong password generator <https://strongpasswordgenerator.com/>`_ (and make sure it's escaped for json)
 
 The config files can be encrypted before you want to push them to some repo.
 This way you can maintain your deploy setup in git without exposing login credentials and other critical information.

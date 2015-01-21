@@ -56,13 +56,13 @@
 <div class="section" id="command-line-execute">
 <h2>Command line execute<a class="headerlink" href="#command-line-execute" title="Permalink to this headline">¶</a></h2>
 <p>There are 2 options when executing a <cite>deploy-command</cite> from the command line.</p>
-<div class="highlight-python"><div class="highlight"><pre>$ deploy-commander go run:&lt;action&gt;
+<div class="highlight-python"><div class="highlight"><pre>$ deploy-commander go run:&lt;task&gt;
 </pre></div>
 </div>
 <p>The <cite>go</cite> part will ask you for the project and environment you want to use.
 The <cite>run</cite> part will execute several actions (<cite>Like git clone, mysql import</cite>) combined. We defined this as <cite>the task</cite>.</p>
 <p>You can bypass the prompt for the project and environment by setting them in your command.</p>
-<div class="highlight-python"><div class="highlight"><pre>$ deploy-commander go:&lt;project&gt;,&lt;enviroment&gt; run:&lt;action&gt;
+<div class="highlight-python"><div class="highlight"><pre>$ deploy-commander go:&lt;project&gt;,&lt;enviroment&gt; run:&lt;task&gt;
 </pre></div>
 </div>
 </div>

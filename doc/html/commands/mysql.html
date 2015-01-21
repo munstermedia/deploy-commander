@@ -79,7 +79,7 @@
 </div>
 <div class="section" id="mysql-cleanup-db-backups">
 <h2>mysql.cleanup_db_backups<a class="headerlink" href="#mysql-cleanup-db-backups" title="Permalink to this headline">¶</a></h2>
-<p>(Gonna be depricated, this is something we should implement with the backup_db)</p>
+<p>(Gonna be deprecated, this is something we should implement with the backup_db)</p>
 <div class="highlight-python"><div class="highlight"><pre>&quot;your-own-description&quot;:{
         &quot;sequence&quot;:1,
         &quot;command&quot;:&quot;mysql.cleanup_db_dumps&quot;,
@@ -98,24 +98,18 @@
 </div>
 <div class="section" id="mysql-query">
 <h2>mysql.query<a class="headerlink" href="#mysql-query" title="Permalink to this headline">¶</a></h2>
-<dl class="docutils">
-<dt>::</dt>
-<dd><dl class="first docutils">
-<dt>&#8220;your-own-description&#8221;:{</dt>
-<dd><p class="first">&#8220;sequence&#8221;:1,
-&#8220;command&#8221;:&#8221;mysql.query&#8221;,
-&#8220;params&#8221;:{</p>
-<blockquote>
-<div>&#8220;host&#8221;:&#8221;localhost&#8221;,
-&#8220;user&#8221;:&#8221;root&#8221;,
-&#8220;password&#8221;:&#8221;root&#8221;,
-&#8220;query&#8221;:&#8221;CREATE DATABASE IF NOT EXISTS your-db-name&#8221;</div></blockquote>
-<p class="last">}</p>
-</dd>
-</dl>
-<p class="last">}</p>
-</dd>
-</dl>
+<div class="highlight-python"><div class="highlight"><pre>&quot;your-own-description&quot;:{
+        &quot;sequence&quot;:1,
+        &quot;command&quot;:&quot;mysql.query&quot;,
+        &quot;params&quot;:{
+                &quot;host&quot;:&quot;localhost&quot;,
+                &quot;user&quot;:&quot;root&quot;,
+                &quot;password&quot;:&quot;root&quot;,
+                &quot;query&quot;:&quot;CREATE DATABASE IF NOT EXISTS your-db-name&quot;
+        }
+}
+</pre></div>
+</div>
 <p>Functionality:</p>
 <ul class="simple">
 <li>Execute a raw query thru the command line</li>

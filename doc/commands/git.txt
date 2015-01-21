@@ -6,13 +6,15 @@ git.clone
 
 ::
 
-	"your-own-description":{
-		"sequence":1,
-		"command":"git.install_repo",
-		"params":{
-			"git_repo_path":"/full/path/to/repo",
-			"git_repo_url":"https://github.com/munstermedia/demo.git"
-		}
+	{
+	  "your-own-description": {
+	    "sequence": 1,
+	    "command": "git.install_repo",
+	    "params": {
+	      "git_repo_path": "/full/path/to/repo",
+	      "git_repo_url": "https://github.com/munstermedia/demo.git"
+	    }
+	  }
 	}
 
 Functionality:
@@ -26,15 +28,17 @@ git.deploy
 
 ::
 
-	"your-own-description":{
-		"sequence":1,
-		"command":"git.deploy",
-		"params":{
-			"git_repo_url":"http://www.somegit.repo",
-			"git_repo_path":"/full/path/to/repo",
-			"git_source_path":"/full/path/to/source/%(tag)s",
-			"git_branch":"deploy-0.0.1"
-		}
+	{
+	  "your-own-description": {
+	    "sequence": 1,
+	    "command": "git.deploy",
+	    "params": {
+	      "git_repo_url": "http://www.somegit.repo",
+	      "git_repo_path": "/full/path/to/repo",
+	      "git_source_path": "/full/path/to/source/%(tag)s",
+	      "git_branch": "deploy-0.0.1"
+	    }
+	  }
 	}
 
 

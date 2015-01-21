@@ -40,6 +40,9 @@ Initial project config
 This config file is located in the /config/<project> folder. 
 Here you can define settings related to deploy commander.
 
+This file is optional, and not required to be present.
+The application autodetects the presence of this file.
+
 /<project>/config.json
 
 ::
@@ -93,7 +96,7 @@ To view the configuration from the command line you can run:
 	$ deploy-commander go show_config
 
 
-When running a deployment for a project it will first load in sequence (if available):
+When running a task it will load in sequence (if available) and combine the configuration of:
 
 1.    Generic config (default.json)
 2.    Generic environment config (<environment>.json)
@@ -108,6 +111,8 @@ So in this case, the 2'nd config will append and overwrite the 1'st. The 3'rd th
 
 This is an example structure of a project config:
 
+1.	**/config/default.json**
+
 ::
 
 	{
@@ -119,7 +124,7 @@ This is an example structure of a project config:
 	  },
 	  "tasks": {
 	    "deploy": {
-	      "title": "Deploy project",
+	      "description": "Deploy project",
 	      "actions": {
 	        "your-own-description": {
 	          "sequence": 1,
@@ -134,3 +139,73 @@ This is an example structure of a project config:
 	  }
 	}
 	
+	
+2.	**/config/testing.json**
+
+::
+
+	{
+	  "params": {
+	    "environment": "testing"
+	  }
+	}
+	
+3.	**/config/test/default.json**
+
+::
+
+	{
+	  "params": {
+	    "project_name": "test"
+	  },
+	  "post_params": {
+	    "post_test": "%(project_name)s-%(environment)-%(password)s"
+	  },
+	  "tasks": {
+	    "deploy": {
+	      "description": "Lets change the title"
+	    }
+	  }
+	}
+
+4.	**/config/test/testing.json**
+
+::
+
+	{
+	  "params": {
+	    "password": "1234"
+	  }
+	}
+
+When executing : $ deploy-commander	go:test,testing show_config it will output as:
+
+::
+
+	{
+	  "params": {
+	    "some_param": "param/value",
+	    "password": "1234",
+	    "project_name": "test",
+	    "environment": "testing"
+	  },
+	  "post_params": {
+	    "dynamic_post_param": "/some/%(some_param)s/path",
+	    "post_test": "%(project_name)s-%(environment)-%(password)s"
+	  },
+	  "tasks": {
+	    "deploy": {
+	      "description": "Lets change the title",
+	      "actions": {
+	        "your-own-description": {
+	          "sequence": 1,
+	          "execute": "command.action",
+	          "params": {
+	            "dynamic_param": "%(dynamic_param)s/repo",
+	            "dynamic_post_param": "%(dynamic_post_param)s/source/%(tag)s"
+	          }
+	        }
+	      }
+	    }
+	  }
+	}

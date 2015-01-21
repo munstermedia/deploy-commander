@@ -2,25 +2,26 @@ What is deploy commander?
 =========================
 
 A command line tool for unix based OS mainly used for remotely executing sysadmin tasks.
-As the name might give you a clue... it's power lies with managing deployments/software builds for continues integration flows.
+As the name might give you a clue... it's power lies with managing deployments/software builds for continuous integration flows.
 
 Deploy commander is build directly on python/fabric, but can be used for any project.
 
-Main goal of this system is to configure your deployment by using a generic set of predefined actions.
-There are other flavors for setting up your dtap... we're focussing on simplicity and transparancy. 
+Main goal of this application is to configure your deployment by using a generic set of predefined actions.
 
-Next to that we want to create a centralized system to manage `different deployments` (applications) for `multiple apps` build in `different languages` on `different servers`.
+There are other flavors for setting up your dtap... we're focussing on simplicity and transparancy
+ in a centralized application to manage `different deployments` (applications) for `multiple apps` build in `different languages` on `different servers`.
 
 We're building a lot if handy features for sysadmins and developers that will make your life easier. 
 
 Stuff like:
 
-- Git checkout and update made easy
-- Create folders dynamicly
+- Git checkout and update
+- Create/ensure folders dynamicly
 - Backup database on deployment
 - Import database
 - Download files (like assets) for backup.
 - Upload files (like assets) for preperation
+- Upload templates for dynamic settings
 
 .. NOTE::
 	This application is still in it's development phase.

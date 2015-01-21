@@ -4,12 +4,14 @@ deploy-commander installation
 
 Deploy commander is easy to install and configure. Here we'll explain the basic installation.
 
-If you're completely new to python,pip and or virtualenv please follow the :doc:`tutials <tuturials>` 
+If you're completely new to python, pip and or virtualenv please follow the :doc:`tuturials <tuturials>` 
 
 Prerequisites
 -------------
 
 - Python 2.7
+
+(others not tested yet)
 
 Other libraries will be installed by the pip installer:
 
@@ -25,8 +27,8 @@ Best practices
 --------------
 
 - In production encrypt the config files.
-- On unix based machines make sure the user directory (best to use deploy user) is encrypted/secured
-- Make sure if you make a backup of copy on your dev, that it's secured.
+- Make sure the user home directory (best to use deploy user) is encrypted/secured
+- Make sure if you make a backup of copy on your dev, that it's encrypted.
 - For production use a dedicated deployment environment.
 - Use virtualenv
 
