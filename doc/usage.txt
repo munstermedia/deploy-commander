@@ -23,3 +23,29 @@ You can bypass the prompt for the project and environment by setting them in you
 	
 	$ deploy-commander go:<project>,<enviroment> run:<task>
 
+Show config
+-----------
+
+Show full config 
+
+::
+
+	$ deploy-commander go:<project>,<enviroment> show_config
+
+
+Show available tasks
+--------------------
+
+::
+
+	$ deploy-commander go:<project>,<enviroment> show_tasks
+
+
+Show task
+---------
+
+::
+
+	$ deploy-commander go:<project>,<enviroment> show_task:<task>
+	
+	

@@ -1,7 +1,10 @@
 # Changelog
-## 0.0.1
+
+## 0.1.1
 -	Renamed/refactored commands in config to tasks
 - 	Renamed/refactored the execute to command in actions
+- 	Add show_tasks functionality
+-	Refactored config strategy
 
 ## 0.1.0
 -	Prepping for a final release

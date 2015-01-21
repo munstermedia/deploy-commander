@@ -110,7 +110,7 @@ mysql.restore_db
 
 ::
 
-{
+	{
 	  "your-own-description": {
 	    "sequence": 2,
 	    "command": "mysql.restore_db",

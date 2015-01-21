@@ -6,13 +6,15 @@ system.symlink
 
 ::
 
-	"your-own-description":{
-		"sequence":1,
-		"command":"system.symlink",
-		"params":{
-			"source":"/path/where/to/create/symlink",
-			"target":"/path/where/the/symlink/should/link"
-		}
+	{
+	  "your-own-description": {
+	    "sequence": 1,
+	    "command": "system.symlink",
+	    "params": {
+	      "source": "/path/where/to/create/symlink",
+	      "target": "/path/where/the/symlink/should/link"
+	    }
+	  }
 	}
 
 Functionality:
@@ -25,12 +27,14 @@ system.command
 
 ::
 
-	"list-source":{
-		"sequence":1,
-		"command":"system.command",
-		"params":{
-			"command":"ls -las /home"
-		}
+	{
+	  "list-source": {
+	    "sequence": 1,
+	    "command": "system.command",
+	    "params": {
+	      "command": "ls -las /home"
+	    }
+	  }
 	}
 
 
@@ -38,20 +42,23 @@ Functionality:
 
 - Run command on server
 
+
 system.upload_template
 ----------------------
 
 ::
 
-	"upload-environment-config":{
-		"sequence":1,
-		"command":"system.upload_template",
-		"params":{
-			"source":"some/file/in/the/template/path.ini",
-			"target":"/path/where/to/copy/on/the/server.ini",
-			"yourvar_1":"whatever",
-			"yourvar_2":"you-want"
-		}
+	{
+	  "upload-environment-config": {
+	    "sequence": 1,
+	    "command": "system.upload_template",
+	    "params": {
+	      "source": "some/file/in/the/template/path.ini",
+	      "target": "/path/where/to/copy/on/the/server.ini",
+	      "yourvar_1": "whatever",
+	      "yourvar_2": "you-want"
+	    }
+	  }
 	}
 
 Functionality:
@@ -66,12 +73,14 @@ system.ensure_path
 
 ::
 
-	"your-own-description":{
-		"sequence":1,
-		"command":"system.ensure_path",
-		"params":{
-			"path":"/the/full/path/you/need"
-		}
+	{
+	  "your-own-description": {
+	    "sequence": 1,
+	    "command": "system.ensure_path",
+	    "params": {
+	      "path": "/the/full/path/you/need"
+	    }
+	  }
 	}
 
 
@@ -85,13 +94,15 @@ system.download_from_remote
 
 ::
 
-	"your-own-description":{
-		"sequence":1,
-		"command":"system.download_from_remote",
-		"params":{
-			"remote_path":"/some/remote/path/*.jpg",
-			"local_path":"./templates/tmp"
-		}
+	{
+	  "your-own-description": {
+	    "sequence": 1,
+	    "command": "system.download_from_remote",
+	    "params": {
+	      "remote_path": "/some/remote/path/*.jpg",
+	      "local_path": "./templates/tmp"
+	    }
+	  }
 	}
 
 

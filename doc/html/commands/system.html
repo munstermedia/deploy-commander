@@ -23,7 +23,10 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="deploy-commander 0 documentation" href="../index.html" /> 
+    <link rel="top" title="deploy-commander 0 documentation" href="../index.html" />
+    <link rel="up" title="Commands" href="../commands.html" />
+    <link rel="next" title="Git commands" href="git.html" />
+    <link rel="prev" title="Commands" href="../commands.html" /> 
   </head>
   <body>
     <div class="related">
@@ -32,7 +35,14 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li><a href="../index.html">deploy-commander 0 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="git.html" title="Git commands"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../commands.html" title="Commands"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">deploy-commander 0 documentation</a> &raquo;</li>
+          <li><a href="../commands.html" accesskey="U">Commands</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -45,14 +55,16 @@
 <h1>System commands<a class="headerlink" href="#system-commands" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="system-symlink">
 <h2>system.symlink<a class="headerlink" href="#system-symlink" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre>&quot;your-own-description&quot;:{
-        &quot;sequence&quot;:1,
-        &quot;command&quot;:&quot;system.symlink&quot;,
-        &quot;params&quot;:{
-                &quot;source&quot;:&quot;/path/where/to/create/symlink&quot;,
-                &quot;target&quot;:&quot;/path/where/the/symlink/should/link&quot;
-        }
-}
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;your-own-description&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&quot;command&quot;</span><span class="p">:</span> <span class="s">&quot;system.symlink&quot;</span><span class="p">,</span>
+    <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;source&quot;</span><span class="p">:</span> <span class="s">&quot;/path/where/to/create/symlink&quot;</span><span class="p">,</span>
+      <span class="s">&quot;target&quot;</span><span class="p">:</span> <span class="s">&quot;/path/where/the/symlink/should/link&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Functionality:</p>
@@ -62,13 +74,15 @@
 </div>
 <div class="section" id="system-command">
 <h2>system.command<a class="headerlink" href="#system-command" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre>&quot;list-source&quot;:{
-        &quot;sequence&quot;:1,
-        &quot;command&quot;:&quot;system.command&quot;,
-        &quot;params&quot;:{
-                &quot;command&quot;:&quot;ls -las /home&quot;
-        }
-}
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;list-source&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&quot;command&quot;</span><span class="p">:</span> <span class="s">&quot;system.command&quot;</span><span class="p">,</span>
+    <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;command&quot;</span><span class="p">:</span> <span class="s">&quot;ls -las /home&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Functionality:</p>
@@ -78,16 +92,18 @@
 </div>
 <div class="section" id="system-upload-template">
 <h2>system.upload_template<a class="headerlink" href="#system-upload-template" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre>&quot;upload-environment-config&quot;:{
-        &quot;sequence&quot;:1,
-        &quot;command&quot;:&quot;system.upload_template&quot;,
-        &quot;params&quot;:{
-                &quot;source&quot;:&quot;some/file/in/the/template/path.ini&quot;,
-                &quot;target&quot;:&quot;/path/where/to/copy/on/the/server.ini&quot;,
-                &quot;yourvar_1&quot;:&quot;whatever&quot;,
-                &quot;yourvar_2&quot;:&quot;you-want&quot;
-        }
-}
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;upload-environment-config&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&quot;command&quot;</span><span class="p">:</span> <span class="s">&quot;system.upload_template&quot;</span><span class="p">,</span>
+    <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;source&quot;</span><span class="p">:</span> <span class="s">&quot;some/file/in/the/template/path.ini&quot;</span><span class="p">,</span>
+      <span class="s">&quot;target&quot;</span><span class="p">:</span> <span class="s">&quot;/path/where/to/copy/on/the/server.ini&quot;</span><span class="p">,</span>
+      <span class="s">&quot;yourvar_1&quot;</span><span class="p">:</span> <span class="s">&quot;whatever&quot;</span><span class="p">,</span>
+      <span class="s">&quot;yourvar_2&quot;</span><span class="p">:</span> <span class="s">&quot;you-want&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Functionality:</p>
@@ -99,13 +115,15 @@
 </div>
 <div class="section" id="system-ensure-path">
 <h2>system.ensure_path<a class="headerlink" href="#system-ensure-path" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre>&quot;your-own-description&quot;:{
-        &quot;sequence&quot;:1,
-        &quot;command&quot;:&quot;system.ensure_path&quot;,
-        &quot;params&quot;:{
-                &quot;path&quot;:&quot;/the/full/path/you/need&quot;
-        }
-}
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;your-own-description&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&quot;command&quot;</span><span class="p">:</span> <span class="s">&quot;system.ensure_path&quot;</span><span class="p">,</span>
+    <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;path&quot;</span><span class="p">:</span> <span class="s">&quot;/the/full/path/you/need&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Functionality:</p>
@@ -115,14 +133,16 @@
 </div>
 <div class="section" id="system-download-from-remote">
 <h2>system.download_from_remote<a class="headerlink" href="#system-download-from-remote" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre>&quot;your-own-description&quot;:{
-        &quot;sequence&quot;:1,
-        &quot;command&quot;:&quot;system.download_from_remote&quot;,
-        &quot;params&quot;:{
-                &quot;remote_path&quot;:&quot;/some/remote/path/*.jpg&quot;,
-                &quot;local_path&quot;:&quot;./templates/tmp&quot;
-        }
-}
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;your-own-description&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&quot;command&quot;</span><span class="p">:</span> <span class="s">&quot;system.download_from_remote&quot;</span><span class="p">,</span>
+    <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;remote_path&quot;</span><span class="p">:</span> <span class="s">&quot;/some/remote/path/*.jpg&quot;</span><span class="p">,</span>
+      <span class="s">&quot;local_path&quot;</span><span class="p">:</span> <span class="s">&quot;./templates/tmp&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Functionality:</p>
@@ -152,6 +172,12 @@
 </li>
 </ul>
 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../commands.html"
+                        title="previous chapter">Commands</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="git.html"
+                        title="next chapter">Git commands</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/commands/system.txt"
@@ -180,7 +206,14 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              >index</a></li>
-        <li><a href="../index.html">deploy-commander 0 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="git.html" title="Git commands"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../commands.html" title="Commands"
+             >previous</a> |</li>
+        <li><a href="../index.html">deploy-commander 0 documentation</a> &raquo;</li>
+          <li><a href="../commands.html" >Commands</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

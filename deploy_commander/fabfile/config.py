@@ -39,6 +39,13 @@ env.commands = {}
 # Tasks setting
 env.tasks = {}
 
+# Sequence of loading
+env.config_load_strategy = ['config/default.json',
+                            'config/%(environment)s.json',
+                            'config/%(project)s/default.json',
+                            'config/%(project)s/%(environment)s.json'
+                            ]
+
 def init():
     """
     Default init for all commands
@@ -73,23 +80,15 @@ def environment():
                 abort(red("Cannot read main config, is the config correct?. `%s`" % e))
             
             if 'config_load_strategy' in main_config:
-                for config_file in main_config['config_load_strategy']:
-                    load_config(config_file % env.params)
-    else:
-        # Load default
-        load_config('config/default.json')
+                env.config_load_strategy = main_config['config_load_strategy']
     
-        # Load environment config
-        load_config('config/%s.json' % env.params['environment'])
-        
-        # Load default project settings
-        load_config('config/%s/default.json' % (env.params['project']))
-        
-        # Load specific env settings
-        load_config('config/%s/%s.json' % (env.params['project'], env.params['environment']))
-    
+    if 'config_load_strategy' in env:
+        for config_file in env['config_load_strategy']:
+            load_config(config_file % env.params)
+                    
     # Post process params from params
     if env.post_params:
+        print ""
         for param_key, param_value in env.post_params.iteritems():
             env.params[param_key] = param_value % env.params
             print(yellow("Set post param `%s` to `%s`" % (param_key, env.params[param_key])))

@@ -55,18 +55,20 @@
 <h1>MySql commands<a class="headerlink" href="#mysql-commands" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="mysql-backup-db">
 <h2>mysql.backup_db<a class="headerlink" href="#mysql-backup-db" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre>&quot;your-own-description&quot;:{
-        &quot;sequence&quot;:1,
-        &quot;command&quot;:&quot;mysql.backup_db&quot;,
-        &quot;params&quot;:{
-                &quot;host&quot;:&quot;localhost&quot;,
-                &quot;user&quot;:&quot;root&quot;,
-                &quot;password&quot;:&quot;root&quot;,
-                &quot;database&quot;:&quot;your-database&quot;,
-                &quot;backup_file&quot;:&quot;/full/path/to/database/backup/path/file.sql&quot;
-                (&quot;download_tar_to_local_file&quot;:&quot;./local/path/db/backup.tar.gz&quot;)
-        }
-}
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;your-own-description&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&quot;command&quot;</span><span class="p">:</span> <span class="s">&quot;mysql.backup_db&quot;</span><span class="p">,</span>
+    <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;host&quot;</span><span class="p">:</span> <span class="s">&quot;localhost&quot;</span><span class="p">,</span>
+      <span class="s">&quot;user&quot;</span><span class="p">:</span> <span class="s">&quot;root&quot;</span><span class="p">,</span>
+      <span class="s">&quot;password&quot;</span><span class="p">:</span> <span class="s">&quot;root&quot;</span><span class="p">,</span>
+      <span class="s">&quot;database&quot;</span><span class="p">:</span> <span class="s">&quot;your-database&quot;</span><span class="p">,</span>
+      <span class="s">&quot;backup_file&quot;</span><span class="p">:</span> <span class="s">&quot;/full/path/to/database/backup/path/file.sql&quot;</span><span class="p">,</span>
+      <span class="s">&quot;download_tar_to_local_file&quot;</span><span class="p">:</span> <span class="s">&quot;./local/path/db/backup.tar.gz&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Functionality:</p>
@@ -80,14 +82,16 @@
 <div class="section" id="mysql-cleanup-db-backups">
 <h2>mysql.cleanup_db_backups<a class="headerlink" href="#mysql-cleanup-db-backups" title="Permalink to this headline">¶</a></h2>
 <p>(Gonna be deprecated, this is something we should implement with the backup_db)</p>
-<div class="highlight-python"><div class="highlight"><pre>&quot;your-own-description&quot;:{
-        &quot;sequence&quot;:1,
-        &quot;command&quot;:&quot;mysql.cleanup_db_dumps&quot;,
-        &quot;params&quot;:{
-                &quot;path&quot;:&quot;/full/path/to/database/backup/path&quot;,
-                (&quot;max_backup_history&quot;:&quot;5&quot;)
-        }
-}
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;your-own-description&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&quot;command&quot;</span><span class="p">:</span> <span class="s">&quot;mysql.cleanup_db_dumps&quot;</span><span class="p">,</span>
+    <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;path&quot;</span><span class="p">:</span> <span class="s">&quot;/full/path/to/database/backup/path&quot;</span><span class="p">,</span>
+      <span class="s">&quot;max_backup_history&quot;</span><span class="p">:</span> <span class="s">&quot;5&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Functionality:</p>
@@ -98,16 +102,18 @@
 </div>
 <div class="section" id="mysql-query">
 <h2>mysql.query<a class="headerlink" href="#mysql-query" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre>&quot;your-own-description&quot;:{
-        &quot;sequence&quot;:1,
-        &quot;command&quot;:&quot;mysql.query&quot;,
-        &quot;params&quot;:{
-                &quot;host&quot;:&quot;localhost&quot;,
-                &quot;user&quot;:&quot;root&quot;,
-                &quot;password&quot;:&quot;root&quot;,
-                &quot;query&quot;:&quot;CREATE DATABASE IF NOT EXISTS your-db-name&quot;
-        }
-}
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;your-own-description&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&quot;command&quot;</span><span class="p">:</span> <span class="s">&quot;mysql.query&quot;</span><span class="p">,</span>
+    <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;host&quot;</span><span class="p">:</span> <span class="s">&quot;localhost&quot;</span><span class="p">,</span>
+      <span class="s">&quot;user&quot;</span><span class="p">:</span> <span class="s">&quot;root&quot;</span><span class="p">,</span>
+      <span class="s">&quot;password&quot;</span><span class="p">:</span> <span class="s">&quot;root&quot;</span><span class="p">,</span>
+      <span class="s">&quot;query&quot;</span><span class="p">:</span> <span class="s">&quot;CREATE DATABASE IF NOT EXISTS your-db-name&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Functionality:</p>
@@ -117,17 +123,19 @@
 </div>
 <div class="section" id="mysql-import-file">
 <h2>mysql.import_file<a class="headerlink" href="#mysql-import-file" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre>&quot;your-own-description&quot;:{
-        &quot;sequence&quot;:3,
-        &quot;command&quot;:&quot;mysql.import_file&quot;,
-        &quot;params&quot;:{
-                &quot;host&quot;:&quot;localhost&quot;,
-                &quot;user&quot;:&quot;root&quot;,
-                &quot;password&quot;:&quot;root&quot;,
-                &quot;database&quot;:&quot;your-database&quot;,
-                &quot;import_file&quot;:&quot;/full/path/to/repo/.data/install.sql&quot;
-        }
-}
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;your-own-description&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s">&quot;command&quot;</span><span class="p">:</span> <span class="s">&quot;mysql.import_file&quot;</span><span class="p">,</span>
+    <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;host&quot;</span><span class="p">:</span> <span class="s">&quot;localhost&quot;</span><span class="p">,</span>
+      <span class="s">&quot;user&quot;</span><span class="p">:</span> <span class="s">&quot;root&quot;</span><span class="p">,</span>
+      <span class="s">&quot;password&quot;</span><span class="p">:</span> <span class="s">&quot;root&quot;</span><span class="p">,</span>
+      <span class="s">&quot;database&quot;</span><span class="p">:</span> <span class="s">&quot;your-database&quot;</span><span class="p">,</span>
+      <span class="s">&quot;import_file&quot;</span><span class="p">:</span> <span class="s">&quot;/full/path/to/repo/.data/install.sql&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Functionality:</p>
@@ -138,18 +146,20 @@
 </div>
 <div class="section" id="mysql-restore-db">
 <h2>mysql.restore_db<a class="headerlink" href="#mysql-restore-db" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre>&quot;your-own-description&quot;:{
-        &quot;sequence&quot;:2,
-        &quot;command&quot;:&quot;mysql.restore_db&quot;,
-        &quot;params&quot;:{
-                &quot;host&quot;:&quot;localhost&quot;,
-                &quot;user&quot;:&quot;root&quot;,
-                &quot;password&quot;:&quot;password&quot;,
-                &quot;database&quot;:&quot;your-database&quot;,
-                &quot;backup_path&quot;:&quot;/full/path/to/database/backup/path&quot;,
-                (&quot;version&quot;:&quot;sql-version&quot;)
-        }
-}
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;your-own-description&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s">&quot;command&quot;</span><span class="p">:</span> <span class="s">&quot;mysql.restore_db&quot;</span><span class="p">,</span>
+    <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;host&quot;</span><span class="p">:</span> <span class="s">&quot;localhost&quot;</span><span class="p">,</span>
+      <span class="s">&quot;user&quot;</span><span class="p">:</span> <span class="s">&quot;root&quot;</span><span class="p">,</span>
+      <span class="s">&quot;password&quot;</span><span class="p">:</span> <span class="s">&quot;password&quot;</span><span class="p">,</span>
+      <span class="s">&quot;database&quot;</span><span class="p">:</span> <span class="s">&quot;your-database&quot;</span><span class="p">,</span>
+      <span class="s">&quot;backup_path&quot;</span><span class="p">:</span> <span class="s">&quot;/full/path/to/database/backup/path&quot;</span><span class="p">,</span>
+      <span class="s">&quot;version&quot;</span><span class="p">:</span> <span class="s">&quot;sql-version&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Functionality:</p>

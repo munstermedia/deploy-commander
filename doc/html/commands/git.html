@@ -55,14 +55,16 @@
 <h1>Git commands<a class="headerlink" href="#git-commands" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="git-clone">
 <h2>git.clone<a class="headerlink" href="#git-clone" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre>&quot;your-own-description&quot;:{
-        &quot;sequence&quot;:1,
-        &quot;command&quot;:&quot;git.install_repo&quot;,
-        &quot;params&quot;:{
-                &quot;git_repo_path&quot;:&quot;/full/path/to/repo&quot;,
-                &quot;git_repo_url&quot;:&quot;https://github.com/munstermedia/demo.git&quot;
-        }
-}
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;your-own-description&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&quot;command&quot;</span><span class="p">:</span> <span class="s">&quot;git.install_repo&quot;</span><span class="p">,</span>
+    <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;git_repo_path&quot;</span><span class="p">:</span> <span class="s">&quot;/full/path/to/repo&quot;</span><span class="p">,</span>
+      <span class="s">&quot;git_repo_url&quot;</span><span class="p">:</span> <span class="s">&quot;https://github.com/munstermedia/demo.git&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Functionality:</p>
@@ -73,16 +75,18 @@
 </div>
 <div class="section" id="git-deploy">
 <h2>git.deploy<a class="headerlink" href="#git-deploy" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre>&quot;your-own-description&quot;:{
-        &quot;sequence&quot;:1,
-        &quot;command&quot;:&quot;git.deploy&quot;,
-        &quot;params&quot;:{
-                &quot;git_repo_url&quot;:&quot;http://www.somegit.repo&quot;,
-                &quot;git_repo_path&quot;:&quot;/full/path/to/repo&quot;,
-                &quot;git_source_path&quot;:&quot;/full/path/to/source/%(tag)s&quot;,
-                &quot;git_branch&quot;:&quot;deploy-0.0.1&quot;
-        }
-}
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;your-own-description&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&quot;command&quot;</span><span class="p">:</span> <span class="s">&quot;git.deploy&quot;</span><span class="p">,</span>
+    <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;git_repo_url&quot;</span><span class="p">:</span> <span class="s">&quot;http://www.somegit.repo&quot;</span><span class="p">,</span>
+      <span class="s">&quot;git_repo_path&quot;</span><span class="p">:</span> <span class="s">&quot;/full/path/to/repo&quot;</span><span class="p">,</span>
+      <span class="s">&quot;git_source_path&quot;</span><span class="p">:</span> <span class="s">&quot;/full/path/to/source/</span><span class="si">%(tag)s</span><span class="s">&quot;</span><span class="p">,</span>
+      <span class="s">&quot;git_branch&quot;</span><span class="p">:</span> <span class="s">&quot;deploy-0.0.1&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>Functionality:</p>

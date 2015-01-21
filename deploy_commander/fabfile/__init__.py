@@ -164,6 +164,37 @@ def go(project=None, environment=None):
     
     utils.print_double_line()
 
+
+@task 
+def show_tasks():
+    """
+    List available tasks
+    """
+    if 'tasks' in env:
+        print("Available tasks :")
+        for key, val in env['tasks'].iteritems():
+            if 'description' in val:
+                print("%s : %s" % (green(key), val['description']))
+            else:
+                print("%s : ?" % green(key))
+    else:
+        print(red("No tasks defined?"))
+
+@task
+def show_task(task):
+    """
+    Show task info
+    """
+    if task in env['tasks']:
+        print("Params :")
+        print json.dumps(env.params, sort_keys=True, indent=4)
+        print("Post params :")
+        print json.dumps(env.post_params, sort_keys=True, indent=4)
+        print("Task :")
+        print json.dumps(env.tasks[task], sort_keys=True, indent=4)
+    else:
+        print(red("Invalid task `%s`" % task))
+
 @task
 def show_config():
     """
@@ -175,8 +206,8 @@ def show_config():
     print json.dumps(env.post_params, sort_keys=True, indent=4)
     utils.print_double_line()
     
-    if 'commands' in env:
-        print(red("Commands are deprecated, use the name `tags` instead"))
+    if 'commands' in env and len(env.commands) > 0:
+        print(red("Commands are deprecated, use the name `tasks` instead"))
         env.tasks = env.commands
         
     if 'tasks' in env:
