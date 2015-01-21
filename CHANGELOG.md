@@ -5,6 +5,7 @@
 - 	Renamed/refactored the execute to command in actions
 - 	Add show_tasks functionality
 -	Refactored config strategy
+-   More documentation
 
 ## 0.1.0
 -	Prepping for a final release
