@@ -106,24 +106,8 @@ def deploy(params):
     if 'git_repo_path' not in params:
         abort(red("git_repo_path is required !")) 
         
-    if 'git_branch' not in params:
-        with cd(params['git_repo_path']):
-            print("Fetching latest tags...just a moment...")
-            print("")
-            
-            run('git fetch --tags')
-            tags = run('git tag -l')
-            
-            latest_tag = 'master'
-            
-            if len(tags) > 0:
-                for tag in tags.split('\n'):
-                    print("- %s" % tag)
-                    latest_tag = tag
-                
-            print("")
-        
-        params['git_branch'] = prompt("Enter branch/tag to deploy : ", default=latest_tag)
+    if 'git_branch' not in params or len(params['git_branch']) == 0:
+        abort(red("`git_branch` is required !"))
     
     params = utils.format_params(params)
     

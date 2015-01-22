@@ -247,7 +247,7 @@ def run(task):
     
     if 'input_params' in env.tasks[task]:
         for param_key, param_value in env.tasks[task]['input_params'].items():
-            env.params[param_value['param']] = prompt(param_value['prompt'])
+            env.params[param_value['param']] = prompt(param_value['prompt'] + ' : ')
     
     ordered_tasks = sorted(env.tasks[task]['actions'].items(), key=lambda (k,v): v['sequence'])
     

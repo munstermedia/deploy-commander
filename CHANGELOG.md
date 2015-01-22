@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.2
+-	Removed git branch and tag listing, with prompt in git.deploy.
+-	Small typo change in input_params prompt
+-	Added docu for input_params
+-	Added system.cleanup_old_files
+-	Removed README docu
+
 ## 0.1.1
 -	Renamed/refactored commands in config to tasks
 - 	Renamed/refactored the execute to command in actions

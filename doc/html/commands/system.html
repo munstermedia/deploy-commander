@@ -152,6 +152,28 @@
 <li>Can download one or more files/folders</li>
 </ul>
 </div>
+<div class="section" id="system-cleanup-old-files">
+<h2>system.cleanup_old_files<a class="headerlink" href="#system-cleanup-old-files" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;delete-old-files&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s">&quot;command&quot;</span><span class="p">:</span> <span class="s">&quot;system.cleanup_old_files&quot;</span><span class="p">,</span>
+    <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;minutes&quot;</span><span class="p">:</span> <span class="s">&quot;86400&quot;</span><span class="p">,</span>
+      <span class="s">&quot;path&quot;</span><span class="p">:</span> <span class="s">&quot;/some/path&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Params:
+- minutes : Remove files older then x minutes (optional, default 86400)
+- path : path to folder.(required)</p>
+<p>Functionality:</p>
+<ul class="simple">
+<li>Deletes old files and (sub)folders</li>
+</ul>
+</div>
 </div>
 
 
@@ -168,6 +190,7 @@
 <li><a class="reference internal" href="#system-upload-template">system.upload_template</a></li>
 <li><a class="reference internal" href="#system-ensure-path">system.ensure_path</a></li>
 <li><a class="reference internal" href="#system-download-from-remote">system.download_from_remote</a></li>
+<li><a class="reference internal" href="#system-cleanup-old-files">system.cleanup_old_files</a></li>
 </ul>
 </li>
 </ul>

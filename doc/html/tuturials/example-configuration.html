@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Example Configurations &mdash; deploy-commander 0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="deploy-commander 0 documentation" href="../index.html" />
+    <link rel="up" title="Tuturials" href="../tuturials.html" />
+    <link rel="next" title="Config" href="../config.html" />
+    <link rel="prev" title="Tuturials" href="../tuturials.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../config.html" title="Config"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../tuturials.html" title="Tuturials"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">deploy-commander 0 documentation</a> &raquo;</li>
+          <li><a href="../tuturials.html" accesskey="U">Tuturials</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="example-configurations">
+<h1>Example Configurations<a class="headerlink" href="#example-configurations" title="Permalink to this headline">¶</a></h1>
+<p>We have a ready to go repo in github that contains a basic setup with the following:</p>
+<ul class="simple">
+<li>Vagrant file (for your local dev machine)</li>
+<li>Setup server with puppet</li>
+<li>Encrypted configs</li>
+<li>Configs with different examples</li>
+<li>Main config.dist for main configuration</li>
+</ul>
+<p>See the github repo : <a class="reference external" href="https://github.com/munstermedia/deploy-commander-example">https://github.com/munstermedia/deploy-commander-example</a>.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p>In this example we&#8217;ll use <a class="reference external" href="https://www.virtualbox.org/">virtualbox</a> and <a class="reference external" href="https://www.vagrantup.com/">vagrant</a>.</p>
+<p>We&#8217;ll assume you have worked with then...</p>
+<p>We only tested this system on unix like machines, like Ubuntu and MacOS.
+Currently we don&#8217;t support other flavors... sorry... (allthough it must work on centos too...)
+So for now, this quick demo can&#8217;t be run if you are using a windows machine.</p>
+<p>Clone an example</p>
+<div class="highlight-python"><div class="highlight"><pre>$ git clone https://github.com/munstermedia/deploy-commander-example.git
+</pre></div>
+</div>
+<p>Go into repo</p>
+<div class="highlight-python"><div class="highlight"><pre>$ cd deploy-commander-example
+</pre></div>
+</div>
+<p>Setup main config</p>
+<div class="highlight-python"><div class="highlight"><pre>$ mv config.json.dist config.json
+</pre></div>
+</div>
+<p>Load development server, a ubuntu trusty box with ip 192.168.56.135</p>
+<div class="highlight-python"><div class="highlight"><pre>$ vagrant up
+</pre></div>
+</div>
+</div>
+<div class="section" id="lets-go">
+<h2>Lets go...<a class="headerlink" href="#lets-go" title="Permalink to this headline">¶</a></h2>
+<p>We&#8217;re gonna start with a small example project and inspect some configuration files.</p>
+<div class="section" id="install-app">
+<h3>Install app<a class="headerlink" href="#install-app" title="Permalink to this headline">¶</a></h3>
+<p>We&#8217;re gonna install a new app <cite>php-info</cite> on a development environment.</p>
+<div class="highlight-python"><div class="highlight"><pre>$ deploy-commander go run:install-app
+</pre></div>
+</div>
+<p>it will prompt you for the project and environment.</p>
+<p>A shortcut to do the same:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ deploy-commander go:phpinfo,development run:install-app
+</pre></div>
+</div>
+<div class="sidebar">
+<p class="first sidebar-title">Different environments</p>
+<p class="last">Try to enter different environments, in this example they all point to the vagrant box, but for your production it can point to different servers.</p>
+</div>
+<p>What just happened?</p>
+<ul class="simple">
+<li>This will create base folders and clone the repo into a development enviroment</li>
+<li>We&#8217;ve cloned a repo into <cite>/home/&lt;user&gt;/&lt;env&gt;/repo</cite></li>
+<li>We&#8217;ve created a database</li>
+<li>We&#8217;ve installed the default install.sql from repo</li>
+</ul>
+</div>
+<div class="section" id="deploy-app">
+<h3>Deploy app<a class="headerlink" href="#deploy-app" title="Permalink to this headline">¶</a></h3>
+<p>Now we&#8217;re gonna deploy the source code and use the master branch to do so.</p>
+<div class="highlight-python"><div class="highlight"><pre>$ deploy-commander go run:deploy-app
+</pre></div>
+</div>
+<p>This wil prompt you with the same like install but it will ask for a tag.
+The default tag is the latest from the list.</p>
+<p>What just happened?</p>
+<ul class="simple">
+<li>We&#8217;ve updated <cite>/home/&lt;user&gt;/&lt;env&gt;/repo</cite></li>
+<li>We&#8217;ve created <cite>/home/&lt;user&gt;/&lt;env&gt;/source/&lt;tag&gt;</cite> from the repo</li>
+<li>We&#8217;ve backupped the database in <cite>/home/&lt;user&gt;/&lt;env&gt;/db_backup</cite></li>
+<li>We&#8217;ve created a symlink <cite>/home/&lt;user&gt;/&lt;env&gt;/current</cite> to <cite>/home/&lt;user&gt;/&lt;env&gt;/source/&lt;tag&gt;</cite></li>
+</ul>
+</div>
+<div class="section" id="rollback-app">
+<h3>Rollback app<a class="headerlink" href="#rollback-app" title="Permalink to this headline">¶</a></h3>
+<p>Now we&#8217;re gonna rollback the app...  .. euhm rollback? impossible in continuous integration right?</p>
+<div class="highlight-python"><div class="highlight"><pre>$ deploy-commander go run:rollback-app
+</pre></div>
+</div>
+<p>What just happened?</p>
+<ul class="simple">
+<li>We&#8217;ve removed the old symlink <cite>/home/&lt;user&gt;/&lt;env&gt;/current</cite> and linked it to the new tag you&#8217;ve entered.</li>
+<li>If we answered yes to import database, we could rollback the database to another version.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Example Configurations</a><ul>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#lets-go">Lets go...</a><ul>
+<li><a class="reference internal" href="#install-app">Install app</a></li>
+<li><a class="reference internal" href="#deploy-app">Deploy app</a></li>
+<li><a class="reference internal" href="#rollback-app">Rollback app</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../tuturials.html"
+                        title="previous chapter">Tuturials</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../config.html"
+                        title="next chapter">Config</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/tuturials/example-configuration.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../config.html" title="Config"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../tuturials.html" title="Tuturials"
+             >previous</a> |</li>
+        <li><a href="../index.html">deploy-commander 0 documentation</a> &raquo;</li>
+          <li><a href="../tuturials.html" >Tuturials</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Ference van Munster.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

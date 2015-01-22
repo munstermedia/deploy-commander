@@ -1,0 +1,126 @@
+======================
+Example Configurations
+======================
+
+We have a ready to go repo in github that contains a basic setup with the following:
+
+- Vagrant file (for your local dev machine)
+- Setup server with puppet
+- Encrypted configs
+- Configs with different examples
+- Main config.dist for main configuration
+
+See the github repo : `https://github.com/munstermedia/deploy-commander-example <https://github.com/munstermedia/deploy-commander-example>`_.
+
+Requirements
+------------
+
+In this example we'll use `virtualbox <https://www.virtualbox.org/>`_ and `vagrant <https://www.vagrantup.com/>`_.
+
+We'll assume you have worked with then...
+
+We only tested this system on unix like machines, like Ubuntu and MacOS.
+Currently we don't support other flavors... sorry... (allthough it must work on centos too...)
+So for now, this quick demo can't be run if you are using a windows machine.
+
+Clone an example
+
+::
+	
+	$ git clone https://github.com/munstermedia/deploy-commander-example.git
+
+
+Go into repo
+
+::
+	
+	$ cd deploy-commander-example
+
+
+Setup main config
+
+::
+
+	$ mv config.json.dist config.json
+
+Load development server, a ubuntu trusty box with ip 192.168.56.135
+
+::
+
+	$ vagrant up
+
+
+Lets go...
+----------
+
+We're gonna start with a small example project and inspect some configuration files.
+
+Install app
+^^^^^^^^^^^
+
+We're gonna install a new app `php-info` on a development environment.
+
+::
+
+	$ deploy-commander go run:install-app
+
+
+it will prompt you for the project and environment.
+
+A shortcut to do the same:
+
+::
+	
+	$ deploy-commander go:phpinfo,development run:install-app
+
+
+.. sidebar:: Different environments
+
+	Try to enter different environments, in this example they all point to the vagrant box, but for your production it can point to different servers.
+
+
+What just happened?
+
+- This will create base folders and clone the repo into a development enviroment
+- We've cloned a repo into `/home/<user>/<env>/repo`
+- We've created a database
+- We've installed the default install.sql from repo
+
+
+
+Deploy app
+^^^^^^^^^^
+
+Now we're gonna deploy the source code and use the master branch to do so.
+
+::
+
+	$ deploy-commander go run:deploy-app
+
+
+This wil prompt you with the same like install but it will ask for a tag.
+The default tag is the latest from the list.
+
+What just happened?
+
+- We've updated `/home/<user>/<env>/repo`
+- We've created `/home/<user>/<env>/source/<tag>` from the repo
+- We've backupped the database in `/home/<user>/<env>/db_backup`
+- We've created a symlink `/home/<user>/<env>/current` to `/home/<user>/<env>/source/<tag>`
+
+
+Rollback app
+^^^^^^^^^^^^
+
+Now we're gonna rollback the app...  .. euhm rollback? impossible in continuous integration right?
+
+::
+
+	$ deploy-commander go run:rollback-app
+
+
+What just happened?
+
+- We've removed the old symlink `/home/<user>/<env>/current` and linked it to the new tag you've entered.
+- If we answered yes to import database, we could rollback the database to another version.
+

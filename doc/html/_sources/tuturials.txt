@@ -1,6 +1,11 @@
 Tuturials
 =========
 
-We're working on this page.. `still in development mode`
+We're working on more tuturials we're `still in development mode`
 
-See `https://github.com/munstermedia/deploy-commander-example <https://github.com/munstermedia/deploy-commander-example>`_ for a working example.
+.. toctree::
+   :maxdepth: 2
+   
+   Example Configurations <tuturials/example-configuration.txt>
+
+

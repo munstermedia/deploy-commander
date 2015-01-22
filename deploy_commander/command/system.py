@@ -15,7 +15,26 @@ from fabric.colors import yellow
 from fabric.colors import green
 from fabfile import utils
 from fabric.context_managers import cd
+from fabric.context_managers import settings
 
+def cleanup_old_files(params):
+    """
+    Delete old files and folders
+    """
+    params = utils.format_params(params)
+    
+    if not 'minutes' in params:
+        params['minutes'] = 86400
+    
+    if not 'path' in params:
+        abort('No path set')
+        
+    #find . -cmin +1 -exec rm -Rf {} \;
+    with settings(warn_only=True):
+        run("find %s/* -cmin +%s -exec rm -Rf {} \;" % (params['path'], params['minutes'])) 
+        
+    
+    
 def symlink(params):
     """
     Create a symlink command.

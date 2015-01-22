@@ -50,6 +50,33 @@ You can define as many tasks as you want.
 	  }
 	}
 
+Key options:
+
+- input_params (optional, input params from command line)
+- description
+- actions
+
+Full example
+::
+
+	{
+	  "tasks": {
+	    "tasks-1": {
+	      "input_params": {
+	        "unique-key": {
+	          "param": "git_branch",
+	          "prompt": "Enter branch"
+	        }
+	      },
+	      "description": "Test task 1",
+	      "actions": {}
+	    },
+	    "tasks-2": {
+	      "description": "Test task 2",
+	      "actions": {}
+	    }
+	  }
+	}
 
 Actions
 -------
@@ -64,7 +91,7 @@ So in a normal deploy/build you'll make a task `deploy` and define actions somet
 ::
 
 	{
-	  "commands": {
+	  "tasks": {
 	    "deploy": {
 	      "description": "Deploy app example",
 	      "actions": {

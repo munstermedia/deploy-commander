@@ -9,7 +9,7 @@ git.clone
 	{
 	  "your-own-description": {
 	    "sequence": 1,
-	    "command": "git.install_repo",
+	    "command": "git.clone",
 	    "params": {
 	      "git_repo_path": "/full/path/to/repo",
 	      "git_repo_url": "https://github.com/munstermedia/demo.git"
@@ -46,8 +46,7 @@ Functionality:
 
 It will use the code in the repo path to go to a certain branch/tag. This will be copied to a tag path so you'll have versioned codebases living next to each other.
 
-- Branch in params is optional, you should leave it empty by default unless you have a good reason for it.
-- If branch it's not set (empty) it will list the available tags and prompt for input.
+- Branch in params is required, you can use input_params to make this dynamic.
 - If repo path is not existing it will exit. You'll need a valid cloned repo path
 - If target path is allready existing it will remove it and all it's content. And deploy a completely new version.
 - Allow updates submodules by running 'git submodule update'

@@ -112,3 +112,27 @@ Functionality:
 - Can use wildcards for files.
 - Can download one or more files/folders
 
+
+system.cleanup_old_files
+------------------------
+
+::
+
+	{
+	  "delete-old-files": {
+	    "sequence": 1,
+	    "command": "system.cleanup_old_files",
+	    "params": {
+	      "minutes": "86400",
+	      "path": "/some/path"
+	    }
+	  }
+	}
+
+Params:
+- minutes : Remove files older then x minutes (optional, default 86400)
+- path : path to folder.(required)
+
+Functionality:
+
+- Deletes old files and (sub)folders

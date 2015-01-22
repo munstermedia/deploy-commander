@@ -58,7 +58,7 @@
 <div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
   <span class="s">&quot;your-own-description&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="s">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s">&quot;command&quot;</span><span class="p">:</span> <span class="s">&quot;git.install_repo&quot;</span><span class="p">,</span>
+    <span class="s">&quot;command&quot;</span><span class="p">:</span> <span class="s">&quot;git.clone&quot;</span><span class="p">,</span>
     <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
       <span class="s">&quot;git_repo_path&quot;</span><span class="p">:</span> <span class="s">&quot;/full/path/to/repo&quot;</span><span class="p">,</span>
       <span class="s">&quot;git_repo_url&quot;</span><span class="p">:</span> <span class="s">&quot;https://github.com/munstermedia/demo.git&quot;</span>
@@ -92,8 +92,7 @@
 <p>Functionality:</p>
 <p>It will use the code in the repo path to go to a certain branch/tag. This will be copied to a tag path so you&#8217;ll have versioned codebases living next to each other.</p>
 <ul class="simple">
-<li>Branch in params is optional, you should leave it empty by default unless you have a good reason for it.</li>
-<li>If branch it&#8217;s not set (empty) it will list the available tags and prompt for input.</li>
+<li>Branch in params is required, you can use input_params to make this dynamic.</li>
 <li>If repo path is not existing it will exit. You&#8217;ll need a valid cloned repo path</li>
 <li>If target path is allready existing it will remove it and all it&#8217;s content. And deploy a completely new version.</li>
 <li>Allow updates submodules by running &#8216;git submodule update&#8217;</li>

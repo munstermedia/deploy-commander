@@ -92,6 +92,33 @@ You can define as many tasks as you want.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>Key options:</p>
+<ul class="simple">
+<li>input_params (optional, input params from command line)</li>
+<li>description</li>
+<li>actions</li>
+</ul>
+<p>Full example</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;tasks&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">&quot;tasks-1&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;input_params&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&quot;unique-key&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s">&quot;param&quot;</span><span class="p">:</span> <span class="s">&quot;git_branch&quot;</span><span class="p">,</span>
+          <span class="s">&quot;prompt&quot;</span><span class="p">:</span> <span class="s">&quot;Enter branch&quot;</span>
+        <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;Test task 1&quot;</span><span class="p">,</span>
+      <span class="s">&quot;actions&quot;</span><span class="p">:</span> <span class="p">{}</span>
+    <span class="p">},</span>
+    <span class="s">&quot;tasks-2&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;Test task 2&quot;</span><span class="p">,</span>
+      <span class="s">&quot;actions&quot;</span><span class="p">:</span> <span class="p">{}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="actions">
 <h2>Actions<a class="headerlink" href="#actions" title="Permalink to this headline">¶</a></h2>
@@ -102,7 +129,7 @@ You can define as many tasks as you want.</p>
 <li>Checkout/update git repo (git.deploy)</li>
 </ul>
 <div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
-  <span class="s">&quot;commands&quot;</span><span class="p">:</span> <span class="p">{</span>
+  <span class="s">&quot;tasks&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="s">&quot;deploy&quot;</span><span class="p">:</span> <span class="p">{</span>
       <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;Deploy app example&quot;</span><span class="p">,</span>
       <span class="s">&quot;actions&quot;</span><span class="p">:</span> <span class="p">{</span>
