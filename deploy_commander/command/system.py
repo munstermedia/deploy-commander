@@ -18,6 +18,9 @@ from fabric.context_managers import cd
 from fabric.context_managers import settings
 
 def cleanup_old_files(params):
+    abort(red("Command `cleanup_old_files` is depricated, use `filesystem_remove_old`"))
+
+def filesystem_remove_old(params):
     """
     Delete old files and folders
     """
@@ -28,10 +31,9 @@ def cleanup_old_files(params):
     
     if not 'path' in params:
         abort('No path set')
-        
-    #find . -cmin +1 -exec rm -Rf {} \;
+    
     with settings(warn_only=True):
-        run("find %s/* -cmin +%s -exec rm -Rf {} \;" % (params['path'], params['minutes'])) 
+        run("find %s/* -maxdepth 0 -cmin +%s -exec rm -Rf {} \;" % (params['path'], params['minutes'])) 
         
     
     

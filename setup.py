@@ -8,7 +8,7 @@ setup(
     author_email='info@munstermedia.nl',
     packages=find_packages(),
     install_requires=['pycrypto==2.6.1', 'ecdsa', 'jinja2', 'fabric==1.10.0','simple-crypt'],
-    url='http://github.com/munstermedia/deploy-commander',
+    url='http://deploy-commander.readthedocs.org',
     license='Free',
     description='Simple command line tool to deploy your projects',
     long_description=open('README.txt').read(),

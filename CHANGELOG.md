@@ -1,4 +1,9 @@
 # Changelog
+## 0.1.?
+-	Added falcon api
+- 	requirements.txt
+- 	Vagrant file for devbox
+-	some setup upgrades
 
 ## 0.1.2
 -	Removed git branch and tag listing, with prompt in git.deploy.

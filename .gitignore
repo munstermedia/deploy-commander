@@ -22,6 +22,10 @@ var/
 .installed.cfg
 *.egg
 
+# Vagrant box
+.vagrant/
+
+# Mac 
 .DS_Store
 
 #  Usually these files are written by a python script from a template
