@@ -16,7 +16,8 @@ from fabric.utils import abort
 
 from os import listdir
 from os.path import isfile, join
-
+        
+        
 def get_master_password():
     if not env.has_key('master_password') or len(env.master_password) == 0:
         abort(red("No master password configurated"))

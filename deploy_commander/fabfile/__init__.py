@@ -1,11 +1,13 @@
-import os.path
 import sys
+import os.path
+
+sys.path.append(os.path.abspath(os.path.join(os.path.realpath(__file__), "../../")))
+
 import json
 import pprint
-import fabfile.utils
-import fabfile.config
+import utils
+import config
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from importlib import import_module
 
@@ -33,6 +35,24 @@ from fabric.context_managers import hide
 
 
 config.init()
+   
+@task
+def runserver():
+    dc_application_path = os.path.dirname(os.path.realpath(__file__)) + '/../'
+    dc_virtualenv_path = os.path.join(env.home_path, 'virtualenv')
+    
+    local('virtualenv/bin/gunicorn api:app'
+          ' -e DC_HOME_PATH=%(dc_home_path)s'
+          ' -e DC_VIRTUALENV_PATH=%(dc_virtualenv_path)s'
+          ' -w 1' 
+          ' -b 0.0.0.0:8686'
+          ' --chdir %(dc_application_path)s' % {'dc_home_path':env.home_path,
+                                              'dc_virtualenv_path':dc_virtualenv_path,
+                                              'dc_application_path': dc_application_path});
+
+@task
+def home_path(home_path):
+    env.home_path = home_path
 
 def set_project(project=None):
     """
@@ -40,8 +60,8 @@ def set_project(project=None):
     a valid project
     """
     if not 'project' in env.params:
-        cwd = os.getcwd()
-        config_folder = "%s/config" % (cwd)
+        
+        config_folder = "%s/config" % (env.home_path)
         available_projects = []
         for tmp_project in os.listdir(config_folder):
             if os.path.isdir(os.path.join(config_folder, tmp_project)):

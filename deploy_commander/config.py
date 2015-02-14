@@ -26,6 +26,8 @@ env.connection_attempts = 3
 # Set default timeout
 env.timeout = 30
 
+# Root path of home where all the files will live..
+env.home_path = os.getcwd()
 
 # Base params settings
 env.params = {}
@@ -38,6 +40,9 @@ env.commands = {}
 
 # Tasks setting
 env.tasks = {}
+
+# Mail settings
+env.mail = {}
 
 # Sequence of loading
 env.config_load_strategy = ['config/default.json',
@@ -179,13 +184,12 @@ def load_main_config():
     """
     Load main config file.
     """
-    cwd = os.getcwd()
     
-    old_file_path = "%s/.config" % (cwd)
+    old_file_path = "%s/.config" % (env.home_path)
     if os.path.isfile(old_file_path):
         abort(red("The main config file `%s` is deprecated in this version of deploy commander, please rename file to config.json" % (old_file_path)))
     
-    file_path = "%s/config.json" % (cwd)
+    file_path = "%s/config.json" % (env.home_path)
     if not os.path.isfile(file_path):
         abort(red("No main config file found. Did you setup your project in the `%s` file?" % (file_path)))
     else:
@@ -193,6 +197,8 @@ def load_main_config():
             config = json.load(json_config)
             if not 'master_password' in config:
                 abort(red('No master password set in main config.'))
+            
+            env.master_password = config['master_password']
             
             # If environment is set in config
             if 'env' in config:
@@ -207,18 +213,16 @@ def load_main_config():
             
                 if 'stdout' in config['env']:
                     env.stdout = str2bool(config['env']['stdout'])
-                
-
-            env.master_password = config['master_password']
+            
+            if 'mail' in config:
+                env.mail = config['mail']
     
 def load_config(filename):
     """
     Load config by filename and set it...
     """
     
-    cwd = os.getcwd()
-    
-    file_path = "%s/%s" % (cwd, filename)
+    file_path = "%s/%s" % (env.home_path, filename)
     
     config = read_config(file_path)
     if config:

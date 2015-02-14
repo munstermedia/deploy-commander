@@ -13,7 +13,7 @@ from fabric.utils import abort
 
 from fabric.colors import yellow
 from fabric.colors import green
-from fabfile import utils
+import utils
 from fabric.context_managers import cd
 from fabric.context_managers import settings
 

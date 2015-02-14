@@ -4,6 +4,11 @@
 - 	requirements.txt
 - 	Vagrant file for devbox
 -	some setup upgrades
+-	Added env.home_path, to replace getcwd and added home_path task
+- 	Working bibucket hook (still need to cleanup)
+- 	Added runserver task
+-	Added mail of console
+-	Moved files to other location
 
 ## 0.1.2
 -	Removed git branch and tag listing, with prompt in git.deploy.

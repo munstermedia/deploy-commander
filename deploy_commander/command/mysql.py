@@ -18,7 +18,7 @@ from fabric.context_managers import cd
 from fabric.utils import abort
 from fabric.operations import get
 
-from fabfile import utils
+import utils
 
 def install_server(params):
     """

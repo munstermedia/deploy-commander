@@ -15,7 +15,7 @@ from fabric.context_managers import cd
 from fabric.context_managers import hide
 from fabric.context_managers import show
 
-from fabfile import utils
+import utils
 
 
 def install_repo(params):
