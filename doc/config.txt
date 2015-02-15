@@ -30,9 +30,26 @@ This config file contains json structured params, like your master password.
 	    "warning_only": "True",
 	    "running": "False",
 	    "stdout": "False"
+	  },
+	  "mail":{
+	    "host":"smtp.host.com",
+	    "port":"587",
+	    "from":"your@email.com",
+	    "user":"smtpuser",
+	    "password":"smtppassword",
+	    "to":["devops@yourdomain.com"]
 	  }
 	}
 
+Mail settings
+-------------
+
+When using automated deployments and executing tasks it can send out notifications and other mails to 
+keep you and your team up to date.
+
+.. note:: If you'll leave the mail configuration empty it won't send out any mails.
+
+Don't have a smtp server? Try the free `mandrillapp <https://mandrillapp.com>`_
 
 Initial project config
 ----------------------

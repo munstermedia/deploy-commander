@@ -55,7 +55,7 @@ def output_to_html(output, payload_data):
            }
            </style>
            <body>
-           <div style="float:right"><img src="%(user_avatar)s" /></div>
+           <div style="float:right;position:absolute;"><img src="%(user_avatar)s" /></div>
            <div style="font-family: Monospace;white-space:pre;width:98ch;">%(output)s</div>'
            </body>
            </html>""" % params
@@ -220,7 +220,12 @@ app = falcon.API()
 
 bitbucket_hook = BitbucketHookResource()
 root_resource = RootResource()
-# things will handle all requests to the '/things' URL path
-app.add_route('/api/1.0/config', ConfigResource())
-app.add_route('/api/1.0/bitbucket/pullrequesthook', bitbucket_hook)
+
+# Read the configuration
+#app.add_route('/api/1.0/config', ConfigResource())
+
+# Bitbucket pull request post hook
+app.add_route('/api/1.0/bitbucket/pullrequestposthook', bitbucket_hook)
+
+# Yust add a root responsive
 app.add_route('/', root_resource)

@@ -1,0 +1,26 @@
+Bitbucket integration
+=====================
+
+It's possible to connect bitbucket to deploy-commander and automate some deployment tasks.
+
+Bitbucket pull request post hook
+--------------------------------
+
+Bitbucket has a post pull request hook that will post information about a pull request to a url.
+We have exposed a rest endpoint that can catch this post request.
+
+Be sure that you have the deploy-commander webserver running! 
+
+.. note:: Still in beta now.. we'll update as much as possible.
+
+
+Bitbucket hook
+--------------
+
+Go to your webadmin https://bitbucket.org repo. Under settings -> hooks you'll find 
+hooks. 
+
+Select the `Pull Request POST` and enter your deploy-commander rest endpoint:
+
+-	http://<yourip/domain>:8686/api/1.0/bitbucket/pullrequestposthook
+

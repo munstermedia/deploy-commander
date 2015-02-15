@@ -14,3 +14,12 @@ Quick overview of the command line possibilities.
 	// Encrypt/Decrypt config
 	$ deploy-commander go:<project>,<environment> encrypt_config
 	$ deploy-commander go:<project>,<environment> decrypt_config
+	
+	// Show available tasks
+	$ deploy-commander go:<project>,<enviroment> show_tasks
+	
+	// Show task info
+	$ deploy-commander go:<project>,<enviroment> show_task:<task>
+
+	// Run the api server
+	$ deploy-commander runserver

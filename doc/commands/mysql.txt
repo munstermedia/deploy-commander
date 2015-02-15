@@ -51,7 +51,7 @@ mysql.cleanup_db_backups
 
 Functionality:
 
-- Reads path for *.tar.gz files... and removes the oldest files. (by filesystem)
+- Reads path for \*.tar.gz files... and removes the oldest files. (by filesystem)
 - max_backup_history is optional, defaults to 5
 
 

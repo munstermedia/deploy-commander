@@ -26,5 +26,7 @@ Contents
    Commands <commands>
    Security <security>
    Cheatsheet <cheatsheet>
+   Integration <integration>
+   News <news>
 
 

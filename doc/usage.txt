@@ -48,4 +48,12 @@ Show task
 
 	$ deploy-commander go:<project>,<enviroment> show_task:<task>
 	
+
+Run server
+----------
+
+::
+
+	$ deploy-commander runserver
+	
 	

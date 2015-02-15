@@ -1,7 +1,0 @@
-Tasks
-=====
-
-Tasks define a set of commands to execute. This is one of the core elements of the system. The key defined will be usable in the command line execute. (fab go run:<action>)
-
-* description : General text to parse when executing
-* commands : Many command definitions to execute

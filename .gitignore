@@ -25,6 +25,9 @@ var/
 # Vagrant box
 .vagrant/
 
+# Sphinx doc
+doc/html/
+
 # Mac 
 .DS_Store
 

@@ -1,0 +1,18 @@
+News
+====
+
+15 Feb 2015
+-----------
+
+So we've finally created a version that works and our documentation is getting better. 
+I was thinking `now` is the time to start with a historical news log. 
+
+In the current release (0.1.3) we've integrated a rest webserver to handle task request and 
+integrate a bitbucket hook to automate the deployment proces.
+
+We think the rest api will be the entry point to communicate with deploy-commander. 
+We're thinking about developing a web interface that 'talks' to your deploy-commander instance. 
+Maybe a iphone/android app to track deployments would be a nice addition! 
+
+So in the next releases we might move certain command line actions to the rest api.
+Expect more functionality in the upcoming months!

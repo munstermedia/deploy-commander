@@ -1,2 +1,31 @@
 Install on Ubuntu
-============================================
+=================
+
+Go to home root:
+
+::
+
+	$ cd ~
+
+Install virtualenv, and activate
+
+::
+
+	$ virtualenv virtualenv
+	$ . virtualenv/bin/activate
+
+
+Install deploy commander, and all it's dependencies
+
+::
+
+	$ pip install deploy-commander
+
+This will install the python libraries.
+
+
+Run the server
+
+::
+
+	$ deploy-commander runserver

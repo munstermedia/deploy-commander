@@ -15,11 +15,14 @@ Prerequisites
 
 Other libraries will be installed by the pip installer:
 
-- pycrypto==2.6.1
-- ecdsa
-- jinja2 
-- fabric==1.10.0
-- simple-crypt
+-	pycrypto==2.6.1
+-	ecdsa
+-	jinja2 
+-	fabric==1.10.0
+-	simple-crypt==4.0.0
+-	cython==0.22
+-	falcon==0.1.10
+-	gunicorn==19.2.1
 
 
 
@@ -35,14 +38,15 @@ Best practices
 Install deploy commander
 ------------------------
 
-::
-
-	$ sudo pip install deploy-commander
-	
-This will install the python libraries.
-It's better to use virtualenv, but this is something we don't explain here.
+-	:doc:`Install on Ubuntu <tuturials/install-on-ubuntu>`
 
 Once installed, take a look at our :doc:`tuturials <tuturials>`, :doc:`key concepts <key-concepts>` and :doc:`general usage <usage>`
+
+Running the webserver
+---------------------
+
+The webserver exposes a rest api which is used by external applications.
+If you want to integrate with bitbucket, github or other systems you'll need start this server.
 
 
 Example deployment configuration
