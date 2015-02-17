@@ -23,6 +23,9 @@ env.home_path = os.environ['DC_HOME_PATH']
 init()
 
 def output_to_text(output):
+    """
+    Format command line output to text
+    """
     output = output.replace('[0m', '')
     output = output.replace('[32m', '')
     output = output.replace('[31m', '')
@@ -31,6 +34,9 @@ def output_to_text(output):
     return output
 
 def output_to_html(output, payload_data):
+    """
+    Format command line output to html
+    """
     output = output.replace('[0m', '</span>')
     output = output.replace('[32m', '<span style="color:green;">')
     output = output.replace('[31m', '<span style="color:red;">')
@@ -63,11 +69,15 @@ def output_to_html(output, payload_data):
     return html
 
 def RunCommand(tasks, payload_data):
+    """
+    Runcommand wil take a list of task params and add 
+    extra payload data for rendering template
+    """
     # Change directory
     os.chdir(os.environ['DC_HOME_PATH'])
     
     # Fabric executable
-    execute = os.path.join(os.environ['DC_VIRTUALENV_PATH'], 'bin', 'fab')
+    execute = os.path.join(os.environ['DC_VIRTUALENV_PATH'], 'bin', 'deploy-commander')
     
     call = [execute, '--abort-on-prompts']
     call.extend(tasks)

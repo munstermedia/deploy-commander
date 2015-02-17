@@ -1,6 +1,24 @@
 News
 ====
 
+17 Feb 2015
+-----------
+
+Started testing a clean setup on ubuntu working with a Vagrant box.
+See the Vagrantfile and puppet folder for more info.
+
+Goal of this test is to look for possible problems with the installation.
+It seemed that cython needs some dependencies that can be installed by the apt-get package python-dev.
+
+Added an initial folder for unit tests.
+
+Allso added a new variable `environment` to the runserver command so we can select a virtualenv.
+I think it might be a better idea to start the webserver based on certain configuration in de root config.json.
+So i've added my first issue: #1
+
+Released a new version 0.1.4 with these changes
+
+
 15 Feb 2015
 -----------
 

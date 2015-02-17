@@ -37,21 +37,28 @@ from fabric.context_managers import hide
 config.init()
    
 @task
-def runserver():
+def runserver(environment='environment'):
+    """ 
+    Quick task to start running the webserver.
+    """
     dc_application_path = os.path.dirname(os.path.realpath(__file__)) + '/../'
-    dc_virtualenv_path = os.path.join(env.home_path, 'virtualenv')
+    dc_virtualenv_path = os.path.join(env.home_path, environment)
     
-    local('virtualenv/bin/gunicorn api:app'
+    local('environment/bin/gunicorn api:app'
           ' -e DC_HOME_PATH=%(dc_home_path)s'
           ' -e DC_VIRTUALENV_PATH=%(dc_virtualenv_path)s'
           ' -w 1' 
           ' -b 0.0.0.0:8686'
           ' --chdir %(dc_application_path)s' % {'dc_home_path':env.home_path,
-                                              'dc_virtualenv_path':dc_virtualenv_path,
-                                              'dc_application_path': dc_application_path});
+                                                'dc_virtualenv_path':dc_virtualenv_path,
+                                                'dc_application_path': dc_application_path});
 
 @task
 def home_path(home_path):
+    """ 
+    init with home path.
+    used in system tasks where no current path is applicable
+    """
     env.home_path = home_path
 
 def set_project(project=None):

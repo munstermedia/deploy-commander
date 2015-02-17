@@ -20,7 +20,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
   	config.vm.provision :puppet do |puppet|
     	puppet.manifests_path = 'puppet/manifests'
-    	puppet.manifest_file = 'site.pp'
+    	puppet.manifest_file = 'default.pp'
     	puppet.module_path = 'puppet/modules'
   	end
   
@@ -32,6 +32,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     #vb.gui = true
   
     vb.customize ["modifyvm", :id, "--cpus", "1"]
-	vb.customize ["modifyvm", :id, "--memory", "1024"]
+	vb.customize ["modifyvm", :id, "--memory", "512"]
   end
 end

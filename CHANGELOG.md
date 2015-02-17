@@ -1,11 +1,16 @@
 # Changelog
+## 0.1.4
+-	runserver added virtualenv path
+-	Inline documentation
+- 	Initial unit tests
+
 ## 0.1.3
 -	Added falcon api
 - 	requirements.txt
 - 	Vagrant file for devbox
 -	some setup upgrades
 -	Added env.home_path, to replace getcwd and added home_path task
-- 	Working bibucket hook (still need to cleanup)
+- 	Working bitbucket hook (still need to cleanup)
 - 	Added runserver task
 -	Added mail of console
 -	Moved files to other location

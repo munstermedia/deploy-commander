@@ -1,18 +1,25 @@
 Install on Ubuntu
 =================
 
-Go to home root:
+Go to home root, or the folder where you want to install.
 
 ::
 
 	$ cd ~
 
+Install python pip and dev
+
+::
+
+	$ sudo apt-get -y install python-pip python-dev
+
+
 Install virtualenv, and activate
 
 ::
 
-	$ virtualenv virtualenv
-	$ . virtualenv/bin/activate
+	$ virtualenv environment
+	$ . environment/bin/activate
 
 
 Install deploy commander, and all it's dependencies
