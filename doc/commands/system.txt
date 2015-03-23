@@ -113,7 +113,7 @@ Functionality:
 - Can download one or more files/folders
 
 
-system.cleanup_old_files
+system.filesystem_remove_old
 ------------------------
 
 ::

@@ -79,31 +79,45 @@ def RunCommand(tasks, payload_data):
     # Fabric executable
     execute = os.path.join(os.environ['DC_VIRTUALENV_PATH'], 'bin', 'deploy-commander')
     
+    if not os.path.isfile(execute):
+        raise Exception('Deploy commander executable not available in : %s' % execute)
+
     call = [execute, '--abort-on-prompts']
     call.extend(tasks)
+    
     process = subprocess.Popen(call, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     
     process.wait()
     
-    # Make dir
-    file = "%s.html" % int(time.time())
-    dir = os.path.join(os.environ['DC_HOME_PATH'], 'logs', 'build', 'mail')
-                     
-    if not os.path.exists(dir):
-        os.makedirs(dir)
-    
+
     communicate = process.communicate()
     
     htmlBody = output_to_html(communicate[0] + communicate[1], payload_data)
     plainBody = output_to_text(communicate[0] + communicate[1])
     
     
-    log_file = open(os.path.join(dir, file), 'w+')
-    log_file.write(htmlBody)
-    log_file.close()
+    # Make dir
+    html_dir = os.path.join(os.environ['DC_HOME_PATH'], 'logs', 'build', 'html')
+                     
+    if not os.path.exists(html_dir):
+        os.makedirs(html_dir)
+
+    html_log = open(os.path.join(html_dir, "%s.html" % int(time.time())), 'w+')
+    html_log.write(htmlBody)
+    html_log.close()
     
     
-    if 'mail' in env:
+    # Make dir
+    text_dir = os.path.join(os.environ['DC_HOME_PATH'], 'logs', 'build', 'txt')
+                     
+    if not os.path.exists(text_dir):
+        os.makedirs(text_dir)
+
+    text_log = open(os.path.join(text_dir, "%s.txt" % int(time.time())), 'w+')
+    text_log.write(plainBody)
+    text_log.close()
+    
+    if 'mail' in env and env['mail']:
         """
         When mail isset in the config it will use the settings 
         for the smtp server
@@ -136,7 +150,10 @@ def RunCommand(tasks, payload_data):
         s.quit()
     
     # Cleanup log files
-    cleanup_folder(path=dir)
+    cleanup_folder(path=html_log)
+
+    # Cleanup log files
+    cleanup_folder(path=text_log)
     
 def cleanup_folder(path, max_files = 10):
     """
@@ -184,21 +201,21 @@ class BitbucketHookResource:
             except:
                 print("Invalid params?")
         
-        # How to map branch to environment
-        environment_mapping = {'develop':'testing',
-                               'release':'staging'}
-        
-        if (environment_mapping.has_key(payload_data['branch'])):
-            go = 'go:%(project)s,%(environment)s' % {'environment':environment_mapping[payload_data['branch']],
-                                                     'project':payload_data['project']}
-            # Start deploy commander thread
-            command_tasks = [go,'run:deploy-app']
-            thread = threading.Thread(name='worker', target=RunCommand, args=(command_tasks, payload_data))
-            thread.start()
+            # How to map branch to environment
+            environment_mapping = {'develop':'testing',
+                                   'release':'staging'}
+            
+            if (environment_mapping.has_key(payload_data['branch'])):
+                go = 'go:%(project)s,%(environment)s' % {'environment':environment_mapping[payload_data['branch']],
+                                                         'project':payload_data['project']}
+                # Start deploy commander thread
+                command_tasks = [go,'run:deploy-app']
+                thread = threading.Thread(name='worker', target=RunCommand, args=(command_tasks, payload_data))
+                thread.start()
 
-        
-        # Cleanup log files
-        cleanup_folder(path=dir)
+            
+            # Cleanup log files
+            cleanup_folder(path=dir)
             
         
         resp.status = falcon.HTTP_200  # This is the default status
@@ -232,10 +249,10 @@ bitbucket_hook = BitbucketHookResource()
 root_resource = RootResource()
 
 # Read the configuration
-#app.add_route('/api/1.0/config', ConfigResource())
+app.add_route('/api/v1/config', ConfigResource())
 
 # Bitbucket pull request post hook
-app.add_route('/api/1.0/bitbucket/pullrequestposthook', bitbucket_hook)
+app.add_route('/api/v1/bitbucket/pullrequestposthook', bitbucket_hook)
 
 # Yust add a root responsive
 app.add_route('/', root_resource)
