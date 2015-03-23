@@ -30,7 +30,23 @@ This config file contains json structured params, like your master password.
 	    "warning_only": "True",
 	    "running": "False",
 	    "stdout": "False"
-	  },
+	  }
+	}
+
+Mail config
+-----------
+
+When using automated deployments and executing tasks it can send out notifications and other mails to keep you and your team up to date.
+
+.. note:: If you'll leave the mail configuration empty it won't send out any mails.
+
+Don't have a smtp server? Try the free `mandrillapp <https://mandrillapp.com>`_
+
+/config.json
+
+::
+
+	{
 	  "mail":{
 	    "host":"smtp.host.com",
 	    "port":"587",
@@ -41,15 +57,39 @@ This config file contains json structured params, like your master password.
 	  }
 	}
 
-Mail settings
--------------
 
-When using automated deployments and executing tasks it can send out notifications and other mails to 
-keep you and your team up to date.
+Webserver config
+----------------
 
-.. note:: If you'll leave the mail configuration empty it won't send out any mails.
+.. sidebar:: Default path
 
-Don't have a smtp server? Try the free `mandrillapp <https://mandrillapp.com>`_
+	The runserver command will autodetect the current path, application path and virtualenv path to generate the right command for executing the gunicorn webserver.
+
+	By default it expects the virtualenv folder 'environment' in the root of the home path where your configuration lives.
+
+The webserver runs by default on port 8086, and ip 0.0.0.0.
+
+This config will overwrite the default config.
+
+dc_application_path : the deploy commander path.
+dc_virtualenv_path : path to virtualenv
+dc_home_path : path to configuration
+
+
+/config.json
+
+::
+
+	{
+	  "webserver":{
+   		"ip":"0.0.0.0",
+    	"port":"8086",
+    	"dc_application_path":"/deploy-commander/code/path",
+    	"dc_virtualenv_path":"/default/home/path/environment",
+    	"dc_home_path":"/default/home/path",
+    	"workers":1
+	  }
+	}
 
 Initial project config
 ----------------------

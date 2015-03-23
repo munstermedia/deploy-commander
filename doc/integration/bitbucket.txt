@@ -3,24 +3,44 @@ Bitbucket integration
 
 It's possible to connect bitbucket to deploy-commander and automate some deployment tasks.
 
-Bitbucket pull request post hook
---------------------------------
+We use the git flow by default for automated builds.
+See `a successful git branching model <http://nvie.com/posts/a-successful-git-branching-model>`_
 
-Bitbucket has a post pull request hook that will post information about a pull request to a url.
-We have exposed a rest endpoint that can catch this post request.
 
-Be sure that you have the deploy-commander webserver running! 
+How it works
+------------
+
+Bitbucket has a post pull request hook that will post information when pull and merge requests are executed. We have exposed a rest endpoint that can catch this post request.
+
+Setup and start the webserver (:doc:`See the usage <usage>`, and :doc:`config <config>`)
+
+::
+
+	$ deploy-commander runserver
+
+By default it will listen to the merge action from bitbucket. So when somebody merges code in the develop branch it will execute : 
+
+::
+
+	$ deploy-commander go:<project>,testing run:deploy-app
+
+When somebody merges code into the release branch it will execute:
+
+::
+	
+	$ deploy-commander go:<project>,staging run:deploy-app
+
 
 .. note:: Still in beta now.. we'll update as much as possible.
 
 
-Bitbucket hook
---------------
+Setup Bitbucket hook
+--------------------
 
 Go to your webadmin https://bitbucket.org repo. Under settings -> hooks you'll find 
 hooks. 
 
 Select the `Pull Request POST` and enter your deploy-commander rest endpoint:
 
--	http://<yourip/domain>:8686/api/1.0/bitbucket/pullrequestposthook
+-	http://<yourip/domain>:8086/api/v1/bitbucket/pullrequestposthook
 

@@ -51,6 +51,16 @@ env.config_load_strategy = ['config/default.json',
                             'config/%(project)s/%(environment)s.json'
                             ]
 
+# Webserver settings
+env.webserver = {
+    'ip':'0.0.0.0',
+    'port':'8086',
+    'dc_application_path':os.path.dirname(os.path.realpath(__file__)),
+    'dc_virtualenv_path':os.path.join(env.home_path, 'environment'),
+    'dc_home_path':env.home_path,
+    'workers':1
+}
+
 def init():
     """
     Default init for all commands
@@ -216,6 +226,10 @@ def load_main_config():
             
             if 'mail' in config:
                 env.mail = config['mail']
+
+            if 'webserver' in config:
+                env.webserver.update(config['webserver'])
+
     
 def load_config(filename):
     """

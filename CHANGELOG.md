@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.6
+-	Modified runserver so the webserver can be configured
+- 	Added documentation for the webserver
+
 ## 0.1.5
 -	Fixed bug in post hook
 -	Check if deploy commander file is available

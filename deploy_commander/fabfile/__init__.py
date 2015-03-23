@@ -37,21 +37,16 @@ from fabric.context_managers import hide
 config.init()
    
 @task
-def runserver(environment='environment'):
+def runserver():
     """ 
     Quick task to start running the webserver.
     """
-    dc_application_path = os.path.dirname(os.path.realpath(__file__)) + '/../'
-    dc_virtualenv_path = os.path.join(env.home_path, environment)
-    
-    local('environment/bin/gunicorn api:app'
+    local('%(dc_virtualenv_path)s/bin/gunicorn api:app'
           ' -e DC_HOME_PATH=%(dc_home_path)s'
           ' -e DC_VIRTUALENV_PATH=%(dc_virtualenv_path)s'
-          ' -w 1' 
-          ' -b 0.0.0.0:8686'
-          ' --chdir %(dc_application_path)s' % {'dc_home_path':env.home_path,
-                                                'dc_virtualenv_path':dc_virtualenv_path,
-                                                'dc_application_path': dc_application_path});
+          ' -w %(workers)s' 
+          ' -b %(ip)s:%(port)s'
+          ' --chdir %(dc_application_path)s' % env.webserver);
 
 @task
 def home_path(home_path):

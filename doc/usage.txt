@@ -44,13 +44,19 @@ Show available tasks
 Show task
 ---------
 
+Will show the task for a certain project/environment
+
 ::
 
 	$ deploy-commander go:<project>,<enviroment> show_task:<task>
 	
 
-Run server
-----------
+Run webserver
+-------------
+
+The webserver exposes a rest webserver with some extra functionality for post hooks. (bitbucket)
+
+See the config section for possible configurations.
 
 ::
 
