@@ -1,4 +1,11 @@
 # Changelog
+
+## 0.1.5
+-	Fixed bug in post hook
+-	Check if deploy commander file is available
+-	New hook log in mail and text, and optimalisation of this logging
+- 	Changed routing in post hook with right versioning
+
 ## 0.1.4
 -	runserver added virtualenv path
 -	Inline documentation
