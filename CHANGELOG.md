@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.7
+-	Fixed path of log folder to cleanup html and text logs
+
 ## 0.1.6
 -	Modified runserver so the webserver can be configured
 - 	Added documentation for the webserver

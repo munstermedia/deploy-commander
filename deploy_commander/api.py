@@ -150,10 +150,10 @@ def RunCommand(tasks, payload_data):
         s.quit()
     
     # Cleanup log files
-    cleanup_folder(path=html_log)
+    cleanup_folder(path=html_dir)
 
     # Cleanup log files
-    cleanup_folder(path=text_log)
+    cleanup_folder(path=text_dir)
     
 def cleanup_folder(path, max_files = 10):
     """
