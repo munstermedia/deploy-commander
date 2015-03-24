@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.8
+-	Set default port of webserver to 8687
+-	Added new task, stopserver
+-	Made startserver a background task
+-	Cleanup some documentation
+
 ## 0.1.7
 -	Fixed path of log folder to cleanup html and text logs
 

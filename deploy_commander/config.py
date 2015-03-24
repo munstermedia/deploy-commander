@@ -54,7 +54,7 @@ env.config_load_strategy = ['config/default.json',
 # Webserver settings
 env.webserver = {
     'ip':'0.0.0.0',
-    'port':'8086',
+    'port':'8687',
     'dc_application_path':os.path.dirname(os.path.realpath(__file__)),
     'dc_virtualenv_path':os.path.join(env.home_path, 'environment'),
     'dc_home_path':env.home_path,

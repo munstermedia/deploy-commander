@@ -41,13 +41,22 @@ def runserver():
     """ 
     Quick task to start running the webserver.
     """
-    local('%(dc_virtualenv_path)s/bin/gunicorn api:app'
+    local('nohup %(dc_virtualenv_path)s/bin/gunicorn api:app'
           ' -e DC_HOME_PATH=%(dc_home_path)s'
           ' -e DC_VIRTUALENV_PATH=%(dc_virtualenv_path)s'
           ' -w %(workers)s' 
           ' -b %(ip)s:%(port)s'
-          ' --chdir %(dc_application_path)s' % env.webserver);
+          ' --chdir %(dc_application_path)s'
+          ' > %(dc_home_path)s/webserver.log &' % env.webserver);
 
+@task
+def stopserver():
+    """ 
+    Quick task kill webserver processes
+    """
+    local('ps -ef | grep deploy-commander | grep -v grep | awk \'{print $2}\' | xargs kill -9');
+
+# ps -ef | grep PROCESS | grep -v grep | awk '{print $2}' | xargs kill -9
 @task
 def home_path(home_path):
     """ 

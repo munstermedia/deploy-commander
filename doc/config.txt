@@ -67,7 +67,7 @@ Webserver config
 
 	By default it expects the virtualenv folder 'environment' in the root of the home path where your configuration lives.
 
-The webserver runs by default on port 8086, and ip 0.0.0.0.
+The webserver runs by default on port 8687, and ip 0.0.0.0.
 
 This config will overwrite the default config.
 
@@ -83,7 +83,7 @@ dc_home_path : path to configuration
 	{
 	  "webserver":{
    		"ip":"0.0.0.0",
-    	"port":"8086",
+    	"port":"8687",
     	"dc_application_path":"/deploy-commander/code/path",
     	"dc_virtualenv_path":"/default/home/path/environment",
     	"dc_home_path":"/default/home/path",

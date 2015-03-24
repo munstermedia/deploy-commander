@@ -61,5 +61,12 @@ See the config section for possible configurations.
 ::
 
 	$ deploy-commander runserver
+
+
+Stop any deploy-commander processes
+
+::
+
+	$ deploy-commander stopserver
 	
 	

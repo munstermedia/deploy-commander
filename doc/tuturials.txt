@@ -6,6 +6,7 @@ We're working on more tuturials we're `still in development mode`
 .. toctree::
    :maxdepth: 2
    
+   Install on ubuntu <tuturials/install-on-ubuntu.txt>
    Example Configurations <tuturials/example-configuration.txt>
 
 

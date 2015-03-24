@@ -12,7 +12,7 @@ We have a ready to go repo in github that contains a basic setup with the follow
 
 See the github repo : `https://github.com/munstermedia/deploy-commander-example <https://github.com/munstermedia/deploy-commander-example>`_.
 
-Requirements
+Git checkout
 ------------
 
 In this example we'll use `virtualbox <https://www.virtualbox.org/>`_ and `vagrant <https://www.vagrantup.com/>`_.
@@ -50,8 +50,8 @@ Load development server, a ubuntu trusty box with ip 192.168.56.135
 	$ vagrant up
 
 
-Lets go...
-----------
+Executing tasks
+---------------
 
 We're gonna start with a small example project and inspect some configuration files.
 
