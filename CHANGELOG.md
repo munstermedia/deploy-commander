@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.9
+-	Update fabric
+-	Print error fix
+ 
 ## 0.1.8
 -	Set default port of webserver to 8687
 -	Added new task, stopserver

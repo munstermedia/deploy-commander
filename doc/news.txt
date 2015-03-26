@@ -1,6 +1,16 @@
 News
 ====
 
+24 March 2015
+-------------
+
+So.. i've created an easy way to start a webserver that listens to the bitbucket post hook requests.
+This nice feature will deploy automaticly to the testing and staging environment.
+
+In the next release i will work on a 'deployment strategy configuration' which can be used to configure how
+deploy-commander will react to bitbucket and github post request.
+
+
 17 Feb 2015
 -----------
 

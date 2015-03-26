@@ -3,14 +3,14 @@ from setuptools import setup, find_packages
 
 setup(
     name='deploy-commander',
-    version='0.1.8',
+    version='0.1.9',
     author=u'Ference van Munster',
     author_email='info@munstermedia.nl',
     packages=find_packages(),
     install_requires=['pycrypto==2.6.1', 
                       'ecdsa', 
                       'jinja2', 
-                      'fabric==1.10.0',
+                      'fabric==1.10.1',
                       'simple-crypt==4.0.0',
                       'cython==0.22',
                       'falcon==0.1.10',

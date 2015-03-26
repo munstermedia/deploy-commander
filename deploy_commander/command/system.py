@@ -2,6 +2,8 @@
 System commands for deploy commander
 """
 import os
+import utils
+import traceback
 
 from fabric.api import env
 from fabric.contrib.files import is_link
@@ -13,9 +15,10 @@ from fabric.utils import abort
 
 from fabric.colors import yellow
 from fabric.colors import green
-import utils
+
 from fabric.context_managers import cd
 from fabric.context_managers import settings
+
 
 def cleanup_old_files(params):
     abort(red("Command `cleanup_old_files` is depricated, use `filesystem_remove_old`"))
@@ -105,7 +108,7 @@ def download_from_remote(params):
     try:
         get(**params) 
     except Exception, e:
-        print e
+        print(str(e))
 
 def upload_template(params):
     """
