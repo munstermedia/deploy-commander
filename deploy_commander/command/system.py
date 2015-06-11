@@ -39,23 +39,24 @@ def filesystem_remove_old(params):
         run("find %s/* -maxdepth 0 -cmin +%s -exec rm -Rf {} \;" % (params['path'], params['minutes']))
 
 
-def filesystem_keep_latest(params):
-    """
-    Keep latest files and folders
-    """
-    params = utils.format_params(params)
+# BUG : command doesn't work!?
+# def filesystem_keep_latest(params):
+#     """
+#     Keep latest files and folders
+#     """
+#     params = utils.format_params(params)
 
-    if not 'releases' in params:
-        params['releases'] = 42
+#     if not 'releases' in params:
+#         params['releases'] = 42
 
-    if not 'path' in params:
-        abort('No path set')
+#     if not 'path' in params:
+#         abort('No path set')
 
-    if not 'name' in params:
-        abort('No name set')
+#     if not 'name' in params:
+#         abort('No name set')
 
-    with settings(warn_only=True):
-        run("KEEPCOUNT=%s;find /projects/keeplatest -maxdepth 1 | grep %s | sort -rn | tail -n +$KEEPCOUNT+1 | while read folder; do rm -rf "$folder" ; done;"% (params['releases'], params['path'], params['name']))
+#     with settings(warn_only=True):
+#         run("KEEPCOUNT=%s;find /projects/keeplatest -maxdepth 1 | grep %s | sort -rn | tail -n +$KEEPCOUNT+1 | while read folder; do rm -rf \"$folder\" ; done;" % (params['releases'], params['path'], params['name']))
 
 
 def symlink(params):
