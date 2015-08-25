@@ -167,6 +167,60 @@ def cleanup_folder(path, max_files = 10):
         for remove_file in onlyfiles[0:-max_files]:
             os.remove(os.path.join(path, remove_file))
 
+class BitbucketWebhookResource:
+    def on_post(self, req, resp):
+        """Handles POST requests"""
+        # Try to read the payload
+        try:
+            raw_json = str(req.stream.read())
+        except Exception as ex:
+            raise falcon.HTTPError(falcon.HTTP_400, 'Error', ex.message)
+        
+        # Write log file
+        file = "%s.json" % int(time.time())
+        
+        dir = os.path.join(os.environ['DC_HOME_PATH'], 'logs', 'bitbucket', 'webhook')
+                     
+        if not os.path.exists(dir):
+            os.makedirs(dir)
+        
+        log_file = open(os.path.join(dir, file), 'w+')
+        log_file.write(str(raw_json))
+        log_file.close()
+        
+        data = json.loads(raw_json)
+        
+        payload_data = {}
+        if data.has_key('pullrequest'):
+            try:
+                payload_data = {'title':data['pullrequest']['title'],
+                                'description':data['pullrequest']['description'],
+                                'branch':data['pullrequest']['destination']['branch']['name'],
+                                'project':data['pullrequest']['destination']['repository']['name'],
+                                'user_avatar':data['pullrequest']['author']['links']['avatar']['href']}
+            except:
+                print("Invalid params?")
+        
+            # How to map branch to environment
+            environment_mapping = {'develop':'testing',
+                                   'release':'staging'}
+            
+            if (environment_mapping.has_key(payload_data['branch'])):
+                go = 'go:%(project)s,%(environment)s' % {'environment':environment_mapping[payload_data['branch']],
+                                                         'project':payload_data['project']}
+                # Start deploy commander thread
+                command_tasks = [go,'run:deploy-app']
+                thread = threading.Thread(name='worker', target=RunCommand, args=(command_tasks, payload_data))
+                thread.start()
+
+            
+            # Cleanup log files
+            cleanup_folder(path=dir)
+            
+        
+        resp.status = falcon.HTTP_200  # This is the default status
+        resp.body = ('{"status":"ok"}')
+
 class BitbucketHookResource:
     def on_post(self, req, resp):
         """Handles POST requests"""
@@ -246,6 +300,10 @@ class ConfigResource:
 app = falcon.API()
 
 bitbucket_hook = BitbucketHookResource()
+
+# new version of hook
+bitbucket_webhook =  BitbucketWebhookResource()
+
 root_resource = RootResource()
 
 # Read the configuration
@@ -253,6 +311,9 @@ app.add_route('/api/v1/config', ConfigResource())
 
 # Bitbucket pull request post hook
 app.add_route('/api/v1/bitbucket/pullrequestposthook', bitbucket_hook)
+
+# Bitbucket pull request post hook
+app.add_route('/api/v1/bitbucket/webhook', bitbucket_webhook)
 
 # Yust add a root responsive
 app.add_route('/', root_resource)
