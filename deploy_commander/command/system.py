@@ -4,6 +4,7 @@ System commands for deploy commander
 import os
 import utils
 import traceback
+import config
 
 from fabric.api import env
 from fabric.contrib.files import is_link
@@ -95,6 +96,35 @@ def command(params):
         run(params['command'])
 
     print(green("Command `%s` executed" % params['command']))
+
+def multi_command(params):
+    """
+    Run a command multiple times, based on config
+    """
+    #params['command'] = utils.format_params(params, strict=False)
+    if not 'command' in params:
+        abort('No command set')
+
+    #Skip command, we'll format it later on.. but we'll need it for the list_config_file..
+    original_params = params.copy();
+    del params['command']
+
+    if not 'list_config_file' in params:
+        abort('No list_config_file set')
+  
+    utils.format_params(params=params)
+    
+    data_list = config.read_config(params['list_config_file'])
+
+    for data in data_list:
+        tmp_params = original_params.copy();
+        tmp_params = utils.format_params(params=tmp_params, merge_extra_params=data)
+        if 'use_sudo' in tmp_params:
+            sudo(tmp_params['command'])
+        else:
+            run(tmp_params['command'])
+
+        print(green("Command `%s` executed" % tmp_params['command']))
 
 def ensure_path(params):
     """

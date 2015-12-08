@@ -43,6 +43,41 @@ Functionality:
 - Run command on server
 
 
+system.multi_command
+--------------
+
+::
+
+	{
+	  "list-source": {
+	    "sequence": 1,
+	    "command": "system.multi_command",
+		"params": {
+            "command":"print %(domain)s",
+            "list_config_file": "config/%(project)s/list/%(environment)s.json"
+        }
+	  }
+	}
+
+
+Functionality:
+
+- Run command on server and use a source json file to format params.
+- It will format the command based on the list_config_file
+- The list_config_file wil overwrite any previous set params
+
+Example list
+:: 
+
+	[
+	  {
+	    "domain": "domain1.com"
+	  },
+	  {
+	    "domain": "domain2.com"
+	  }
+	]
+
 system.upload_template
 ----------------------
 

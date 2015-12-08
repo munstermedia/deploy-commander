@@ -34,13 +34,23 @@ def print_single_line():
     print(green("-------------------------------------------------------------------------------------------------"))
     print("")
 
-def format_params(params):
+def format_value(value, data):
+    return value % data
+
+def format_params(params, merge_extra_params=None):
     """
     Take a dict of params and process them with the environment params
     """
+    new_params = env.params;
+    #print env.params
+    if merge_extra_params:
+        new_params.update(merge_extra_params)
+    
     for key, value in params.iteritems():
-        params[key] = value % env.params
+        params[key] = value % new_params
+
     return params
+
 
 def get_global_params(return_params, *params):
     """

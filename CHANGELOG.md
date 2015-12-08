@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.10
+-	Add new hook /api/v1/bitbucket/webhook because /api/v1/bitbucket/pullrequestposthook is deprecated
+
 ## 0.1.9
 -	Update fabric
 -	Print error fix

@@ -37,10 +37,10 @@ When somebody merges code into the release branch it will execute:
 Setup Bitbucket hook
 --------------------
 
-Go to your webadmin https://bitbucket.org repo. Under settings -> hooks you'll find 
-hooks. 
+Go to your webadmin https://bitbucket.org repo. Under settings -> webhooks you'll find 
+add webhook. 
 
-Select the `Pull Request POST` and enter your deploy-commander rest endpoint:
+Select a trigger (pull request->merged) and enter your deploy-commander rest endpoint:
 
--	http://<yourip/domain>:8086/api/v1/bitbucket/pullrequestposthook
+-	http://<yourip/domain>:8086/api/v1/bitbucket/webhook
 
