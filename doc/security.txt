@@ -30,8 +30,9 @@ The config files are encrypted with a AES256 encryption. For more technical info
 Remember to setup this password on your production server manually, and do not commit this in any repo!
 
 There are 2 commands available to encrypt and decrypt all the config files.
+It won't encrypt the config files if it is named as config.json. Only config.crypt.json will be encrypted/decrypted
 
-To encrypt all .json config files:
+To encrypt all crypt.json config files:
 
 ::
 

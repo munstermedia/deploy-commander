@@ -1,9 +1,10 @@
 # Changelog
 
+
 ## 0.1.11
 - 	Add new command multi_command, which can be used to run multiple commands based on a json list
 - 	Add deprecated notifications for old commands
-
+- 	Only encrypt/decrypt config files ending with 'crypt.json'
 
 ## 0.1.10
 -	Add new hook /api/v1/bitbucket/webhook because /api/v1/bitbucket/pullrequestposthook is deprecated
