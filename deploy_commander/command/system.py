@@ -116,15 +116,18 @@ def multi_command(params):
     
     data_list = config.read_config(params['list_config_file'])
 
-    for data in data_list:
-        tmp_params = original_params.copy();
-        tmp_params = utils.format_params(params=tmp_params, merge_extra_params=data)
-        if 'use_sudo' in tmp_params:
-            sudo(tmp_params['command'])
-        else:
-            run(tmp_params['command'])
+    if data_list:
+        for data in data_list:
+            tmp_params = original_params.copy();
+            tmp_params = utils.format_params(params=tmp_params, merge_extra_params=data)
+            if 'use_sudo' in tmp_params:
+                sudo(tmp_params['command'])
+            else:
+                run(tmp_params['command'])
 
-        print(green("Command `%s` executed" % tmp_params['command']))
+            print(green("Command `%s` executed" % tmp_params['command']))
+    else:
+        print(yellow("Command `%s` not executed, data list %s is empty" % (tmp_params['command'], params['list_config_file'])))
 
 def ensure_path(params):
     """

@@ -147,7 +147,7 @@ def encrypt_config():
     
     for root, dirs, files in os.walk("./config"):
         for file in files:
-            if file.endswith(".json"):
+            if file.endswith(".crypt.json"):
                 file_path = os.path.join(root, file)
                 
                 config.write_encrypted_config(file_path,

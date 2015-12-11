@@ -113,7 +113,7 @@ def write_encrypted_config(file_path, config):
     Takes a config dict and formats it to a json string
     It will be encrypted and then stored as json.encrypt file
     """
-    if file_path.endswith(".json"):
+    if file_path.endswith(".crypt.json"):
         encrypt_file_path = "%s.encrypt" % file_path
         json_config = dicttoconfig(config)
         with open(file_path) as encrypted_file:

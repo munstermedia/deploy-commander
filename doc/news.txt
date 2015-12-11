@@ -4,7 +4,10 @@ News
 8 Dec 2015
 ----------
 
-Added a new command to process the same command with a supplied list (json)
+I've decided that most of the commands are just 'linux commands' and can be executed by the system.command.
+So in the next release expect a deprecated notification for a lot of commands.
+
+
 
 
 24 March 2015

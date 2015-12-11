@@ -25,6 +25,7 @@ def install_server(params):
     Install mysql server
     This currently works on ubuntu systems only
     """
+    print yellow("Warning mysql.install_server is deprecated from version 1.0")
     with shell_env(DEBIAN_FRONTEND='noninteractive'):
         sudo('apt-get -y install mysql-server')
     
@@ -33,6 +34,7 @@ def backup_db(params):
     This command backups the database based on a backup folder
     The output dump will be a iso date formatted filename
     """
+    print yellow("Warning mysql.backup_db is deprecated from version 1.0")
     params = utils.format_params(params)
     
     command = """
@@ -69,6 +71,7 @@ def query(params):
     """
     Query command for executing raw queries
     """
+    print yellow("Warning mysql.query is deprecated from version 1.0")
     params = utils.format_params(params)
     
     command = """
@@ -88,7 +91,7 @@ def import_file(params):
     """
     Given the database credentials and a import file it will import into a database
     """
-    
+    print yellow("Warning mysql.import_file is deprecated from version 1.0")
     params = utils.format_params(params)
      
      
@@ -114,6 +117,7 @@ def cleanup_db_backups(params):
     """
     Cleanup sql backup files from folder
     """
+    print yellow("Warning mysql.cleanup_db_backups is deprecated from version 1.0")
     params = utils.format_params(params)
     
     if not 'path' in params:
@@ -148,6 +152,7 @@ def restore_db(params):
     Restore database from a backup folder. This will first list available backups, 
     and then you'll be prompted to enter the version you'll like to import
     """
+    print yellow("Warning mysql.restore_db is deprecated from version 1.0")
     params = utils.format_params(params)
         
     command = """

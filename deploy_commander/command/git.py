@@ -26,7 +26,8 @@ def clone(params):
     The clone command can be used to clone a new repo.
     If it's allready an existing path it will prompt for overwrite
     """
-    
+    print yellow("Warning git.clone is deprecated from version 1.0")
+
     if 'repo_path' in params:
         abort(red("repo_path is deprecated, use git_repo_path"))
         
@@ -71,6 +72,7 @@ def deploy(params):
     It can be used to create versioned deployments of the codebase
     When executed it will prompt for the tag to deploy if it's not known
     """
+    print yellow("Warning git.deploy is deprecated from version 1.0")
     
     # Try to get global params
     params = utils.get_global_params(params,
