@@ -61,7 +61,7 @@ def output_to_html(output, payload_data):
            }
            </style>
            <body>
-           <div style="float:right;position:absolute;"><img src="%(user_avatar)s" /></div>
+           <div style="float:right;position:absolute;right:20px;"><img src="%(user_avatar)s" /><br /><a href="%(user_home)s">%(author_name)s</a></div>
            <div style="font-family: Monospace;white-space:pre;width:98ch;">%(output)s</div>'
            </body>
            </html>""" % params
@@ -197,7 +197,9 @@ class BitbucketWebhookResource:
                                 'description':data['pullrequest']['description'],
                                 'branch':data['pullrequest']['destination']['branch']['name'],
                                 'project':data['pullrequest']['destination']['repository']['name'],
-                                'user_avatar':data['pullrequest']['author']['links']['avatar']['href']}
+                                'user_avatar':data['pullrequest']['author']['links']['avatar']['href'],
+                                'user_home':data['pullrequest']['author']['links']['html']['href'],
+                                'author_name':data['pullrequest']['author']['display_name']}
             except:
                 print("Invalid params?")
         

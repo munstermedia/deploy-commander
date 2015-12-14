@@ -32,7 +32,8 @@ system.command
 	    "sequence": 1,
 	    "command": "system.command",
 	    "params": {
-	      "command": "ls -las /home"
+	      "command": "ls -las /home",
+	      ("secure":"False")
 	    }
 	  }
 	}
@@ -41,7 +42,7 @@ system.command
 Functionality:
 
 - Run command on server
-
+- If secure param is set to true, then it won't output the command with params. Default value is False
 
 system.multi_command
 --------------
@@ -54,7 +55,8 @@ system.multi_command
 	    "command": "system.multi_command",
 		"params": {
             "command":"print %(domain)s",
-            "list_config_file": "config/%(project)s/list/%(environment)s.json"
+            "list_config_file": "config/%(project)s/list/%(environment)s.json",
+            ("secure":"False")
         }
 	  }
 	}
@@ -65,6 +67,7 @@ Functionality:
 - Run command on server and use a source json file to format params.
 - It will format the command based on the list_config_file
 - The list_config_file wil overwrite any previous set params
+- If secure param is set to true, then it won't output the command with params. Default value is False
 
 Example list
 :: 

@@ -19,7 +19,7 @@ from fabric.colors import green
 
 from fabric.context_managers import cd
 from fabric.context_managers import settings
-
+from fabric.context_managers import hide
 
 def cleanup_old_files(params):
     abort(red("Command `cleanup_old_files` is depricated, use `filesystem_remove_old`"))
@@ -85,49 +85,62 @@ def command(params):
     """
     Run a command
     """
-    params = utils.format_params(params)
+    with hide('running'):
+        params = utils.format_params(params)
 
-    if not 'command' in params:
-        abort('No command set')
+        if not 'command' in params:
+            abort('No command set')
 
-    if 'use_sudo' in params:
-        sudo(params['command'])
+        if 'use_sudo' in params:
+            sudo(params['command'])
+        else:
+            run(params['command'])
+
+    if 'secure' in params and params['secure'] == "True":
+        print(green("Secure command executed"))
     else:
-        run(params['command'])
-
-    print(green("Command `%s` executed" % params['command']))
+        print(green("Command `%s` executed" % params['command']))
+        
 
 def multi_command(params):
     """
     Run a command multiple times, based on config
     """
-    #params['command'] = utils.format_params(params, strict=False)
-    if not 'command' in params:
-        abort('No command set')
+    with hide('running'):
+        #params['command'] = utils.format_params(params, strict=False)
+        if not 'command' in params:
+            abort('No command set')
 
-    #Skip command, we'll format it later on.. but we'll need it for the list_config_file..
-    original_params = params.copy();
-    del params['command']
+        #Skip command, we'll format it later on.. but we'll need it for the list_config_file..
+        original_params = params.copy();
+        del params['command']
 
-    if not 'list_config_file' in params:
-        abort('No list_config_file set')
-  
-    utils.format_params(params=params)
-    
-    data_list = config.read_config(params['list_config_file'])
+        if not 'list_config_file' in params:
+            abort('No list_config_file set')
+      
+        utils.format_params(params=params)
+        
+        data_list = config.read_config(params['list_config_file'])
 
-    if data_list:
-        for data in data_list:
-            tmp_params = original_params.copy();
-            tmp_params = utils.format_params(params=tmp_params, merge_extra_params=data)
-            if 'use_sudo' in tmp_params:
-                sudo(tmp_params['command'])
+        if data_list:
+            for data in data_list:
+                tmp_params = original_params.copy();
+                tmp_params = utils.format_params(params=tmp_params, merge_extra_params=data)
+                if 'use_sudo' in tmp_params:
+                    sudo(tmp_params['command'])
+                else:
+                    run(tmp_params['command'])
+
+                if 'secure' in params and params['secure'] == "True":
+                    print(green("Secure command %s executed" % original_params['command']))
+                else:
+                    print(green("Command `%s` executed" % tmp_params['command']))
+        else:
+            if 'secure' in params and params['secure'] == "True":
+                print(yellow("Command not executed, data list %s is empty" % (params['list_config_file'])))
             else:
-                run(tmp_params['command'])
-
-            print(green("Command `%s` executed" % tmp_params['command']))
-    else:
-        print(yellow("Command `%s` not executed, data list %s is empty" % (tmp_params['command'], params['list_config_file'])))
+                print(yellow("Command `%s` not executed, data list %s is empty" % (tmp_params['command'], params['list_config_file'])))
+                
 
 def ensure_path(params):
     """

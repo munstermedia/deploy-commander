@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.12
+- 	Add more user data to outgoing deployment email.
+- 	Add secure option to system and multi system commands.
 
 ## 0.1.11
 - 	Add new command multi_command, which can be used to run multiple commands based on a json list
