@@ -11,6 +11,7 @@ from fabric.contrib.files import is_link
 from fabric.operations import run
 from fabric.operations import sudo
 from fabric.operations import get
+from fabric.operations import local
 
 from fabric.utils import abort
 
@@ -23,6 +24,7 @@ from fabric.context_managers import hide
 
 def cleanup_old_files(params):
     abort(red("Command `cleanup_old_files` is depricated, use `filesystem_remove_old`"))
+
 
 def filesystem_remove_old(params):
     """
@@ -80,6 +82,7 @@ def symlink(params):
     run(command)
 
     print(green("Symlink from `%s` to `%s`." % (params['source'], params['target'])))
+
 
 def command(params):
     """
@@ -141,6 +144,41 @@ def multi_command(params):
             else:
                 print(yellow("Command `%s` not executed, data list %s is empty" % (tmp_params['command'], params['list_config_file'])))
                 
+def multi_local_command(params):
+    """
+    Run a local command multiple times, based on config
+    """
+    with hide('running'):
+        if not 'command' in params:
+            abort('No command set')
+
+        #Skip command, we'll format it later on.. but we'll need it for the list_config_file..
+        original_params = params.copy();
+        del params['command']
+
+        if not 'list_config_file' in params:
+            abort('No list_config_file set')
+      
+        utils.format_params(params=params)
+        
+        data_list = config.read_config(params['list_config_file'])
+
+        if data_list:
+            for data in data_list:
+                tmp_params = original_params.copy();
+                tmp_params = utils.format_params(params=tmp_params, merge_extra_params=data)
+
+                local(tmp_params['command'])
+
+                if 'secure' in params and params['secure'] == "True":
+                    print(green("Secure command %s executed" % original_params['command']))
+                else:
+                    print(green("Command `%s` executed" % tmp_params['command']))
+        else:
+            if 'secure' in params and params['secure'] == "True":
+                print(yellow("Command not executed, data list %s is empty" % (params['list_config_file'])))
+            else:
+                print(yellow("Command `%s` not executed, data list %s is empty" % (tmp_params['command'], params['list_config_file'])))
 
 def ensure_path(params):
     """
@@ -154,6 +192,7 @@ def ensure_path(params):
     utils.ensure_path(path=params['path'])
 
     print(green("Ensure path `%s`." % (params['path'])))
+
 
 def download_from_remote(params):
     """
@@ -174,6 +213,28 @@ def download_from_remote(params):
         get(**params)
     except Exception, e:
         print(str(e))
+
+
+def upload_to_remote(params):
+    """
+    Upload files to remote
+    """
+    params = utils.format_params(params)
+
+    if not 'target_source' in params:
+        abort('No target_source set')
+
+    if not 'local_source' in params:
+        abort('No local_source set')
+
+    print("Reading from `%s`" % params['local_source'])
+    print("Target to `%s`" % params['target_source'])
+
+    try:
+        put(params['local_source'], params['target_source'])
+    except Exception, e:
+        print(str(e))
+
 
 def upload_template(params):
     """

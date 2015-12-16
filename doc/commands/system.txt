@@ -81,6 +81,33 @@ Example list
 	  }
 	]
 
+
+system.multi_local_command
+---------------------------
+
+::
+
+	{
+	  "your-own-description": {
+	    "sequence": 1,
+	    "command": "system.multi_local_command",
+	    "params": {
+            "command":"print %(domain)s",
+            "list_config_file": "config/%(project)s/list/%(environment)s.json",
+            ("secure":"False")
+	    }
+	  }
+	}
+
+
+Functionality:
+(see multi_command)
+
+- Run command on local server and use a source json file to format params.
+- It will format the command based on the list_config_file
+- The list_config_file wil overwrite any previous set params
+- If secure param is set to true, then it won't output the command with params. Default value is False
+
 system.upload_template
 ----------------------
 
@@ -149,6 +176,31 @@ Functionality:
 - Will download file(s)
 - Can use wildcards for files.
 - Can download one or more files/folders
+
+
+system.upload_to_remote
+---------------------------
+
+::
+
+	{
+	  "your-own-description": {
+	    "sequence": 1,
+	    "command": "system.upload_to_remote",
+	    "params": {
+	      "local_source": "/some/remote/path/*.jpg",
+	      "target_source": "./templates/tmp"
+	    }
+	  }
+	}
+
+
+Functionality:
+
+- Will upload file(s)
+- Can use wildcards for files.
+- Can upload one or more files/folders
+
 
 
 system.filesystem_remove_old

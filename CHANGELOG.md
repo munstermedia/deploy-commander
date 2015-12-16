@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.13
+- 	Add new system command: upload_to_remote
+
 ## 0.1.12
 - 	Add more user data to outgoing deployment email.
 - 	Add secure option to system and multi system commands.
