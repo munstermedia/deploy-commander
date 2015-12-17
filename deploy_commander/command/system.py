@@ -12,6 +12,7 @@ from fabric.operations import run
 from fabric.operations import sudo
 from fabric.operations import get
 from fabric.operations import local
+from fabric.operations import put
 
 from fabric.utils import abort
 

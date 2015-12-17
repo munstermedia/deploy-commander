@@ -1,7 +1,11 @@
 # Changelog
 
+## 0.1.14
+- 	Fixed bug in command upload_to_remote
+
 ## 0.1.13
 - 	Add new system command: upload_to_remote
+- 	Add new system command: multi_local_command
 
 ## 0.1.12
 - 	Add more user data to outgoing deployment email.
