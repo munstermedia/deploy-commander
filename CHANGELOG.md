@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.15
+- 	Fixed issue with executing tasks from the bibucket hook. (if process was running it started a new one next to it, this is fixed by adding a lockfile)
+- 	Removed old bitbucket hook request.
+
 ## 0.1.14
 - 	Fixed bug in command upload_to_remote
 

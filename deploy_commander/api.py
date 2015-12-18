@@ -6,6 +6,7 @@ import threading
 import subprocess
 import json
 import smtplib
+import subprocess
 
 from os.path import isfile, join
 from os import listdir
@@ -17,12 +18,13 @@ from fabric.api import env
 
 from config import init
 
+
 env.home_path = os.environ['DC_HOME_PATH']
 
 # Init default config
 init()
 
-def output_to_text(output):
+def output_to_text(output, payload_data):
     """
     Format command line output to text
     """
@@ -68,55 +70,91 @@ def output_to_html(output, payload_data):
 
     return html
 
-def RunCommand(tasks, payload_data):
-    """
-    Runcommand wil take a list of task params and add 
-    extra payload data for rendering template
-    """
-    # Change directory
+def run_command(payload_data, project, environment):
+
+    go = 'go:%(project)s,%(environment)s' % {'environment':environment,
+                                             'project':project}
+
+    command = os.path.join(os.environ['DC_VIRTUALENV_PATH'], 'bin', 'deploy-commander')
+    #execute = "(cd %s && (%s %s run:deploy-app))" % (os.environ['DC_HOME_PATH'], command, go)
+
+    run = 'run:deploy-app'
+
+
     os.chdir(os.environ['DC_HOME_PATH'])
     
-    # Fabric executable
-    execute = os.path.join(os.environ['DC_VIRTUALENV_PATH'], 'bin', 'deploy-commander')
-    
-    if not os.path.isfile(execute):
-        raise Exception('Deploy commander executable not available in : %s' % execute)
-
-    call = [execute, '--abort-on-prompts']
-    call.extend(tasks)
-    
-    process = subprocess.Popen(call, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    
-    process.wait()
-    
-
-    communicate = process.communicate()
-    
-    htmlBody = output_to_html(communicate[0] + communicate[1], payload_data)
-    plainBody = output_to_text(communicate[0] + communicate[1])
-    
-    
     # Make dir
+    output_dir = os.path.join(os.environ['DC_HOME_PATH'], 'logs', 'build', 'output')
+                     
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    output_path_file = os.path.join(output_dir, "%s.output" % int(time.time()))
+    
+    output_log = open(output_path_file, 'w+')
+
+
+    lockfile_dir = os.path.join(os.environ['DC_HOME_PATH'], 'lockfiles')
+    
+    if not os.path.exists(lockfile_dir):
+        os.makedirs(lockfile_dir)
+
+    lockfile_path_file =  os.path.join(lockfile_dir, ('%s-%s-%s.pid' % (project, environment, 'deploy-app')))
+
+    # For now just kill old process, and start a new one
+    if os.path.isfile(lockfile_path_file):
+        with open(lockfile_path_file) as log_file:
+            pid=log_file.read()
+        
+        print "Lockfile with pid#%s exists, kill process and remove file" % (pid)
+        kill = subprocess.Popen(['kill', pid], stdout=output_log, stderr=output_log)
+        kill.wait()
+
+
+    process = subprocess.Popen([command, go, run], stdout=output_log, stderr=output_log)
+
+    lock = open(lockfile_path_file, 'w+')
+    lock.write(str(process.pid));
+    lock.close()
+
+    print "PID:", process.pid
+    return_code = process.wait()
+    os.remove(lockfile_path_file)
+
+    # If process is killed, don't mail!
+    if return_code != -15:
+        with open(output_path_file) as raw_output_fp:
+            raw_output = raw_output_fp.read()
+            html_body  = output_to_html(raw_output, payload_data)
+            plain_body = output_to_text(raw_output, payload_data)
+            mail_log(html_body=html_body,
+                     plain_body=plain_body,
+                     error=process.returncode)
+    # Cleanup log files
+    cleanup_folder(path=output_dir)
+
+def mail_log(html_body, plain_body, error=False):
+    # Make dir file html
     html_dir = os.path.join(os.environ['DC_HOME_PATH'], 'logs', 'build', 'html')
                      
     if not os.path.exists(html_dir):
         os.makedirs(html_dir)
 
     html_log = open(os.path.join(html_dir, "%s.html" % int(time.time())), 'w+')
-    html_log.write(htmlBody)
+    html_log.write(html_body)
     html_log.close()
     
     
-    # Make dir
+    # Make dir file plain
     text_dir = os.path.join(os.environ['DC_HOME_PATH'], 'logs', 'build', 'txt')
                      
     if not os.path.exists(text_dir):
         os.makedirs(text_dir)
 
     text_log = open(os.path.join(text_dir, "%s.txt" % int(time.time())), 'w+')
-    text_log.write(plainBody)
+    text_log.write(plain_body)
     text_log.close()
-    
+
     if 'mail' in env and env['mail']:
         """
         When mail isset in the config it will use the settings 
@@ -133,14 +171,14 @@ def RunCommand(tasks, payload_data):
         msg['To'] = email_to
         
         # Set important if there was an error!
-        if process.returncode > 0:
+        if error:
             msg['Subject'] = 'Deploy Commander failed task'
             msg['X-Priority'] = '2'
         else:
             msg['Subject'] = 'Deploy Commander task executed'
         
-        msg.attach(MIMEText(plainBody, 'text'))
-        msg.attach(MIMEText(htmlBody, 'html'))
+        msg.attach(MIMEText(plain_body, 'text'))
+        msg.attach(MIMEText(html_body, 'html'))
         
         # Create sendmail
         s = smtplib.SMTP(mail_config['host'], str(mail_config['port']))
@@ -148,12 +186,6 @@ def RunCommand(tasks, payload_data):
         
         s.sendmail(email_from, mail_config['to'], msg.as_string())
         s.quit()
-    
-    # Cleanup log files
-    cleanup_folder(path=html_dir)
-
-    # Cleanup log files
-    cleanup_folder(path=text_dir)
     
 def cleanup_folder(path, max_files = 10):
     """
@@ -208,11 +240,11 @@ class BitbucketWebhookResource:
                                    'release':'staging'}
             
             if (environment_mapping.has_key(payload_data['branch'])):
-                go = 'go:%(project)s,%(environment)s' % {'environment':environment_mapping[payload_data['branch']],
-                                                         'project':payload_data['project']}
-                # Start deploy commander thread
-                command_tasks = [go,'run:deploy-app']
-                thread = threading.Thread(name='worker', target=RunCommand, args=(command_tasks, payload_data))
+                environment = environment_mapping[payload_data['branch']]
+                project     = payload_data['project']
+                
+                #Start deploy commander thread
+                thread = threading.Thread(name='worker', target=run_command, args=(payload_data, project, environment))
                 thread.start()
 
             
@@ -223,59 +255,6 @@ class BitbucketWebhookResource:
         resp.status = falcon.HTTP_200  # This is the default status
         resp.body = ('{"status":"ok"}')
 
-class BitbucketHookResource:
-    def on_post(self, req, resp):
-        """Handles POST requests"""
-        # Try to read the payload
-        try:
-            raw_json = str(req.stream.read())
-        except Exception as ex:
-            raise falcon.HTTPError(falcon.HTTP_400, 'Error', ex.message)
-        
-        # Write log file
-        file = "%s.json" % int(time.time())
-        
-        dir = os.path.join(os.environ['DC_HOME_PATH'], 'logs', 'bitbucket', 'pullrequesthook')
-                     
-        if not os.path.exists(dir):
-            os.makedirs(dir)
-        
-        log_file = open(os.path.join(dir, file), 'w+')
-        log_file.write(str(raw_json))
-        log_file.close()
-        
-        data = json.loads(raw_json)
-        
-        payload_data = {}
-        if data.has_key('pullrequest_merged'):
-            try:
-                payload_data = {'title':data['pullrequest_merged']['title'],
-                                'description':data['pullrequest_merged']['description'],
-                                'branch':data['pullrequest_merged']['destination']['branch']['name'],
-                                'project':data['pullrequest_merged']['destination']['repository']['name'],
-                                'user_avatar':data['pullrequest_merged']['author']['links']['avatar']['href']}
-            except:
-                print("Invalid params?")
-        
-            # How to map branch to environment
-            environment_mapping = {'develop':'testing',
-                                   'release':'staging'}
-            
-            if (environment_mapping.has_key(payload_data['branch'])):
-                go = 'go:%(project)s,%(environment)s' % {'environment':environment_mapping[payload_data['branch']],
-                                                         'project':payload_data['project']}
-                # Start deploy commander thread
-                command_tasks = [go,'run:deploy-app']
-                thread = threading.Thread(name='worker', target=RunCommand, args=(command_tasks, payload_data))
-                thread.start()
-
-            
-            # Cleanup log files
-            cleanup_folder(path=dir)
-            
-        
-        resp.status = falcon.HTTP_200  # This is the default status
-        resp.body = ('{"status":"ok"}')
 
 class RootResource:
     def on_get(self, req, resp):
@@ -301,8 +280,6 @@ class ConfigResource:
 # falcon.API instances are callable WSGI apps
 app = falcon.API()
 
-bitbucket_hook = BitbucketHookResource()
-
 # new version of hook
 bitbucket_webhook =  BitbucketWebhookResource()
 
@@ -310,9 +287,6 @@ root_resource = RootResource()
 
 # Read the configuration
 app.add_route('/api/v1/config', ConfigResource())
-
-# Bitbucket pull request post hook
-app.add_route('/api/v1/bitbucket/pullrequestposthook', bitbucket_hook)
 
 # Bitbucket pull request post hook
 app.add_route('/api/v1/bitbucket/webhook', bitbucket_webhook)
