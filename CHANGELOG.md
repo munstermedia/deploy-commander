@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.16
+- 	Add path to encrypt or decrypt functionality
+
 ## 0.1.15
 - 	Fixed issue with executing tasks from the bibucket hook. (if process was running it started a new one next to it, this is fixed by adding a lockfile)
 - 	Removed old bitbucket hook request.

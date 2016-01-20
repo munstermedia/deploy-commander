@@ -138,14 +138,15 @@ def title_screen():
     print(green("================================================================================================="))
 
 @task
-def encrypt_config():
+def encrypt_config(path="./config"):
     """
     Encrypt all json files to json.encrypt
     """
     title_screen()
     password = utils.get_master_password()
-    
-    for root, dirs, files in os.walk("./config"):
+    print "Processing folder `%s`" % path
+
+    for root, dirs, files in os.walk(path):
         for file in files:
             if file.endswith(".crypt.json"):
                 file_path = os.path.join(root, file)
@@ -156,16 +157,18 @@ def encrypt_config():
                 os.remove(file_path)
 
 @task   
-def decrypt_config():
+def decrypt_config(path="./config"):
     """
     Decrypt all json.encrypt files to .json files
     """
     title_screen()
     password = utils.get_master_password()
     
+    print "Processing folder `%s`" % path
+     
     print(green("Decrypting..."))
     
-    for root, dirs, files in os.walk("./config"):
+    for root, dirs, files in os.walk(path):
         for file in files:
             if file.endswith(".encrypt"):
                 encrypt_file_path = os.path.join(root, file)

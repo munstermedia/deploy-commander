@@ -39,11 +39,25 @@ To encrypt all crypt.json config files:
 	$ deploy-commander encrypt_config
 
 
+or process only path...
+
+::
+	$ deploy-commander encrypt_config:<./config/path>
+
+
 To decrypt the .json.encrypt config files:
 
 ::
 
 	$ deploy-commander decrypt_config
+
+
+or process only path...
+
+::
+
+	$ deploy-commander decrypt_config:<./config/path>
+
 
 * It will only encrypt or decrypt files that needs to be encrypted/decrypted. It might take a while if your configuration is large.
 

@@ -12,9 +12,12 @@ Quick overview of the command line possibilities.
 	$ deploy-commander go:<project>,<environment> show_config
 
 	// Encrypt/Decrypt config
-	$ deploy-commander go:<project>,<environment> encrypt_config
-	$ deploy-commander go:<project>,<environment> decrypt_config
+	$ deploy-commander encrypt_config
+	$ deploy-commander decrypt_config
 	
+	$ deploy-commander encrypt_config:<path>
+	$ deploy-commander decrypt_config:<path>
+
 	// Show available tasks
 	$ deploy-commander go:<project>,<enviroment> show_tasks
 	
