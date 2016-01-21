@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.17
+- 	Remove insecure config request from api
+
 ## 0.1.16
 - 	Add path to encrypt or decrypt functionality
 

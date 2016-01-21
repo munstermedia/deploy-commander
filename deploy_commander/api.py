@@ -262,21 +262,6 @@ class RootResource:
         resp.status = falcon.HTTP_200  # This is the default status
         resp.body = '{"status":"ok"}'
 
-class ConfigResource:
-    def on_get(self, req, resp):
-        file = req.get_param('file', True)
-        
-        try:
-            config_file = open(os.path.join(os.environ['DC_HOME_PATH'], 'config', file), 'r')
-        except IOError:
-            raise falcon.HTTPBadRequest(
-                'Missing config',
-                'The config `%s` cannot be found!' % file)
-
-        """Handles root get requests"""
-        resp.status = falcon.HTTP_200  # This is the default status
-        resp.body = config_file.read()
-
 # falcon.API instances are callable WSGI apps
 app = falcon.API()
 
@@ -284,9 +269,6 @@ app = falcon.API()
 bitbucket_webhook =  BitbucketWebhookResource()
 
 root_resource = RootResource()
-
-# Read the configuration
-app.add_route('/api/v1/config', ConfigResource())
 
 # Bitbucket pull request post hook
 app.add_route('/api/v1/bitbucket/webhook', bitbucket_webhook)
