@@ -7,6 +7,7 @@ import subprocess
 import json
 import smtplib
 import subprocess
+import requests
 
 from os.path import isfile, join
 from os import listdir
@@ -71,6 +72,9 @@ def output_to_html(output, payload_data):
     return html
 
 def run_command(payload_data, project, environment):
+    if 'slack_hook_url' in env:
+        payload = { "username": "DeployCommander",   "text": "Deployment start for project %s and environment %s" % (project, environment),   "icon_emoji": ":pray:" }
+        requests.post(env['slack_hook_url'], json.dumps(payload))
 
     go = 'go:%(project)s,%(environment)s' % {'environment':environment,
                                              'project':project}
@@ -107,6 +111,9 @@ def run_command(payload_data, project, environment):
             pid=log_file.read()
         
         print "Lockfile with pid#%s exists, kill process and remove file" % (pid)
+        if 'slack_hook_url' in env:
+            payload = { "username": "DeployCommander",   "text": "Double deployment start for project %s and environment %s, latest process is killed." % (project, environment),   "icon_emoji": ":spock-hand:" }
+            requests.post(env['slack_hook_url'], json.dumps(payload))
         kill = subprocess.Popen(['kill', pid], stdout=output_log, stderr=output_log)
         kill.wait()
 
@@ -130,6 +137,13 @@ def run_command(payload_data, project, environment):
             mail_log(html_body=html_body,
                      plain_body=plain_body,
                      error=process.returncode)
+            if 'slack_hook_url' in env:
+                if process.returncode:
+                    payload = { "username": "DeployCommander",   "text": "Failed deployment for project %s to environment %s." % (project, environment),   "icon_emoji": ":bangbang:" }
+                    requests.post(env['slack_hook_url'], json.dumps(payload))
+                else:
+                    payload = { "username": "DeployCommander",   "text": "Project %s is deployed to environment %s." % (project, environment),   "icon_emoji": ":+1:" }
+                    requests.post(env['slack_hook_url'], json.dumps(payload))
     # Cleanup log files
     cleanup_folder(path=output_dir)
 

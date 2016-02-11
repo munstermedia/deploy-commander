@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='deploy-commander',
-    version='0.1.17',
+    version='0.1.18',
     author=u'Ference van Munster',
     author_email='info@munstermedia.nl',
     packages=find_packages(),
@@ -14,7 +14,8 @@ setup(
                       'simple-crypt==4.0.0',
                       'cython==0.22',
                       'falcon==0.1.10',
-                      'gunicorn==19.2.1'],
+                      'gunicorn==19.2.1',
+                      'requests==2.9.1'],
     url='http://deploy-commander.readthedocs.org',
     license='Free',
     description='Simple command line tool to deploy your projects',

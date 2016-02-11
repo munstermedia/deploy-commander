@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.18
+- 	Add slack hook
+
 ## 0.1.17
 - 	Remove insecure config request from api
 

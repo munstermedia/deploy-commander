@@ -58,6 +58,20 @@ Don't have a smtp server? Try the free `mandrillapp <https://mandrillapp.com>`_
 	}
 
 
+Slack hook
+----------
+
+Send a message to slack!
+
+/config.json
+
+::
+
+	{
+	  "slack_hook_url":"https://thehookyouvegeneratedwithslack"
+	}
+
+
 Webserver config
 ----------------
 
