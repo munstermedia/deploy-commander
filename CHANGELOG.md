@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.20
+- 	Catch exception for slack hook when request fails
+
 ## 0.1.19
 - 	slack hook bigfix
 
