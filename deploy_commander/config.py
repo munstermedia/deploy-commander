@@ -44,6 +44,9 @@ env.tasks = {}
 # Mail settings
 env.mail = {}
 
+# Slack hook
+env.slack_hook_url = ""
+
 # Sequence of loading
 env.config_load_strategy = ['config/default.json',
                             'config/%(environment)s.json',
@@ -227,6 +230,9 @@ def load_main_config():
             if 'mail' in config:
                 env.mail = config['mail']
 
+            if 'slack_hook_url' in config:
+                env.slack_hook_url = config['slack_hook_url']
+            
             if 'webserver' in config:
                 env.webserver.update(config['webserver'])
 

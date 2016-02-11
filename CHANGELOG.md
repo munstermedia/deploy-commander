@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.19
+- 	slack hook bigfix
+
 ## 0.1.18
 - 	Add slack hook
 
