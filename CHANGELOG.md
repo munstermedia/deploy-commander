@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.22
+- 	Small encryption and decryption fix
+
 ## 0.1.21
 - 	Catch exception for invalid config on encryption and decryption
 
