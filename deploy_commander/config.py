@@ -106,7 +106,7 @@ def environment():
                     
     # Post process params from params
     if env.post_params:
-        print ""
+        print("")
         for param_key, param_value in env.post_params.iteritems():
             env.params[param_key] = param_value % env.params
             print(yellow("Set post param `%s` to `%s`" % (param_key, env.params[param_key])))
@@ -157,11 +157,11 @@ def read_config(file_path):
             try:
                 config = decrypt(env.master_password, ciphertext.read()).decode('UTF-8')
             except DecryptionException, e:
-                abort(red(e))
+                print(red(e))
             try:
                 return json.loads(config)
             except Exception, e:
-                abort(red("Cannot read config, is the config correct? `%s`" % e))
+                print(red("Cannot read config, is the config correct? `%s`" % e))
             
         return {}
     

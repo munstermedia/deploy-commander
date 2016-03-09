@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.21
+- 	Catch exception for invalid config on encryption and decryption
+
 ## 0.1.20
 - 	Catch exception for slack hook when request fails
 
