@@ -174,15 +174,14 @@ def decrypt_config(path="./config"):
                 encrypt_file_path = os.path.join(root, file)
                 with open(encrypt_file_path) as ciphertext:
                     file_path = encrypt_file_path[:-8]
-                    
-                    config_data = config.read_config(file_path)
-
-                    if config_data:
+                    try:
+                        config_data = config.read_config(file_path)
+                        
                         config.write_config(file_path,
                                             config_data)
                         print(green("File `%s` decrypted." % encrypt_file_path))
                         os.remove(encrypt_file_path)
-                    else:
+                    except:
                         print(red("Cannot decrypt file... `%s` skipping..." % encrypt_file_path))
 
 

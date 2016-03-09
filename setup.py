@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='deploy-commander',
-    version='0.1.21',
+    version='0.1.22',
     author=u'Ference van Munster',
     author_email='info@munstermedia.nl',
     packages=find_packages(),
@@ -11,7 +11,7 @@ setup(
                       'ecdsa', 
                       'jinja2', 
                       'fabric==1.10.1',
-                      'simple-crypt==4.0.0',
+                      'simple-crypt==4.1.7',
                       'cython==0.22',
                       'falcon==0.1.10',
                       'gunicorn==19.2.1',
