@@ -230,8 +230,8 @@ def load_main_config():
             if 'mail' in config:
                 env.mail = config['mail']
 
-            if 'slack_hook_url' in config:
-                env.slack_hook_url = config['slack_hook_url']
+            if 'hook' in config:
+                env.hook = config['hook']
             
             if 'webserver' in config:
                 env.webserver.update(config['webserver'])

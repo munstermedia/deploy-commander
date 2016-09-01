@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.23
+- 	Moved slack hook into "hook"  config var
+- 	Added extra hook config for triggering tasks
+
 ## 0.1.22
 - 	Small encryption and decryption fix
 

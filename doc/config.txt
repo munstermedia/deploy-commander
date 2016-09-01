@@ -68,7 +68,32 @@ Send a message to slack!
 ::
 
 	{
-	  "slack_hook_url":"https://thehookyouvegeneratedwithslack"
+	  "hook":{
+	  	"slack_hook_url":"https://thehookyouvegeneratedwithslack"
+	  }
+	}
+
+
+Hook branch mapping
+----------
+
+Listen to which branch to trigger an action
+
+You can use regex for the key.
+
+Example : if you'll merge a branch into testing-1234 it will deploy.
+
+/config.json
+
+::
+
+	{
+	  "hook":{
+	  	"environment_mapping":{
+            "^(testing)":"testing",
+            "^(release)":"staging"
+        }
+	  }
 	}
 
 

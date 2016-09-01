@@ -8,6 +8,7 @@ import json
 import smtplib
 import subprocess
 import requests
+import re
 
 from os.path import isfile, join
 from os import listdir
@@ -73,9 +74,9 @@ def output_to_html(output, payload_data):
 
 def run_command(payload_data, project, environment):
     try:
-        if 'slack_hook_url' in env:
+        if env.has_key('hook') and 'slack_hook_url' in env['hook']:
             payload = { "username": "DeployCommander",   "text": "Deployment start for project `%s` and environment `%s`" % (project, environment),   "icon_emoji": ":pray:" }
-            requests.post(env['slack_hook_url'], json.dumps(payload))
+            requests.post(env['hook']['slack_hook_url'], json.dumps(payload))
     except:
         pass
 
@@ -115,9 +116,9 @@ def run_command(payload_data, project, environment):
         
         print "Lockfile with pid#%s exists, kill process and remove file" % (pid)
         try:
-            if 'slack_hook_url' in env:
+            if env.has_key('hook') and 'slack_hook_url' in env['hook']:
                 payload = { "username": "DeployCommander",   "text": "Double deployment start for project `%s` and environment `%s`, process is killed." % (project, environment),   "icon_emoji": ":spock-hand:" }
-                requests.post(env['slack_hook_url'], json.dumps(payload))
+                requests.post(env['hook']['slack_hook_url'], json.dumps(payload))
         except:
             pass
 
@@ -145,13 +146,13 @@ def run_command(payload_data, project, environment):
                      plain_body=plain_body,
                      error=process.returncode)
             try:
-                if 'slack_hook_url' in env:
+                if env.has_key('hook') and 'slack_hook_url' in env['hook']:
                     if process.returncode:
                         payload = { "username": "DeployCommander",   "text": "Failed deployment for project `%s` to environment `%s`." % (project, environment),   "icon_emoji": ":bangbang:" }
-                        requests.post(env['slack_hook_url'], json.dumps(payload))
+                        requests.post(env['hook']['slack_hook_url'], json.dumps(payload))
                     else:
                         payload = { "username": "DeployCommander",   "text": "Project `%s` is deployed to environment `%s`." % (project, environment),   "icon_emoji": ":+1:" }
-                        requests.post(env['slack_hook_url'], json.dumps(payload))
+                        requests.post(env['hook']['slack_hook_url'], json.dumps(payload))
             except:
                 pass
 
@@ -233,6 +234,7 @@ class BitbucketWebhookResource:
         except Exception as ex:
             raise falcon.HTTPError(falcon.HTTP_400, 'Error', ex.message)
         
+
         # Write log file
         file = "%s.json" % int(time.time())
         
@@ -259,26 +261,45 @@ class BitbucketWebhookResource:
                                 'author_name':data['pullrequest']['author']['display_name']}
             except:
                 print("Invalid params?")
-        
-            # How to map branch to environment
-            environment_mapping = {'develop':'testing',
-                                   'release':'staging'}
             
-            if (environment_mapping.has_key(payload_data['branch'])):
-                environment = environment_mapping[payload_data['branch']]
-                project     = payload_data['project']
+            if env.has_key('hook'):
+                hook_config = env.hook
+            else:
+                hook_config = {
+                    'environment_mapping':{'develop':'testing',
+                                           'release':'staging'}
+                }
+            
+            project = 'unknown'
+            environment = 'unknown'
+
+            if hook_config.has_key('environment_mapping'):
                 
-                #Start deploy commander thread
-                thread = threading.Thread(name='worker', target=run_command, args=(payload_data, project, environment))
-                thread.start()
+                for k, v in hook_config['environment_mapping'].iteritems():
+                    match = re.search(k, payload_data['branch'])
+                    
+                    if match:
+                        project     = payload_data['project']
+                        environment = v
+                         #Start deploy commander thread
+                        thread = threading.Thread(name='worker', target=run_command, args=(payload_data, project, environment))
+                        thread.start()
+                        continue
 
             
             # Cleanup log files
             cleanup_folder(path=dir)
-            
+
+        data_body = {
+            'status':'ok',
+            'payload_data':payload_data,
+            'project':project, 
+            'environment':environment
+        }
         
+        body = json.dumps(data_body)
         resp.status = falcon.HTTP_200  # This is the default status
-        resp.body = ('{"status":"ok"}')
+        resp.body = body
 
 
 class RootResource:
